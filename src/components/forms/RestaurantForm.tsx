@@ -13,6 +13,7 @@ import {
   Stack,
   Alert,
   CircularProgress,
+  Typography,
 } from '@mui/material';
 import { Save, Publish } from '@mui/icons-material';
 import { restaurantFormSchema, type RestaurantFormData } from '@/lib/validations';
@@ -119,6 +120,20 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
             {error}
+          </Alert>
+        )}
+        {Object.keys(methods.formState.errors).length > 0 && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            <Typography variant="subtitle2" fontWeight="bold">
+              Please fix the following errors:
+            </Typography>
+            <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+              {Object.entries(methods.formState.errors).map(([key, error]) => (
+                <li key={key}>
+                  {key}: {(error as any)?.message || 'Invalid value'}
+                </li>
+              ))}
+            </ul>
           </Alert>
         )}
 

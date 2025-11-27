@@ -108,7 +108,9 @@ export default function ContactsTab() {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField
-            {...register('location.lat', { valueAsNumber: true })}
+            {...register('location.lat', { 
+              setValueAs: (v) => v === '' ? null : Number(v) 
+            })}
             label="Latitude"
             type="number"
             fullWidth
@@ -119,7 +121,9 @@ export default function ContactsTab() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            {...register('location.lng', { valueAsNumber: true })}
+            {...register('location.lng', { 
+              setValueAs: (v) => v === '' ? null : Number(v) 
+            })}
             label="Longitude"
             type="number"
             fullWidth
