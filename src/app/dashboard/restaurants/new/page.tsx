@@ -3,11 +3,11 @@
 import {
   Box,
   Typography,
-  Paper,
   Button,
 } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
+import RestaurantForm from '@/components/forms/RestaurantForm';
 
 export default function NewRestaurantPage() {
   const router = useRouter();
@@ -26,17 +26,10 @@ export default function NewRestaurantPage() {
         Create New Restaurant
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Add a new restaurant to your dashboard
+        Fill in the details below to create your restaurant profile
       </Typography>
 
-      <Paper sx={{ p: 4, textAlign: 'center' }}>
-        <Typography variant="h6" gutterBottom>
-          Restaurant Form Coming Soon
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Phase 5 will include the complete multi-step restaurant form
-        </Typography>
-      </Paper>
+      <RestaurantForm mode="create" />
     </Box>
   );
 }
