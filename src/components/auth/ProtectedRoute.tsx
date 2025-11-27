@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store';
 import { CircularProgress, Box } from '@mui/material';
@@ -8,14 +8,21 @@ import { CircularProgress, Box } from '@mui/material';
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by only checking auth after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (mounted && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [mounted, isAuthenticated, router]);
 
-  if (!isAuthenticated) {
+  // Show loading on server and during initial client render
+  if (!mounted || !isAuthenticated) {
     return (
       <Box
         sx={{

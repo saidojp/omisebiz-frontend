@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import { Box, Container, Typography, Button, Stack } from "@mui/material";
 import { Restaurant, Login, AppRegistration } from "@mui/icons-material";
