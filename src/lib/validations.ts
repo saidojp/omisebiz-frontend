@@ -59,7 +59,7 @@ export const restaurantHoursSchema = z.object({
   sunday: hourEntrySchema,
 }).optional();
 
-export const restaurantAttributesSchema = z.record(z.boolean()).optional();
+export const restaurantAttributesSchema = z.record(z.string(), z.boolean()).optional();
 
 export const restaurantMediaSchema = z.object({
   logo: z.string().url().optional(),
@@ -91,3 +91,4 @@ export const restaurantFormSchema = z.object({
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type RestaurantFormData = z.infer<typeof restaurantFormSchema>;
+export type HourEntry = z.infer<typeof hourEntrySchema>;
