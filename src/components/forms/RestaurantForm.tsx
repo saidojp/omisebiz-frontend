@@ -111,11 +111,18 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
       attributes: cleanData(data.attributes),
       media: cleanData(data.media),
       socials: cleanData(data.socials),
-      // Handle top-level optional strings
-      description: data.description || undefined,
-      category: data.category || undefined,
-      priceRange: data.priceRange || undefined,
     };
+
+    // Handle priceRange - backend only accepts $, $$, $$$, $$$$
+    // If user entered custom format, omit it to avoid validation error
+    const validPriceRanges = ['$', '$$', '$$$', '$$$$'];
+    const priceRangeValue = data.priceRange && validPriceRanges.includes(data.priceRange) 
+      ? data.priceRange 
+      : undefined;
+
+    payload.description = data.description || undefined;
+    payload.category = data.category || undefined;
+    payload.priceRange = priceRangeValue;
 
     console.log('Cleaned payload:', JSON.stringify(payload, null, 2));
     console.log('Payload size:', JSON.stringify(payload).length, 'bytes');
