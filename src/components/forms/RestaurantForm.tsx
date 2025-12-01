@@ -263,28 +263,43 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
             </Button>
 
             <Stack direction="row" spacing={2}>
+              {mode === 'edit' && (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  startIcon={loading ? <CircularProgress size={20} /> : <Save />}
+                  disabled={loading}
+                >
+                  Save Changes
+                </Button>
+              )}
+              
               {activeTab < 5 ? (
                 <Button variant="contained" onClick={handleNext} disabled={loading}>
                   Next
                 </Button>
               ) : (
                 <>
-                  <Button
-                    type="submit"
-                    variant="outlined"
-                    startIcon={loading ? <CircularProgress size={20} /> : <Save />}
-                    disabled={loading}
-                  >
-                    Save Draft
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    startIcon={loading ? <CircularProgress size={20} /> : <Publish />}
-                    disabled={loading}
-                  >
-                    {mode === 'create' ? 'Create Restaurant' : 'Update Restaurant'}
-                  </Button>
+                  {mode === 'create' && (
+                    <>
+                      <Button
+                        type="submit"
+                        variant="outlined"
+                        startIcon={loading ? <CircularProgress size={20} /> : <Save />}
+                        disabled={loading}
+                      >
+                        Save Draft
+                      </Button>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        startIcon={loading ? <CircularProgress size={20} /> : <Save />}
+                        disabled={loading}
+                      >
+                        Create Restaurant
+                      </Button>
+                    </>
+                  )}
                 </>
               )}
             </Stack>
