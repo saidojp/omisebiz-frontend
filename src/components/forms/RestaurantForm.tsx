@@ -78,16 +78,51 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
     setError('');
     setSuccess('');
 
+    // Clean data before sending
+    const cleanData = (obj: any): any => {
+      if (Array.isArray(obj)) {
+        return obj.map(cleanData);
+      }
+      if (obj !== null && typeof obj === 'object') {
+        const cleaned: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+          const cleanedValue = cleanData(value);
+          if (cleanedValue !== undefined && cleanedValue !== '' && cleanedValue !== null) {
+            cleaned[key] = cleanedValue;
+          }
+        }
+        return Object.keys(cleaned).length > 0 ? cleaned : undefined;
+      }
+      return obj === '' ? undefined : obj;
+    };
+
+    const payload = {
+      ...data,
+      contacts: cleanData(data.contacts),
+      address: cleanData(data.address),
+      // Ensure location is either a valid object or undefined (not null)
+      location: data.location?.lat && data.location?.lng ? data.location : undefined,
+      hours: data.hours, // Hours structure is complex, keep as is
+      attributes: cleanData(data.attributes),
+      media: cleanData(data.media),
+      socials: cleanData(data.socials),
+      // Handle top-level optional strings
+      description: data.description || undefined,
+      category: data.category || undefined,
+      priceRange: data.priceRange || undefined,
+    };
+
     try {
       if (mode === 'create') {
-        await api.post('/restaurants', data);
+        await api.post('/restaurants', payload);
         setSuccess('Restaurant created successfully!');
         setTimeout(() => router.push('/dashboard/restaurants'), 1500);
       } else {
-        await api.patch(`/restaurants/${restaurant?.id}`, data);
+        await api.patch(`/restaurants/${restaurant?.id}`, payload);
         setSuccess('Restaurant updated successfully!');
       }
     } catch (err: any) {
+      console.error('Submission error:', err);
       setError(err.response?.data?.error?.message || 'Failed to save restaurant');
     } finally {
       setLoading(false);
