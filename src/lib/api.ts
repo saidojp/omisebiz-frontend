@@ -35,4 +35,10 @@ api.interceptors.response.use(
   }
 );
 
+// Public API
+export const getRestaurantBySlug = async (slug: string) => {
+  const response = await api.get(`/public/restaurants/${slug}`);
+  return response.data;
+};
+
 export default api;

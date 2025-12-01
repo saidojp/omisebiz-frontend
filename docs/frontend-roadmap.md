@@ -286,20 +286,20 @@ Group MUI `Checkbox` by category with `FormGroup`:
    MUI `IconButton` with brand icons
 
 ### SEO Requirements
-- [ ] Dynamic `<title>` and `<meta>` tags
-- [ ] Open Graph tags for social sharing
+- [x] Dynamic `<title>` and `<meta>` tags
+- [x] Open Graph tags for social sharing
 - [ ] Schema.org/Restaurant structured data (JSON-LD)
 - [ ] Sitemap generation (all public restaurants)
 
 ### Components
-- [ ] **PublicRestaurantPage** (MUI `Container`)
-- [ ] **HeroSection** (MUI `Box` with background)
-- [ ] **ActionBar** (MUI `Stack` of buttons)
-- [ ] **PhotoGallery** (MUI `ImageList` with lightbox)
-- [ ] **InfoCard** (MUI `Card`)
-- [ ] **HoursDisplay** (MUI `Accordion`)
+- [x] **PublicRestaurantPage** (MUI `Container`)
+- [x] **HeroSection** (MUI `Box` with background)
+- [x] **ActionBar** (MUI `Stack` of buttons)
+- [x] **PhotoGallery** (MUI `ImageList` with lightbox)
+- [x] **InfoCard** (MUI `Card`)
+- [x] **HoursDisplay** (MUI `Accordion`)
 - [ ] **MapEmbed** (iframe in MUI `Card`)
-- [ ] **SocialLinks** (MUI `IconButton` group)
+- [x] **SocialLinks** (MUI `IconButton` group)
 
 ---
 
