@@ -74,6 +74,9 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
   });
 
   const onSubmit = async (data: RestaurantFormData) => {
+    console.log('=== FORM SUBMISSION STARTED ===');
+    console.log('Raw form data:', JSON.stringify(data, null, 2));
+    
     setLoading(true);
     setError('');
     setSuccess('');
@@ -112,20 +115,60 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
       priceRange: data.priceRange || undefined,
     };
 
+    console.log('Cleaned payload:', JSON.stringify(payload, null, 2));
+    console.log('Payload size:', JSON.stringify(payload).length, 'bytes');
+
     try {
+      console.log(`Making ${mode.toUpperCase()} request...`);
+      
       if (mode === 'create') {
-        await api.post('/restaurants', payload);
+        const response = await api.post('/restaurants', payload);
+        console.log('CREATE response:', response.data);
         setSuccess('Restaurant created successfully!');
         setTimeout(() => router.push('/dashboard/restaurants'), 1500);
       } else {
-        await api.patch(`/restaurants/${restaurant?.id}`, payload);
+        const response = await api.patch(`/restaurants/${restaurant?.id}`, payload);
+        console.log('UPDATE response:', response.data);
         setSuccess('Restaurant updated successfully!');
       }
+      
+      console.log('=== FORM SUBMISSION SUCCESSFUL ===');
     } catch (err: any) {
-      console.error('Submission error:', err);
-      setError(err.response?.data?.error?.message || 'Failed to save restaurant');
+      console.error('=== FORM SUBMISSION FAILED ===');
+      console.error('Error object:', err);
+      console.error('Error response:', err.response);
+      console.error('Error response data:', err.response?.data);
+      console.error('Error response status:', err.response?.status);
+      console.error('Error message:', err.message);
+      
+      // Extract detailed error message
+      let errorMessage = 'Failed to save restaurant';
+      
+      if (err.response?.data) {
+        if (typeof err.response.data === 'string') {
+          errorMessage = err.response.data;
+        } else if (err.response.data.error) {
+          if (typeof err.response.data.error === 'string') {
+            errorMessage = err.response.data.error;
+          } else if (err.response.data.error.message) {
+            errorMessage = err.response.data.error.message;
+          }
+        } else if (err.response.data.message) {
+          errorMessage = err.response.data.message;
+        }
+        
+        // Include validation details if available
+        if (err.response.data.errors) {
+          errorMessage += '\n\nValidation errors:\n' + 
+            JSON.stringify(err.response.data.errors, null, 2);
+        }
+      }
+      
+      console.error('Extracted error message:', errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
+      console.log('=== FORM SUBMISSION ENDED ===');
     }
   };
 
@@ -156,7 +199,12 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         )}
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
-            {error}
+            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+              Error
+            </Typography>
+            <Box component="pre" sx={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', fontSize: '0.875rem', margin: 0 }}>
+              {error}
+            </Box>
           </Alert>
         )}
         {Object.keys(methods.formState.errors).length > 0 && (
