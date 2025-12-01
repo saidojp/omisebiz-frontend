@@ -58,7 +58,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         name: '',
         description: '',
         category: '',
-        priceRange: '$$',
+        priceRange: '',
         contacts: {},
         address: {},
         location: null,

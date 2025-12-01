@@ -66,8 +66,8 @@ export default function BasicInfoTab() {
         label="Price Range"
         fullWidth
         error={!!errors.priceRange}
-        helperText={errors.priceRange?.message || 'e.g., $$-$$$, Moderate, 10-20 USD'}
-        placeholder="Enter price range"
+        helperText={errors.priceRange?.message || 'e.g., 2000-3000¥, 1500-2500₽, $15-25'}
+        placeholder="2000-3000¥"
       />
     </Stack>
   );
