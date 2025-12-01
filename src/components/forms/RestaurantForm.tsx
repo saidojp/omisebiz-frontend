@@ -132,6 +132,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         const response = await api.patch(`/restaurants/${restaurant?.id}`, payload);
         console.log('UPDATE response:', response.data);
         setSuccess('Restaurant updated successfully!');
+        setTimeout(() => router.push('/dashboard/restaurants'), 1000);
       }
       
       console.log('=== FORM SUBMISSION SUCCESSFUL ===');
