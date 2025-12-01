@@ -71,7 +71,7 @@ export default function HoursTab() {
               return (
                 <Box>
                   <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={3}>
+                    <Grid xs={12} sm={3}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -95,7 +95,7 @@ export default function HoursTab() {
 
                     {isOpen && 'open' in value && 'close' in value && (
                       <>
-                        <Grid item xs={6} sm={3}>
+                        <Grid xs={6} sm={3}>
                           <TextField
                             label="Open"
                             type="time"
@@ -111,7 +111,7 @@ export default function HoursTab() {
                             InputLabelProps={{ shrink: true }}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={3}>
+                        <Grid xs={6} sm={3}>
                           <TextField
                             label="Close"
                             type="time"
@@ -131,7 +131,7 @@ export default function HoursTab() {
                     )}
 
                     {!isOpen && (
-                      <Grid item xs={12} sm={6}>
+                      <Grid xs={12} sm={6}>
                         <Typography variant="body2" color="text.secondary">
                           Closed
                         </Typography>

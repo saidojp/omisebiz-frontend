@@ -69,7 +69,7 @@ export default function ContactsTab() {
 
       {/* City, Zip */}
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={8}>
+        <Grid xs={12} sm={8}>
           <TextField
             {...register('address.city')}
             label="City"
@@ -79,7 +79,7 @@ export default function ContactsTab() {
             placeholder="Tokyo"
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid xs={12} sm={4}>
           <TextField
             {...register('address.zip')}
             label="Postal Code"
@@ -106,7 +106,7 @@ export default function ContactsTab() {
       </Typography>
 
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             {...register('location.lat', { 
               setValueAs: (v) => v === '' ? null : Number(v) 
@@ -119,7 +119,7 @@ export default function ContactsTab() {
             inputProps={{ step: 'any' }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid xs={12} sm={6}>
           <TextField
             {...register('location.lng', { 
               setValueAs: (v) => v === '' ? null : Number(v) 

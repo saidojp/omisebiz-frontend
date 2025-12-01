@@ -37,21 +37,15 @@ export const restaurantLocationSchema = z.object({
   lat: z.number().or(z.nan()).nullable().optional(),
   lng: z.number().or(z.nan()).nullable().optional(),
 })
-.optional()
 .nullable()
+.optional()
 .transform((data) => {
   if (!data) return null;
-  const lat = data.lat;
-  const lng = data.lng;
+  const { lat, lng } = data;
   
-  // Check if we have valid numbers
-  const hasLat = typeof lat === 'number' && !isNaN(lat);
-  const hasLng = typeof lng === 'number' && !isNaN(lng);
-  
-  if (hasLat && hasLng) {
+  if (typeof lat === 'number' && !isNaN(lat) && typeof lng === 'number' && !isNaN(lng)) {
     return { lat, lng };
   }
-  // If partial or invalid, return null (treat as no location)
   return null;
 });
 
@@ -95,10 +89,10 @@ export const restaurantFormSchema = z.object({
   name: z.string().min(1, 'Restaurant name is required'),
   description: z.string().max(750, 'Description must be less than 750 characters').optional(),
   category: z.string().optional(),
-  priceRange: z.enum(['$', '$$', '$$$', '$$$$']).optional(),
+  priceRange: z.string().optional(),
   contacts: restaurantContactsSchema.optional(),
   address: restaurantAddressSchema.optional(),
-  location: restaurantLocationSchema,
+  location: restaurantLocationSchema.optional(),
   hours: restaurantHoursSchema,
   attributes: restaurantAttributesSchema,
   media: restaurantMediaSchema,

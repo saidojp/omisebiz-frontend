@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, type DefaultValues } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import {
@@ -40,35 +40,37 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const defaultValues: DefaultValues<RestaurantFormData> = restaurant
+    ? {
+        name: restaurant.name,
+        description: restaurant.description || '',
+        category: restaurant.category || '',
+        priceRange: restaurant.priceRange || '$$',
+        contacts: restaurant.contacts || {},
+        address: restaurant.address || {},
+        location: restaurant.location || null,
+        hours: restaurant.hours || defaultHours,
+        attributes: restaurant.attributes || {},
+        media: restaurant.media || {},
+        socials: restaurant.socials || {},
+      }
+    : {
+        name: '',
+        description: '',
+        category: '',
+        priceRange: '$$',
+        contacts: {},
+        address: {},
+        location: null,
+        hours: defaultHours,
+        attributes: {},
+        media: {},
+        socials: {},
+      };
+
   const methods = useForm<RestaurantFormData>({
     resolver: zodResolver(restaurantFormSchema),
-    defaultValues: restaurant
-      ? {
-          name: restaurant.name,
-          description: restaurant.description || '',
-          category: restaurant.category || '',
-          priceRange: restaurant.priceRange || '$$',
-          contacts: restaurant.contacts || {},
-          address: restaurant.address || {},
-          location: restaurant.location || null,
-          hours: restaurant.hours || defaultHours,
-          attributes: restaurant.attributes || {},
-          media: restaurant.media || {},
-          socials: restaurant.socials || {},
-        }
-      : {
-          name: '',
-          description: '',
-          category: '',
-          priceRange: '$$',
-          contacts: {},
-          address: {},
-          location: null,
-          hours: defaultHours,
-          attributes: {},
-          media: {},
-          socials: {},
-        },
+    defaultValues,
   });
 
   const onSubmit = async (data: RestaurantFormData) => {

@@ -4,26 +4,15 @@ import { useFormContext, Controller } from 'react-hook-form';
 import {
   Stack,
   TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  FormHelperText,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  FormLabel,
   Typography,
 } from '@mui/material';
-import { RESTAURANT_CATEGORIES, PRICE_RANGES } from '@/lib/constants';
 import type { RestaurantFormData } from '@/lib/validations';
 
 export default function BasicInfoTab() {
   const {
     register,
-    control,
-    watch,
     formState: { errors },
+    watch,
   } = useFormContext<RestaurantFormData>();
 
   const description = watch('description') || '';
@@ -46,28 +35,14 @@ export default function BasicInfoTab() {
       />
 
       {/* Category */}
-      <FormControl fullWidth error={!!errors.category}>
-        <InputLabel>Category</InputLabel>
-        <Controller
-          name="category"
-          control={control}
-          render={({ field }) => (
-            <Select {...field} label="Category">
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {RESTAURANT_CATEGORIES.map((category) => (
-                <MenuItem key={category} value={category}>
-                  {category}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-        {errors.category && (
-          <FormHelperText>{errors.category.message}</FormHelperText>
-        )}
-      </FormControl>
+      <TextField
+        {...register('category')}
+        label="Category"
+        fullWidth
+        error={!!errors.category}
+        helperText={errors.category?.message}
+        placeholder="e.g., Japanese, Italian, Cafe"
+      />
 
       {/* Description */}
       <TextField
@@ -86,28 +61,14 @@ export default function BasicInfoTab() {
       />
 
       {/* Price Range */}
-      <FormControl error={!!errors.priceRange}>
-        <FormLabel>Price Range</FormLabel>
-        <Controller
-          name="priceRange"
-          control={control}
-          render={({ field }) => (
-            <RadioGroup {...field} row>
-              {PRICE_RANGES.map((range) => (
-                <FormControlLabel
-                  key={range.value}
-                  value={range.value}
-                  control={<Radio />}
-                  label={range.label}
-                />
-              ))}
-            </RadioGroup>
-          )}
-        />
-        {errors.priceRange && (
-          <FormHelperText>{errors.priceRange.message}</FormHelperText>
-        )}
-      </FormControl>
+      <TextField
+        {...register('priceRange')}
+        label="Price Range"
+        fullWidth
+        error={!!errors.priceRange}
+        helperText={errors.priceRange?.message || 'e.g., $$-$$$, Moderate, 10-20 USD'}
+        placeholder="Enter price range"
+      />
     </Stack>
   );
 }

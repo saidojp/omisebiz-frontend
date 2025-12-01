@@ -169,7 +169,7 @@ export default function MediaTab() {
 
         <Grid container spacing={2} sx={{ mb: 2 }}>
           {gallery.map((url, index) => (
-            <Grid item xs={6} sm={4} md={3} key={index}>
+            <Grid xs={6} sm={4} md={3} key={index}>
               <Box sx={{ position: 'relative' }}>
                 <Card>
                   <CardMedia

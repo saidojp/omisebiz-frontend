@@ -115,7 +115,7 @@ export default function RestaurantsPage() {
       {loading && (
         <Grid container spacing={3}>
           {[1, 2, 3, 4].map((n) => (
-            <Grid item xs={12} sm={6} md={4} key={n}>
+            <Grid xs={12} sm={6} md={4} key={n}>
               <Card>
                 <Skeleton variant="rectangular" height={200} />
                 <CardContent>
@@ -158,7 +158,7 @@ export default function RestaurantsPage() {
       {!loading && filteredRestaurants.length > 0 && (
         <Grid container spacing={3}>
           {filteredRestaurants.map((restaurant) => (
-            <Grid item xs={12} sm={6} md={4} key={restaurant.id}>
+            <Grid xs={12} sm={6} md={4} key={restaurant.id}>
               <Card
                 sx={{
                   height: '100%',
