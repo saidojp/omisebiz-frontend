@@ -5,7 +5,7 @@ import {
   Stack,
   TextField,
   Typography,
-  Grid,
+  Box,
 } from '@mui/material';
 import type { RestaurantFormData } from '@/lib/validations';
 
@@ -68,8 +68,8 @@ export default function ContactsTab() {
       />
 
       {/* City, Zip */}
-      <Grid container spacing={2}>
-        <Grid xs={12} sm={8}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+        <Box sx={{ flex: 2 }}>
           <TextField
             {...register('address.city')}
             label="City"
@@ -78,8 +78,8 @@ export default function ContactsTab() {
             helperText={errors.address?.city?.message}
             placeholder="Tokyo"
           />
-        </Grid>
-        <Grid xs={12} sm={4}>
+        </Box>
+        <Box sx={{ flex: 1 }}>
           <TextField
             {...register('address.zip')}
             label="Postal Code"
@@ -88,8 +88,8 @@ export default function ContactsTab() {
             helperText={errors.address?.zip?.message}
             placeholder="100-0001"
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Stack>
 
       {/* Country */}
       <TextField
@@ -105,8 +105,8 @@ export default function ContactsTab() {
         Coordinates (Optional)
       </Typography>
 
-      <Grid container spacing={2}>
-        <Grid xs={12} sm={6}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+        <Box sx={{ flex: 1 }}>
           <TextField
             {...register('location.lat', { 
               setValueAs: (v) => v === '' ? null : Number(v) 
@@ -118,8 +118,8 @@ export default function ContactsTab() {
             helperText={errors.location?.lat?.message || 'e.g., 35.6762'}
             inputProps={{ step: 'any' }}
           />
-        </Grid>
-        <Grid xs={12} sm={6}>
+        </Box>
+        <Box sx={{ flex: 1 }}>
           <TextField
             {...register('location.lng', { 
               setValueAs: (v) => v === '' ? null : Number(v) 
@@ -131,8 +131,8 @@ export default function ContactsTab() {
             helperText={errors.location?.lng?.message || 'e.g., 139.6503'}
             inputProps={{ step: 'any' }}
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Stack>
     </Stack>
   );
 }

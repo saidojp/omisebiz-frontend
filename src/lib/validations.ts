@@ -21,9 +21,9 @@ export const restaurantBasicSchema = z.object({
 });
 
 export const restaurantContactsSchema = z.object({
-  phone: z.string().optional().transform(v => v === '' ? undefined : v),
-  email: z.string().email('Invalid email').optional().or(z.literal('')).transform(v => v === '' ? undefined : v),
-  website: z.string().url('Invalid URL').optional().or(z.literal('')).transform(v => v === '' ? undefined : v),
+  phone: z.string().optional(),
+  email: z.string().email('Invalid email').optional().or(z.literal('')),
+  website: z.string().url('Invalid URL').optional().or(z.literal('')),
 });
 
 export const restaurantAddressSchema = z.object({
@@ -36,18 +36,7 @@ export const restaurantAddressSchema = z.object({
 export const restaurantLocationSchema = z.object({
   lat: z.number().or(z.nan()).nullable().optional(),
   lng: z.number().or(z.nan()).nullable().optional(),
-})
-.nullable()
-.optional()
-.transform((data) => {
-  if (!data) return null;
-  const { lat, lng } = data;
-  
-  if (typeof lat === 'number' && !isNaN(lat) && typeof lng === 'number' && !isNaN(lng)) {
-    return { lat, lng };
-  }
-  return null;
-});
+}).nullable().optional();
 
 export const hourEntrySchema = z.union([
   z.object({
@@ -73,16 +62,16 @@ export const restaurantHoursSchema = z.object({
 export const restaurantAttributesSchema = z.record(z.string(), z.boolean()).optional();
 
 export const restaurantMediaSchema = z.object({
-  logo: z.string().url().optional().or(z.literal('')).transform(v => v === '' ? undefined : v),
-  cover: z.string().url().optional().or(z.literal('')).transform(v => v === '' ? undefined : v),
+  logo: z.string().url().optional().or(z.literal('')),
+  cover: z.string().url().optional().or(z.literal('')),
   gallery: z.array(z.string().url()).optional(),
 }).optional();
 
 export const restaurantSocialsSchema = z.object({
-  instagram: z.string().url().optional().or(z.literal('')).transform(v => v === '' ? undefined : v),
-  facebook: z.string().url().optional().or(z.literal('')).transform(v => v === '' ? undefined : v),
-  tiktok: z.string().url().optional().or(z.literal('')).transform(v => v === '' ? undefined : v),
-  youtube: z.string().url().optional().or(z.literal('')).transform(v => v === '' ? undefined : v),
+  instagram: z.string().url().optional().or(z.literal('')),
+  facebook: z.string().url().optional().or(z.literal('')),
+  tiktok: z.string().url().optional().or(z.literal('')),
+  youtube: z.string().url().optional().or(z.literal('')),
 }).optional();
 
 export const restaurantFormSchema = z.object({
@@ -92,7 +81,7 @@ export const restaurantFormSchema = z.object({
   priceRange: z.string().optional(),
   contacts: restaurantContactsSchema.optional(),
   address: restaurantAddressSchema.optional(),
-  location: restaurantLocationSchema.optional(),
+  location: restaurantLocationSchema,
   hours: restaurantHoursSchema,
   attributes: restaurantAttributesSchema,
   media: restaurantMediaSchema,

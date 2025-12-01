@@ -6,7 +6,6 @@ import {
   Box,
   Typography,
   Button,
-  Grid,
   Card,
   CardMedia,
   CardContent,
@@ -113,144 +112,129 @@ export default function RestaurantsPage() {
 
       {/* Loading State */}
       {loading && (
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
           {[1, 2, 3, 4].map((n) => (
-            <Grid xs={12} sm={6} md={4} key={n}>
+            <Box key={n} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
               <Card>
                 <Skeleton variant="rectangular" height={200} />
                 <CardContent>
-                  <Skeleton variant="text" height={32} />
-                  <Skeleton variant="text" />
-                  <Skeleton variant="text" width="60%" />
+                  <Skeleton variant="text" height={32} width="80%" />
+                  <Skeleton variant="text" height={20} width="60%" />
+                  <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                    <Skeleton variant="rectangular" width={60} height={24} />
+                    <Skeleton variant="rectangular" width={60} height={24} />
+                  </Box>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       )}
 
-      {/* Empty State */}
+      {/* Empty State (when no restaurants exist initially) */}
       {!loading && restaurants.length === 0 && (
-        <Box
-          sx={{
-            textAlign: 'center',
-            py: 8,
-          }}
-        >
-          <RestaurantIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-          <Typography variant="h6" gutterBottom>
-            No restaurants yet
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Create your first restaurant to get started
+        <Paper sx={{ p: 4, textAlign: 'center' }}>
+          <Typography variant="h6" color="text.secondary">
+            No restaurants found
           </Typography>
           <Button
             variant="contained"
             startIcon={<Add />}
             onClick={() => router.push('/dashboard/restaurants/new')}
+            sx={{ mt: 2 }}
           >
-            Add Restaurant
+            Create Your First Restaurant
           </Button>
-        </Box>
+        </Paper>
       )}
 
       {/* Restaurant Cards */}
       {!loading && filteredRestaurants.length > 0 && (
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
           {filteredRestaurants.map((restaurant) => (
-            <Grid xs={12} sm={6} md={4} key={restaurant.id}>
+            <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
               <Card
                 sx={{
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  transition: 'transform 0.2s',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: 4,
-                  },
+                  cursor: 'pointer',
+                  '&:hover': { boxShadow: 6 },
                 }}
+                onClick={() => router.push(`/dashboard/restaurants/${restaurant.id}`)}
               >
-                {/* Cover Image */}
-                <CardMedia
-                  component="div"
-                  sx={{
-                    height: 200,
-                    backgroundColor: 'grey.200',
-                    backgroundImage: restaurant.media?.cover
-                      ? `url(${restaurant.media.cover})`
-                      : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {!restaurant.media?.cover && (
+                {restaurant.media?.cover ? (
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={restaurant.media.cover}
+                    alt={restaurant.name}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      height: 200,
+                      bgcolor: 'grey.200',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
                     <RestaurantIcon sx={{ fontSize: 60, color: 'grey.400' }} />
-                  )}
-                </CardMedia>
-
-                {/* Content */}
+                  </Box>
+                )}
                 <CardContent sx={{ flexGrow: 1 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 1 }}>
-                    <Typography variant="h6" component="h2" noWrap>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="h6" component="div">
                       {restaurant.name}
                     </Typography>
+                    {restaurant.priceRange && (
+                      <Chip
+                        label={restaurant.priceRange}
+                        size="small"
+                        color="success"
+                        variant="outlined"
+                      />
+                    )}
+                  </Box>
+                  
+                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                    {restaurant.category || 'Uncategorized'}
+                  </Typography>
+
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <LocationOn fontSize="small" color="action" />
+                    <Typography variant="body2" noWrap>
+                      {restaurant.address?.city || 'No location set'}
+                    </Typography>
+                  </Stack>
+
+                  <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
                     <Chip
-                      label={restaurant.isPublished ? 'Published' : 'Draft'}
+                      label={restaurant.attributes?.wifi ? 'WiFi' : 'No WiFi'}
                       size="small"
-                      color={restaurant.isPublished ? 'success' : 'default'}
+                      color={restaurant.attributes?.wifi ? 'primary' : 'default'}
                     />
-                  </Box>
-
-                  {restaurant.category && (
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      {restaurant.category}
-                    </Typography>
-                  )}
-
-                  {restaurant.address?.city && (
-                    <Typography variant="body2" color="text.secondary">
-                      📍 {restaurant.address.city}
-                      {restaurant.address.country && `, ${restaurant.address.country}`}
-                    </Typography>
-                  )}
-
-                  {restaurant.priceRange && (
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      {restaurant.priceRange}
-                    </Typography>
-                  )}
+                    <Chip
+                      label={restaurant.attributes?.parking ? 'Parking' : 'No Parking'}
+                      size="small"
+                      color={restaurant.attributes?.parking ? 'primary' : 'default'}
+                    />
+                  </Stack>
                 </CardContent>
-
-                {/* Actions */}
-                <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
-                  <Box>
-                    <IconButton
-                      size="small"
-                      onClick={() => router.push(`/r/${restaurant.slug}`)}
-                      title="View public page"
-                    >
-                      <Visibility />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => router.push(`/dashboard/restaurants/${restaurant.id}/edit`)}
-                      title="Edit"
-                    >
-                      <Edit />
-                    </IconButton>
-                  </Box>
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => handleDelete(restaurant.id)}
-                    title="Delete"
-                  >
-                    <Delete />
-                  </IconButton>
+                <CardActions>
+                  <Button size="small" onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/dashboard/restaurants/${restaurant.id}/edit`);
+                  }}>
+                    Edit
+                  </Button>
+                  <Button size="small" color="error" onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(restaurant.id);
+                  }}>
+                    Delete
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>

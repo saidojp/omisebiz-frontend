@@ -8,7 +8,6 @@ import {
   Box,
   Button,
   TextField,
-  Grid,
   Card,
   CardMedia,
   IconButton,
@@ -167,30 +166,34 @@ export default function MediaTab() {
           Photo Gallery
         </Typography>
 
-        <Grid container spacing={2} sx={{ mb: 2 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
           {gallery.map((url, index) => (
-            <Grid xs={6} sm={4} md={3} key={index}>
+            <Box key={index} sx={{ width: { xs: 'calc(50% - 8px)', sm: 'calc(33.33% - 11px)', md: 'calc(25% - 12px)' } }}>
               <Box sx={{ position: 'relative' }}>
                 <Card>
                   <CardMedia
                     component="img"
+                    height="140"
                     image={url}
                     alt={`Gallery ${index + 1}`}
-                    sx={{ height: 150, objectFit: 'cover' }}
                   />
+                  <IconButton
+                    size="small"
+                    sx={{
+                      position: 'absolute',
+                      top: 4,
+                      right: 4,
+                      bgcolor: 'rgba(255,255,255,0.8)',
+                    }}
+                    onClick={() => removeGalleryImage(index)}
+                  >
+                    <Delete fontSize="small" />
+                  </IconButton>
                 </Card>
-                <IconButton
-                  size="small"
-                  color="error"
-                  onClick={() => handleRemoveGalleryImage(index)}
-                  sx={{ position: 'absolute', top: 4, right: 4, bgcolor: 'white' }}
-                >
-                  <Delete fontSize="small" />
-                </IconButton>
               </Box>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
 
         <Button
           variant="outlined"

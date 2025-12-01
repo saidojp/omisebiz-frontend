@@ -3,12 +3,12 @@
 import { useFormContext, Controller } from 'react-hook-form';
 import {
   Stack,
-  Typography,
-  Box,
-  FormControlLabel,
-  Switch,
   TextField,
-  Grid,
+  Typography,
+  Switch,
+  FormControlLabel,
+  Box,
+  FormHelperText,
   Divider,
   Button,
 } from '@mui/material';
@@ -27,7 +27,7 @@ const DAY_LABELS: Record<string, string> = {
 };
 
 export default function HoursTab() {
-  const { control, watch, setValue } = useFormContext<RestaurantFormData>();
+  const { control, watch, setValue, register, formState: { errors } } = useFormContext<RestaurantFormData>();
 
   const hours = watch('hours');
 
@@ -70,74 +70,66 @@ export default function HoursTab() {
 
               return (
                 <Box>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid xs={12} sm={3}>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
+                    <Box sx={{ width: { xs: '100%', sm: '25%' } }}>
                       <FormControlLabel
                         control={
                           <Switch
                             checked={isOpen}
                             onChange={(e) => {
-                              if (e.target.checked) {
-                                field.onChange({
-                                  isOpen: true,
-                                  open: '09:00',
-                                  close: '22:00',
-                                });
-                              } else {
-                                field.onChange({ isOpen: false });
+                              const newOpen = e.target.checked;
+                              setValue(`hours.${day}.isOpen`, newOpen);
+                              if (newOpen) {
+                                setValue(`hours.${day}.open`, '09:00');
+                                setValue(`hours.${day}.close`, '17:00');
                               }
                             }}
                           />
                         }
-                        label={DAY_LABELS[day]}
+                        label={day.charAt(0).toUpperCase() + day.slice(1)}
                       />
-                    </Grid>
+                    </Box>
 
                     {isOpen && 'open' in value && 'close' in value && (
                       <>
-                        <Grid xs={6} sm={3}>
+                        <Box sx={{ width: { xs: '50%', sm: '25%' } }}>
                           <TextField
                             label="Open"
                             type="time"
-                            fullWidth
                             size="small"
-                            value={value.open}
-                            onChange={(e) =>
-                              field.onChange({
-                                ...value,
-                                open: e.target.value,
-                              })
-                            }
+                            fullWidth
+                            {...register(`hours.${day}.open`)}
+                            error={!!(errors.hours?.[day] as any)?.open}
                             InputLabelProps={{ shrink: true }}
                           />
-                        </Grid>
-                        <Grid xs={6} sm={3}>
+                        </Box>
+                        <Box sx={{ width: { xs: '50%', sm: '25%' } }}>
                           <TextField
                             label="Close"
                             type="time"
-                            fullWidth
                             size="small"
-                            value={value.close}
-                            onChange={(e) =>
-                              field.onChange({
-                                ...value,
-                                close: e.target.value,
-                              })
-                            }
+                            fullWidth
+                            {...register(`hours.${day}.close`)}
+                            error={!!(errors.hours?.[day] as any)?.close}
                             InputLabelProps={{ shrink: true }}
                           />
-                        </Grid>
+                        </Box>
                       </>
                     )}
 
                     {!isOpen && (
-                      <Grid xs={12} sm={6}>
+                      <Box sx={{ width: { xs: '100%', sm: '50%' } }}>
                         <Typography variant="body2" color="text.secondary">
                           Closed
                         </Typography>
-                      </Grid>
+                      </Box>
                     )}
-                  </Grid>
+                  </Stack>
+                  {(errors.hours?.[day] as any)?.message && (
+                    <FormHelperText error>
+                      {(errors.hours?.[day] as any)?.message}
+                    </FormHelperText>
+                  )}
                 </Box>
               );
             }}
