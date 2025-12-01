@@ -5,12 +5,16 @@ import {
   Stack,
   TextField,
   Typography,
+  FormControlLabel,
+  Switch,
+  Box,
 } from '@mui/material';
 import type { RestaurantFormData } from '@/lib/validations';
 
 export default function BasicInfoTab() {
   const {
     register,
+    control,
     formState: { errors },
     watch,
   } = useFormContext<RestaurantFormData>();
@@ -69,6 +73,35 @@ export default function BasicInfoTab() {
         helperText={errors.priceRange?.message || 'e.g., 2000-3000¥, 1500-2500₽, $15-25'}
         placeholder="2000-3000¥"
       />
+
+      {/* Publish Status */}
+      <Box sx={{ pt: 2 }}>
+        <Controller
+          name="isPublished"
+          control={control}
+          render={({ field }) => (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={field.value || false}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body1" fontWeight="medium">
+                    Publish Restaurant
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Make this restaurant visible on public pages
+                  </Typography>
+                </Box>
+              }
+            />
+          )}
+        />
+      </Box>
     </Stack>
   );
 }

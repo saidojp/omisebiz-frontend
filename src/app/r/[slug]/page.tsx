@@ -1,7 +1,10 @@
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { Box, Container, Typography, Alert, CircularProgress } from '@mui/material';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { Box, Container, Typography, CircularProgress, Alert } from '@mui/material';
 import { getRestaurantBySlug } from '@/lib/api';
+import { Restaurant } from '@/lib/types';
 import HeroSection from '@/components/restaurant/HeroSection';
 import ActionBar from '@/components/restaurant/ActionBar';
 import InfoCard from '@/components/restaurant/InfoCard';
@@ -9,43 +12,76 @@ import HoursDisplay from '@/components/restaurant/HoursDisplay';
 import PhotoGallery from '@/components/restaurant/PhotoGallery';
 import SocialLinks from '@/components/restaurant/SocialLinks';
 
-interface Props {
-  params: { slug: string };
-}
+export default function RestaurantPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  try {
-    const data = await getRestaurantBySlug(params.slug);
-    const restaurant = data.data.restaurant;
-
-    return {
-      title: `${restaurant.name} | OmiseBiz`,
-      description: restaurant.description || `Visit ${restaurant.name}`,
-      openGraph: {
-        title: restaurant.name,
-        description: restaurant.description,
-        images: restaurant.media?.cover ? [restaurant.media.cover] : [],
-      },
+  useEffect(() => {
+    const fetchRestaurant = async () => {
+      try {
+        console.log('Fetching restaurant with slug:', slug);
+        const data = await getRestaurantBySlug(slug);
+        console.log('Restaurant data:', data);
+        
+        if (data.data?.restaurant) {
+          setRestaurant(data.data.restaurant);
+        } else {
+          setError('Restaurant not found');
+        }
+      } catch (err: any) {
+        console.error('Error fetching restaurant:', err);
+        setError(err.response?.data?.error || 'Failed to load restaurant');
+      } finally {
+        setLoading(false);
+      }
     };
-  } catch (error) {
-    return {
-      title: 'Restaurant Not Found',
-    };
+
+    fetchRestaurant();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <Container>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
   }
-}
 
-export default async function RestaurantPage({ params }: Props) {
-  let restaurant;
-
-  try {
-    const data = await getRestaurantBySlug(params.slug);
-    restaurant = data.data.restaurant;
-  } catch (error) {
-    notFound();
-  }
-
-  if (!restaurant) {
-    notFound();
+  if (error || !restaurant) {
+    return (
+      <Container>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Alert severity="error">
+            <Typography variant="h6" gutterBottom>
+              Restaurant Not Found
+            </Typography>
+            <Typography variant="body2">
+              {error || 'The restaurant you are looking for does not exist or is not published.'}
+            </Typography>
+          </Alert>
+        </Box>
+      </Container>
+    );
   }
 
   return (

@@ -127,4 +127,5 @@ export interface RestaurantFormData {
   attributes?: RestaurantAttributes;
   media?: RestaurantMedia;
   socials?: RestaurantSocials;
+  isPublished?: boolean;
 }

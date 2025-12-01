@@ -86,6 +86,7 @@ export const restaurantFormSchema = z.object({
   attributes: restaurantAttributesSchema,
   media: restaurantMediaSchema,
   socials: restaurantSocialsSchema,
+  isPublished: z.boolean().optional(),
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;

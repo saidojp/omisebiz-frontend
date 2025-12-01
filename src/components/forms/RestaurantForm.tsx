@@ -53,6 +53,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         attributes: restaurant.attributes || {},
         media: restaurant.media || {},
         socials: restaurant.socials || {},
+        isPublished: restaurant.isPublished || false,
       }
     : {
         name: '',
@@ -66,6 +67,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         attributes: {},
         media: {},
         socials: {},
+        isPublished: false,
       };
 
   const methods = useForm<RestaurantFormData>({
