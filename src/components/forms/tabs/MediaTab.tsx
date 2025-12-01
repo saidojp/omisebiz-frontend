@@ -185,7 +185,7 @@ export default function MediaTab() {
                       right: 4,
                       bgcolor: 'rgba(255,255,255,0.8)',
                     }}
-                    onClick={() => removeGalleryImage(index)}
+                    onClick={() => handleRemoveGalleryImage(index)}
                   >
                     <Delete fontSize="small" />
                   </IconButton>

@@ -16,6 +16,8 @@ import {
   Alert,
   TextField,
   InputAdornment,
+  Stack,
+  Paper,
 } from '@mui/material';
 import {
   Add,
@@ -24,6 +26,7 @@ import {
   Visibility,
   Search,
   Restaurant as RestaurantIcon,
+  LocationOn,
 } from '@mui/icons-material';
 import api from '@/lib/api';
 import type { Restaurant } from '@/lib/types';
@@ -237,9 +240,9 @@ export default function RestaurantsPage() {
                   </Button>
                 </CardActions>
               </Card>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       )}
 
       {/* No Search Results */}
