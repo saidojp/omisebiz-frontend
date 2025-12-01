@@ -53,7 +53,6 @@ export default async function RestaurantPage({ params }: Props) {
       <HeroSection restaurant={restaurant} />
       
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
           {/* Left Column - Main Info */}
           <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 66.666%' } }}>
@@ -116,7 +115,6 @@ export default async function RestaurantPage({ params }: Props) {
             </Box>
           </Box>
         </Box>
-      </Container>
       </Container>
     </Box>
   );
