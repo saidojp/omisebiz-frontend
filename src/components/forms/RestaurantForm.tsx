@@ -45,7 +45,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         name: restaurant.name,
         description: restaurant.description || '',
         category: restaurant.category || '',
-        priceRange: restaurant.priceRange || '$$',
+        priceRange: restaurant.priceRange || '',
         contacts: restaurant.contacts || {},
         address: restaurant.address || {},
         location: restaurant.location || null,
