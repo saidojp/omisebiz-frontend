@@ -137,6 +137,17 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         setTimeout(() => router.push('/dashboard/restaurants'), 1500);
       } else {
         const response = await api.patch(`/restaurants/${restaurant?.id}`, payload);
+        
+        // Handle publish status change separately if needed
+        if (restaurant && data.isPublished !== restaurant.isPublished) {
+          console.log(`Updating publish status to: ${data.isPublished}`);
+          if (data.isPublished) {
+            await api.patch(`/restaurants/${restaurant.id}/publish`);
+          } else {
+            await api.patch(`/restaurants/${restaurant.id}/unpublish`);
+          }
+        }
+
         console.log('UPDATE response:', response.data);
         setSuccess('Restaurant updated successfully!');
         setTimeout(() => router.push('/dashboard/restaurants'), 1000);
