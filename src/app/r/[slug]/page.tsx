@@ -23,17 +23,33 @@ export default function RestaurantPage() {
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
+        console.log('=== STARTING FETCH ===');
         console.log('Fetching restaurant with slug:', slug);
-        const data = await getRestaurantBySlug(slug);
-        console.log('Restaurant data:', data);
         
+        const data = await getRestaurantBySlug(slug);
+        
+        console.log('=== RAW DATA RECEIVED ===');
+        console.log('Full response:', data);
+        console.log('data.success:', data.success);
+        console.log('data.data:', data.data);
+        console.log('data.data?.restaurant:', data.data?.restaurant);
+        
+        // Check different possible structures
         if (data.data?.restaurant) {
+          console.log('✅ Found restaurant at data.data.restaurant');
           setRestaurant(data.data.restaurant);
+        } else if (data.restaurant) {
+          console.log('✅ Found restaurant at data.restaurant');
+          setRestaurant(data.restaurant);
         } else {
+          console.error('❌ Restaurant not found in response structure');
+          console.log('Checked: data.data.restaurant and data.restaurant');
           setError('Restaurant not found');
         }
       } catch (err: any) {
-        console.error('Error fetching restaurant:', err);
+        console.error('=== ERROR CAUGHT ===');
+        console.error('Full error:', err);
+        console.error('Error response:', err.response);
         const errorMessage = err.response?.data?.error || err.message || 'Failed to load restaurant';
         const errorDetails = err.response?.status ? `Status: ${err.response.status}` : '';
         setError(`${errorMessage} ${errorDetails}`);
