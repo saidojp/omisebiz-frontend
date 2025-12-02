@@ -15,7 +15,11 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
-import { Save, Publish } from '@mui/icons-material';
+import {
+  Save,
+  Publish,
+  Visibility,
+} from '@mui/icons-material';
 import { restaurantFormSchema, type RestaurantFormData } from '@/lib/validations';
 import { defaultHours } from '@/lib/constants';
 import api from '@/lib/api';
@@ -273,13 +277,24 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         {/* Form Actions */}
         <Paper sx={{ p: 2 }}>
           <Stack direction="row" spacing={2} justifyContent="space-between">
-            <Button
-              variant="outlined"
-              onClick={handleBack}
-              disabled={activeTab === 0 || loading}
-            >
-              Back
-            </Button>
+              <Button
+                variant="outlined"
+                onClick={handleBack}
+                disabled={activeTab === 0 || loading}
+              >
+                Back
+              </Button>
+
+              {mode === 'edit' && restaurant?.slug && (
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={() => window.open(`/r/${restaurant.slug}`, '_blank')}
+                  startIcon={<Visibility />}
+                >
+                  View Public Page
+                </Button>
+              )}
 
             <Stack direction="row" spacing={2}>
               {mode === 'edit' && (

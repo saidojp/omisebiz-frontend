@@ -228,6 +228,12 @@ export default function RestaurantsPage() {
                 <CardActions>
                   <Button size="small" onClick={(e) => {
                     e.stopPropagation();
+                    window.open(`/r/${restaurant.slug}`, '_blank');
+                  }}>
+                    View
+                  </Button>
+                  <Button size="small" onClick={(e) => {
+                    e.stopPropagation();
                     router.push(`/dashboard/restaurants/${restaurant.id}/edit`);
                   }}>
                     Edit

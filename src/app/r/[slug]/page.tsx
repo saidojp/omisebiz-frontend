@@ -34,7 +34,9 @@ export default function RestaurantPage() {
         }
       } catch (err: any) {
         console.error('Error fetching restaurant:', err);
-        setError(err.response?.data?.error || 'Failed to load restaurant');
+        const errorMessage = err.response?.data?.error || err.message || 'Failed to load restaurant';
+        const errorDetails = err.response?.status ? `Status: ${err.response.status}` : '';
+        setError(`${errorMessage} ${errorDetails}`);
       } finally {
         setLoading(false);
       }
