@@ -164,7 +164,7 @@ export default function RestaurantsPage() {
                   cursor: 'pointer',
                   '&:hover': { boxShadow: 6 },
                 }}
-                onClick={() => router.push(`/dashboard/restaurants/${restaurant.id}`)}
+                onClick={() => router.push(`/dashboard/restaurants/${restaurant.id}/edit`)}
               >
                 {restaurant.media?.cover ? (
                   <CardMedia
