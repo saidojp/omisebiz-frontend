@@ -37,7 +37,7 @@ api.interceptors.response.use(
 
 // Public API
 export const getRestaurantBySlug = async (slug: string) => {
-  const response = await api.get(`/public/restaurants/${slug}`);
+  const response = await api.get(`/api/public/restaurants/${slug}`);
   return response.data;
 };
 
