@@ -41,4 +41,9 @@ export const getRestaurantBySlug = async (slug: string) => {
   return response.data;
 };
 
+export const regenerateRestaurantSlug = async (id: string) => {
+  const response = await api.patch(`/restaurants/${id}/regenerate-slug`);
+  return response.data;
+};
+
 export default api;

@@ -363,6 +363,28 @@ Authorization: Bearer <token>
 {
   "restaurant": {
     /* updated restaurant object */
+    /* Note: slug is automatically regenerated if name changed */
+  }
+}
+```
+
+---
+
+### Regenerate Slug
+**PATCH** `/restaurants/:id/regenerate-slug`
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "restaurant": {
+    "id": "cm456xyz",
+    "slug": "new-generated-slug",
+    /* ... */
   }
 }
 ```

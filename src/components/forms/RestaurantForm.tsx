@@ -260,7 +260,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
 
         {/* Tab Content */}
         <Paper sx={{ p: 3, mb: 3 }}>
-          {activeTab === 0 && <BasicInfoTab />}
+          {activeTab === 0 && <BasicInfoTab restaurantId={restaurant?.id} mode={mode} />}
           {activeTab === 1 && <ContactsTab />}
           {activeTab === 2 && <HoursTab />}
           {activeTab === 3 && <AttributesTab />}

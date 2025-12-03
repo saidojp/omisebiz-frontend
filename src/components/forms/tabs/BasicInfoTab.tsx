@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import {
   Stack,
@@ -8,10 +9,20 @@ import {
   FormControlLabel,
   Switch,
   Box,
+  Button,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 import type { RestaurantFormData } from '@/lib/validations';
+import { regenerateRestaurantSlug } from '@/lib/api';
 
-export default function BasicInfoTab() {
+interface BasicInfoTabProps {
+  restaurantId?: string;
+  mode: 'create' | 'edit';
+}
+
+export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) {
   const {
     register,
     control,
@@ -19,7 +30,24 @@ export default function BasicInfoTab() {
     watch,
   } = useFormContext<RestaurantFormData>();
 
+  const [regenerating, setRegenerating] = useState(false);
+  const [regenMessage, setRegenMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
   const description = watch('description') || '';
+
+  const handleRegenerateSlug = async () => {
+    if (!restaurantId) return;
+    setRegenerating(true);
+    setRegenMessage(null);
+    try {
+      const data = await regenerateRestaurantSlug(restaurantId);
+      setRegenMessage({ type: 'success', text: `Slug updated to: ${data.restaurant.slug}` });
+    } catch (error) {
+      setRegenMessage({ type: 'error', text: 'Failed to regenerate slug' });
+    } finally {
+      setRegenerating(false);
+    }
+  };
 
   return (
     <Stack spacing={3}>
@@ -28,18 +56,38 @@ export default function BasicInfoTab() {
       </Typography>
 
       {/* Restaurant Name */}
-      <TextField
-        {...register('name')}
-        label="Restaurant Name"
-        required
-        fullWidth
-        error={!!errors.name}
-        helperText={
-          errors.name?.message || 
-          "⚠️ Note: Changing the name won't update the public URL address"
-        }
-        placeholder="e.g., Sakura Sushi Bar"
-      />
+      <Box>
+        <TextField
+          {...register('name')}
+          label="Restaurant Name"
+          required
+          fullWidth
+          error={!!errors.name}
+          helperText={
+            errors.name?.message || 
+            "ℹ️ The public URL will automatically update based on the restaurant name"
+          }
+          placeholder="e.g., Sakura Sushi Bar"
+        />
+        {mode === 'edit' && restaurantId && (
+          <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <Button
+              size="small"
+              variant="text"
+              onClick={handleRegenerateSlug}
+              disabled={regenerating}
+              startIcon={regenerating ? <CircularProgress size={16} /> : <Refresh />}
+            >
+              Regenerate Public URL
+            </Button>
+            {regenMessage && (
+              <Alert severity={regenMessage.type} sx={{ mt: 1, py: 0, px: 2 }}>
+                {regenMessage.text}
+              </Alert>
+            )}
+          </Box>
+        )}
+      </Box>
 
       {/* Category */}
       <TextField
