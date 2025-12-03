@@ -244,7 +244,10 @@ export default function RestaurantsPage() {
                       height="200"
                       image={restaurant.media.cover}
                       alt={restaurant.name}
-                      sx={{ opacity: uploadingId === restaurant.id ? 0.5 : 1 }}
+                      sx={{ 
+                        opacity: uploadingId === restaurant.id ? 0.5 : 1,
+                        objectFit: 'cover'
+                      }}
                     />
                   ) : (
                     <Box

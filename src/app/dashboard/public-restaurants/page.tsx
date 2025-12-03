@@ -146,6 +146,7 @@ export default function PublicRestaurantsPage() {
                       height="200"
                       image={restaurant.media.cover}
                       alt={restaurant.name}
+                      sx={{ objectFit: 'cover' }}
                     />
                   ) : (
                     <Box
