@@ -349,6 +349,8 @@ Authorization: Bearer <token>
 Authorization: Bearer <token>
 ```
 
+**Note:** When the `name` field is updated, the `slug` will be automatically regenerated based on the new name to ensure the public URL reflects the current restaurant name.
+
 **Request Body (partial update):**
 ```json
 {
@@ -362,15 +364,30 @@ Authorization: Bearer <token>
 ```json
 {
   "restaurant": {
-    /* updated restaurant object */
-    /* Note: slug is automatically regenerated if name changed */
+    "id": "cm456xyz",
+    "slug": "updated-restaurant-name",  // Auto-regenerated from new name
+    "name": "Updated Restaurant Name",
+    "description": "Updated description",
+    "priceRange": "$$$$",
+    /* ... other fields */
   }
 }
 ```
 
+**Example:**
+```bash
+# Update restaurant name - slug will auto-regenerate
+curl -X PATCH http://localhost:4000/restaurants/cm456xyz \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Sushi Bar Tokyo"}'
+
+# Response will include: "slug": "sushi-bar-tokyo"
+```
+
 ---
 
-### Regenerate Slug
+### Manually Regenerate Slug
 **PATCH** `/restaurants/:id/regenerate-slug`
 
 **Headers:**
@@ -378,13 +395,16 @@ Authorization: Bearer <token>
 Authorization: Bearer <token>
 ```
 
+**Description:** Manually regenerate the slug from the current restaurant name. Useful for fixing existing restaurants or handling edge cases.
+
 **Response (200 OK):**
 ```json
 {
   "restaurant": {
     "id": "cm456xyz",
     "slug": "new-generated-slug",
-    /* ... */
+    "name": "Current Restaurant Name",
+    /* ... full restaurant object */
   }
 }
 ```
@@ -540,6 +560,42 @@ DELETE /api/upload/uuid.jpg
 ---
 
 ## 🌐 Public API
+
+### List Public Restaurants
+**GET** `/api/public/restaurants`
+
+**No authentication required**
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "restaurants": [
+      {
+        "id": "cm456xyz",
+        "slug": "my-restaurant",
+        "name": "My Restaurant",
+        "description": "A wonderful place to eat",
+        "category": "Japanese",
+        "media": {
+          "cover": "https://pub-xxx.r2.dev/cover.jpg",
+          "logo": "https://pub-xxx.r2.dev/logo.jpg"
+        },
+        "location": {
+          "lat": 35.6762,
+          "lng": 139.6503
+        },
+        "priceRange": "$$",
+        "isPublished": true,
+        "createdAt": "2025-11-26T10:00:00.000Z"
+      }
+    ]
+  }
+}
+```
+
+---
 
 ### Get Restaurant by Slug
 **GET** `/api/public/restaurants/:slug`

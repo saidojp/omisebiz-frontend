@@ -131,6 +131,7 @@
 
 **D. Атрибуты заведения**
 
+* Ценовая категория ($, $$, $$$, $$$$)  
 * Доступность:  
   * Wheelchair accessible entrance  
   * Wheelchair accessible parking  
@@ -398,6 +399,7 @@ PATCH  /api/restaurants/:id/unpublish \# Снятие с публикации
 
 **Public API (открыто):**
 
+GET    /api/public/restaurants        \# Список всех опубликованных ресторанов
 GET    /api/public/restaurants/:slug  \# Публичные данные ресторана
 
 **Media Upload:**

@@ -46,4 +46,9 @@ export const regenerateRestaurantSlug = async (id: string) => {
   return response.data;
 };
 
+export const getPublicRestaurants = async () => {
+  const response = await api.get('/api/public/restaurants');
+  return response.data;
+};
+
 export default api;

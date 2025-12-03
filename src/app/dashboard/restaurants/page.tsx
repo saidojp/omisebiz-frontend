@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -18,6 +18,8 @@ import {
   InputAdornment,
   Stack,
   Paper,
+  CircularProgress,
+  Tooltip,
 } from '@mui/material';
 import {
   Add,
@@ -27,6 +29,7 @@ import {
   Search,
   Restaurant as RestaurantIcon,
   LocationOn,
+  PhotoCamera,
 } from '@mui/icons-material';
 import api from '@/lib/api';
 import type { Restaurant } from '@/lib/types';
@@ -37,6 +40,10 @@ export default function RestaurantsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Upload state
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchRestaurants();
@@ -65,12 +72,75 @@ export default function RestaurantsPage() {
     }
   };
 
+  const handleUploadClick = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setUploadingId(id);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !uploadingId) return;
+
+    // Reset input
+    e.target.value = '';
+
+    try {
+      // 1. Upload image
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      // Show loading state on the specific card? 
+      // We can use uploadingId to show a spinner on the card.
+      
+      const uploadRes = await api.post('/api/upload/image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const imageUrl = uploadRes.data.data.url;
+
+      // 2. Update restaurant
+      const restaurantToUpdate = restaurants.find(r => r.id === uploadingId);
+      if (!restaurantToUpdate) return;
+
+      const updatedMedia = {
+        ...restaurantToUpdate.media,
+        cover: imageUrl
+      };
+
+      await api.patch(`/restaurants/${uploadingId}`, {
+        media: updatedMedia
+      });
+
+      // 3. Update local state
+      setRestaurants(restaurants.map(r => 
+        r.id === uploadingId 
+          ? { ...r, media: updatedMedia }
+          : r
+      ));
+
+    } catch (err) {
+      console.error('Upload failed:', err);
+      alert('Failed to upload image');
+    } finally {
+      setUploadingId(null);
+    }
+  };
+
   const filteredRestaurants = restaurants.filter((r) =>
     r.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <Box>
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        hidden
+        accept="image/*"
+        onChange={handleFileChange}
+      />
+
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
@@ -163,29 +233,79 @@ export default function RestaurantsPage() {
                   flexDirection: 'column',
                   cursor: 'pointer',
                   '&:hover': { boxShadow: 6 },
+                  position: 'relative'
                 }}
                 onClick={() => router.push(`/dashboard/restaurants/${restaurant.id}/edit`)}
               >
-                {restaurant.media?.cover ? (
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={restaurant.media.cover}
-                    alt={restaurant.name}
-                  />
-                ) : (
+                <Box sx={{ position: 'relative', height: 200, bgcolor: 'grey.200' }}>
+                  {restaurant.media?.cover ? (
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={restaurant.media.cover}
+                      alt={restaurant.name}
+                      sx={{ opacity: uploadingId === restaurant.id ? 0.5 : 1 }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <RestaurantIcon sx={{ fontSize: 60, color: 'grey.400' }} />
+                    </Box>
+                  )}
+                  
+                  {/* Upload Overlay/Button */}
                   <Box
                     sx={{
-                      height: 200,
-                      bgcolor: 'grey.200',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      bgcolor: 'rgba(0,0,0,0.3)',
+                      opacity: 0,
+                      transition: 'opacity 0.2s',
+                      '&:hover': { opacity: 1 },
                     }}
                   >
-                    <RestaurantIcon sx={{ fontSize: 60, color: 'grey.400' }} />
+                     <Tooltip title="Change Cover Image">
+                      <IconButton 
+                        onClick={(e) => handleUploadClick(restaurant.id, e)}
+                        sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'grey.100' } }}
+                      >
+                        <PhotoCamera color="primary" />
+                      </IconButton>
+                    </Tooltip>
                   </Box>
-                )}
+
+                  {/* Loading Spinner */}
+                  {uploadingId === restaurant.id && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: 'rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      <CircularProgress />
+                    </Box>
+                  )}
+                </Box>
+
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="h6" component="div">

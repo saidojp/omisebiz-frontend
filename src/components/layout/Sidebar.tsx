@@ -20,6 +20,7 @@ import {
   Restaurant as RestaurantIcon,
   Add as AddIcon,
   Settings as SettingsIcon,
+  Storefront as StorefrontIcon,
 } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 260;
@@ -31,7 +32,12 @@ interface SidebarProps {
 
 const menuItems = [
   {
-    text: 'My Restaurants',
+    text: 'Restaurants',
+    icon: <StorefrontIcon />,
+    href: '/dashboard/public-restaurants',
+  },
+  {
+    text: 'My Business',
     icon: <RestaurantIcon />,
     href: '/dashboard/restaurants',
   },
