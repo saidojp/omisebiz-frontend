@@ -131,7 +131,6 @@
 
 **D. Атрибуты заведения**
 
-* Ценовая категория ($, $$, $$$, $$$$)  
 * Доступность:  
   * Wheelchair accessible entrance  
   * Wheelchair accessible parking  

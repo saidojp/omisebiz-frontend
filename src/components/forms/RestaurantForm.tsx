@@ -117,16 +117,10 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
       socials: cleanData(data.socials),
     };
 
-    // Handle priceRange - backend only accepts $, $$, $$$, $$$$
-    // If user entered custom format, omit it to avoid validation error
-    const validPriceRanges = ['$', '$$', '$$$', '$$$$'];
-    const priceRangeValue = data.priceRange && validPriceRanges.includes(data.priceRange) 
-      ? data.priceRange 
-      : undefined;
-
+    // Clean up optional string fields
     payload.description = data.description || undefined;
     payload.category = data.category || undefined;
-    payload.priceRange = priceRangeValue;
+    payload.priceRange = data.priceRange || undefined;
 
     console.log('Cleaned payload:', JSON.stringify(payload, null, 2));
     console.log('Payload size:', JSON.stringify(payload).length, 'bytes');

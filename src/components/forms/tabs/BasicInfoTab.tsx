@@ -34,7 +34,10 @@ export default function BasicInfoTab() {
         required
         fullWidth
         error={!!errors.name}
-        helperText={errors.name?.message}
+        helperText={
+          errors.name?.message || 
+          "⚠️ Note: Changing the name won't update the public URL address"
+        }
         placeholder="e.g., Sakura Sushi Bar"
       />
 
