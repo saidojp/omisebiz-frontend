@@ -17,7 +17,7 @@ import {
   Stack,
   Divider,
 } from '@mui/material';
-import { Login as LoginIcon, Restaurant } from '@mui/icons-material';
+import { Login as LoginIcon, Restaurant, PersonOutline } from '@mui/icons-material';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { loginSchema, type LoginFormData } from '@/lib/validations';
@@ -25,7 +25,7 @@ import type { AuthResponse } from '@/lib/types';
 
 export default function LoginPage() {
   const router = useRouter();
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const { setAuth, setGuestMode } = useAuthStore();
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,6 +56,11 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGuestLogin = () => {
+    setGuestMode();
+    router.push('/dashboard/public-restaurants');
   };
 
   return (

@@ -22,6 +22,7 @@ import {
   Settings as SettingsIcon,
   Storefront as StorefrontIcon,
 } from '@mui/icons-material';
+import { useAuthStore } from '@/lib/store';
 
 const DRAWER_WIDTH = 260;
 
@@ -57,6 +58,12 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isGuest } = useAuthStore();
+
+  // Filter menu items for guests
+  const visibleMenuItems = isGuest
+    ? menuItems.filter((item) => item.href === '/dashboard/public-restaurants')
+    : menuItems;
 
   const handleNavigation = (href: string) => {
     router.push(href);
@@ -86,7 +93,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
       {/* Navigation Menu */}
       <List sx={{ flex: 1, pt: 2 }}>
-        {menuItems.map((item) => (
+        {visibleMenuItems.map((item) => (
           <ListItem key={item.text} disablePadding sx={{ px: 2, mb: 0.5 }}>
             <ListItemButton
               onClick={() => handleNavigation(item.href)}

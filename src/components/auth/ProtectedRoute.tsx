@@ -7,7 +7,7 @@ import { CircularProgress, Box } from '@mui/material';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isGuest } = useAuthStore();
   const [mounted, setMounted] = useState(false);
 
   // Prevent hydration mismatch by only checking auth after mount
@@ -16,13 +16,13 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   }, []);
 
   useEffect(() => {
-    if (mounted && !isAuthenticated) {
+    if (mounted && !isAuthenticated && !isGuest) {
       router.push('/login');
     }
-  }, [mounted, isAuthenticated, router]);
+  }, [mounted, isAuthenticated, isGuest, router]);
 
   // Show loading on server and during initial client render
-  if (!mounted || !isAuthenticated) {
+  if (!mounted || (!isAuthenticated && !isGuest)) {
     return (
       <Box
         sx={{

@@ -7,14 +7,18 @@ import { useAuthStore } from '@/lib/store';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, isGuest, user } = useAuthStore();
 
   useEffect(() => {
-    // Redirect to restaurants list
-    router.push('/dashboard/restaurants');
-  }, [router]);
+    // Redirect guests to public restaurants, authenticated users to their restaurants
+    if (isGuest) {
+      router.push('/dashboard/public-restaurants');
+    } else {
+      router.push('/dashboard/restaurants');
+    }
+  }, [router, isGuest]);
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isGuest) {
     return (
       <Container>
         <Box
@@ -43,10 +47,10 @@ export default function DashboardPage() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Welcome, {user?.username}!
+          {isGuest ? 'Welcome, Guest!' : `Welcome, ${user?.username}!`}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Redirecting to restaurants...
+          Redirecting...
         </Typography>
       </Box>
     </Container>

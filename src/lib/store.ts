@@ -6,7 +6,9 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  isGuest: boolean;
   setAuth: (user: User, token: string) => void;
+  setGuestMode: () => void;
   logout: () => void;
   updateUser: (user: User) => void;
 }
@@ -17,19 +19,24 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      isGuest: false,
       
       setAuth: (user, token) => {
         if (typeof window !== 'undefined') {
           localStorage.setItem('token', token);
         }
-        set({ user, token, isAuthenticated: true });
+        set({ user, token, isAuthenticated: true, isGuest: false });
+      },
+      
+      setGuestMode: () => {
+        set({ user: null, token: null, isAuthenticated: true, isGuest: true });
       },
       
       logout: () => {
         if (typeof window !== 'undefined') {
           localStorage.removeItem('token');
         }
-        set({ user: null, token: null, isAuthenticated: false });
+        set({ user: null, token: null, isAuthenticated: false, isGuest: false });
       },
       
       updateUser: (user) => {

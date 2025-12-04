@@ -1,10 +1,20 @@
 'use client';
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Box, Container, Typography, Button, Stack } from "@mui/material";
-import { Restaurant, Login, AppRegistration } from "@mui/icons-material";
+import { Restaurant, Login, AppRegistration, PersonOutline } from "@mui/icons-material";
+import { useAuthStore } from "@/lib/store";
 
 export default function Home() {
+  const router = useRouter();
+  const { setGuestMode } = useAuthStore();
+
+  const handleGuestMode = () => {
+    setGuestMode();
+    router.push('/dashboard/public-restaurants');
+  };
+
   return (
     <Container maxWidth="lg">
       <Box
@@ -20,25 +30,24 @@ export default function Home() {
         <Restaurant sx={{ fontSize: 80, color: "primary.main", mb: 2 }} />
         
         <Typography variant="h2" component="h1" gutterBottom fontWeight="bold">
-          OmiseBiz
+          Y
         </Typography>
         
         <Typography variant="h5" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
-          Restaurant Management Platform
         </Typography>
         
         <Typography variant="body1" color="text.secondary" sx={{ mb: 6, maxWidth: 600 }}>
-          Centralized platform for managing multiple restaurant profiles. 
-          Streamline your business with our comprehensive management tools.
+         
         </Typography>
         
-        <Stack direction="row" spacing={2}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: { xs: '100%', sm: 'auto' } }}>
           <Button
             component={Link}
             href="/login"
             variant="contained"
             size="large"
             startIcon={<Login />}
+            sx={{ minWidth: 160 }}
           >
             Login
           </Button>
@@ -49,8 +58,19 @@ export default function Home() {
             variant="outlined"
             size="large"
             startIcon={<AppRegistration />}
+            sx={{ minWidth: 160 }}
           >
             Register
+          </Button>
+
+          <Button
+            onClick={handleGuestMode}
+            variant="text"
+            size="large"
+            startIcon={<PersonOutline />}
+            sx={{ minWidth: 160 }}
+          >
+            Continue as Guest
           </Button>
         </Stack>
       </Box>
