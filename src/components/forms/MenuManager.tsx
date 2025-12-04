@@ -20,9 +20,11 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  CircularProgress,
 } from '@mui/material';
-import { Add, Delete, Edit, Star } from '@mui/icons-material';
+import { Add, Delete, Edit, Star, Upload } from '@mui/icons-material';
 import { MenuItem as MenuItemType } from '@/lib/types';
+import api from '@/lib/api';
 
 interface MenuManagerProps {
   menuItems: MenuItemType[];
@@ -39,6 +41,7 @@ export default function MenuManager({
 }: MenuManagerProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItemType | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -48,6 +51,31 @@ export default function MenuManager({
   });
 
   const categories = ['Appetizers', 'Main Course', 'Desserts', 'Beverages', 'Other'];
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await api.post('/api/upload/image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        imageUrl: response.data.data.url,
+      }));
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      // You might want to show an error message to the user here
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleOpenDialog = (item?: MenuItemType) => {
     if (item) {
@@ -246,13 +274,63 @@ export default function MenuManager({
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
-            <TextField
-              label="Image URL"
-              fullWidth
-              value={formData.imageUrl}
-              onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-              placeholder="https://..."
-            />
+            <Box>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                Dish Image
+              </Typography>
+              {formData.imageUrl ? (
+                <Box sx={{ position: 'relative', width: '100%', height: 200, mb: 1 }}>
+                  <Box
+                    component="img"
+                    src={formData.imageUrl}
+                    alt="Preview"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: 1,
+                    }}
+                  />
+                  <IconButton
+                    size="small"
+                    color="error"
+                    onClick={() => setFormData({ ...formData, imageUrl: '' })}
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      bgcolor: 'rgba(255,255,255,0.9)',
+                      '&:hover': { bgcolor: 'rgba(255,255,255,1)' },
+                    }}
+                  >
+                    <Delete fontSize="small" />
+                  </IconButton>
+                </Box>
+              ) : (
+                <Button
+                  variant="outlined"
+                  component="label"
+                  fullWidth
+                  sx={{ height: 100, borderStyle: 'dashed' }}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                      <Upload />
+                      <Typography variant="body2">Upload Image</Typography>
+                    </Box>
+                  )}
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                  />
+                </Button>
+              )}
+            </Box>
           </Box>
         </DialogContent>
         <DialogActions>

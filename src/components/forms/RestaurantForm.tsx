@@ -126,6 +126,10 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
     payload.description = data.description || undefined;
     payload.category = data.category || undefined;
     payload.priceRange = data.priceRange || undefined;
+    
+    // Explicitly handle featuredDish to ensure it's cleared if removed
+    // If undefined/null, send null to backend to clear the field
+    payload.featuredDish = (data.featuredDish || null) as any;
 
     console.log('Cleaned payload:', JSON.stringify(payload, null, 2));
     console.log('Payload size:', JSON.stringify(payload).length, 'bytes');
@@ -275,7 +279,25 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
           {activeTab === 6 && (
             <MenuManager
               menuItems={methods.watch('menuItems') || []}
-              onChange={(items) => methods.setValue('menuItems', items)}
+              onChange={(items) => {
+                methods.setValue('menuItems', items);
+                
+                // If the featured dish is no longer in the menu items list, remove it
+                const currentFeatured = methods.getValues('featuredDish');
+                if (currentFeatured) {
+                  let exists = false;
+                  if (currentFeatured.menuItemId) {
+                    exists = !!items.find((i) => i.id === currentFeatured.menuItemId);
+                  } else {
+                    // Fallback: check by name and price if ID is missing (legacy data)
+                    exists = !!items.find((i) => i.name === currentFeatured.name && i.price === currentFeatured.price);
+                  }
+                  
+                  if (!exists) {
+                    methods.setValue('featuredDish', undefined);
+                  }
+                }
+              }}
               onFeaturedChange={(itemId) => {
                 const item = (methods.watch('menuItems') || []).find((i: any) => i.id === itemId);
                 if (item) {
