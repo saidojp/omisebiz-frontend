@@ -26,29 +26,30 @@ export default function FeaturedDish({ featuredDish }: FeaturedDishProps) {
         mb: 6,
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: 300 }}>
-        {/* Image Section - Takes more space now */}
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: 180 }}>
+        {/* Image Section */}
         {featuredDish.imageUrl && (
-          <Box sx={{ position: 'relative', width: { xs: '100%', md: '55%' } }}>
+          <Box sx={{ position: 'relative', width: { xs: '100%', md: '40%' } }}>
             <CardMedia
               component="img"
               sx={{
                 width: '100%',
                 height: '100%',
-                minHeight: { xs: 250, md: '100%' },
+                minHeight: { xs: 200, md: '100%' },
                 objectFit: 'cover',
               }}
               image={featuredDish.imageUrl}
               alt={featuredDish.name}
             />
-            {/* Badge overlaid on image for better integration */}
+            {/* Badge overlaid on image */}
             <Chip
-              icon={<Star sx={{ color: '#fff !important' }} />}
-              label="Chef's Recommendation"
+              icon={<Star sx={{ color: '#fff !important', fontSize: '1rem !important' }} />}
+              label="Recommended"
+              size="small"
               sx={{
                 position: 'absolute',
-                top: 16,
-                left: 16,
+                top: 12,
+                left: 12,
                 bgcolor: 'rgba(0, 0, 0, 0.75)',
                 color: '#fff',
                 fontWeight: 600,
@@ -63,7 +64,7 @@ export default function FeaturedDish({ featuredDish }: FeaturedDishProps) {
         <CardContent 
           sx={{ 
             flex: 1, 
-            p: { xs: 3, md: 5 },
+            p: { xs: 2, md: 3 },
             display: 'flex', 
             flexDirection: 'column',
             justifyContent: 'center',
