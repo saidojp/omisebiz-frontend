@@ -31,6 +31,7 @@ import HoursTab from './tabs/HoursTab';
 import AttributesTab from './tabs/AttributesTab';
 import MediaTab from './tabs/MediaTab';
 import SocialTab from './tabs/SocialTab';
+import MenuManager from './MenuManager';
 
 interface RestaurantFormProps {
   restaurant?: Restaurant;
@@ -57,6 +58,8 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         attributes: restaurant.attributes || {},
         media: restaurant.media || {},
         socials: restaurant.socials || {},
+        menuItems: restaurant.menuItems || [],
+        featuredDish: restaurant.featuredDish || undefined,
         isPublished: restaurant.isPublished || false,
       }
     : {
@@ -71,6 +74,8 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         attributes: {},
         media: {},
         socials: {},
+        menuItems: [],
+        featuredDish: undefined,
         isPublished: false,
       };
 
@@ -196,7 +201,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
   };
 
   const handleNext = () => {
-    if (activeTab < 5) {
+    if (activeTab < 6) {
       setActiveTab(activeTab + 1);
     }
   };
@@ -255,6 +260,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
             <Tab label="Attributes" />
             <Tab label="Media" />
             <Tab label="Social Media" />
+            <Tab label="Menu" />
           </Tabs>
         </Paper>
 
@@ -266,6 +272,27 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
           {activeTab === 3 && <AttributesTab />}
           {activeTab === 4 && <MediaTab />}
           {activeTab === 5 && <SocialTab />}
+          {activeTab === 6 && (
+            <MenuManager
+              menuItems={methods.watch('menuItems') || []}
+              onChange={(items) => methods.setValue('menuItems', items)}
+              onFeaturedChange={(itemId) => {
+                const item = (methods.watch('menuItems') || []).find((i: any) => i.id === itemId);
+                if (item) {
+                  methods.setValue('featuredDish', {
+                    menuItemId: item.id,
+                    name: item.name,
+                    description: item.description,
+                    price: item.price,
+                    imageUrl: item.imageUrl,
+                  });
+                } else {
+                  methods.setValue('featuredDish', undefined);
+                }
+              }}
+              featuredItemId={methods.watch('featuredDish')?.menuItemId}
+            />
+          )}
         </Paper>
 
         {/* Form Actions */}
@@ -302,7 +329,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
                 </Button>
               )}
               
-              {activeTab < 5 ? (
+              {activeTab < 6 ? (
                 <Button variant="contained" onClick={handleNext} disabled={loading}>
                   Next
                 </Button>

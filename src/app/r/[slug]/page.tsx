@@ -11,6 +11,8 @@ import InfoCard from '@/components/restaurant/InfoCard';
 import HoursDisplay from '@/components/restaurant/HoursDisplay';
 import PhotoGallery from '@/components/restaurant/PhotoGallery';
 import SocialLinks from '@/components/restaurant/SocialLinks';
+import FeaturedDish from '@/components/restaurant/FeaturedDish';
+import MenuDisplay from '@/components/restaurant/MenuDisplay';
 
 export default function RestaurantPage() {
   const params = useParams();
@@ -114,6 +116,13 @@ export default function RestaurantPage() {
               <ActionBar restaurant={restaurant} />
             </Box>
 
+            {/* Featured Dish Section */}
+            {restaurant.featuredDish && (
+              <Box sx={{ mb: 4 }}>
+                <FeaturedDish featuredDish={restaurant.featuredDish} />
+              </Box>
+            )}
+
             <Box sx={{ mb: 4 }}>
               <Typography variant="h5" gutterBottom fontWeight="bold">
                 About
@@ -129,6 +138,11 @@ export default function RestaurantPage() {
               </Typography>
               <PhotoGallery media={restaurant.media} />
             </Box>
+
+            {/* Menu Section */}
+            {restaurant.menuItems && restaurant.menuItems.length > 0 && (
+              <MenuDisplay menuItems={restaurant.menuItems} />
+            )}
           </Box>
 
           {/* Right Column - Sidebar Info */}

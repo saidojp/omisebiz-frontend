@@ -74,6 +74,23 @@ export const restaurantSocialsSchema = z.object({
   youtube: z.string().url().optional().or(z.literal('')),
 }).optional();
 
+export const menuItemSchema = z.object({
+  id: z.string().min(1, 'Menu item ID is required'),
+  name: z.string().min(1, 'Menu item name is required'),
+  description: z.string().optional(),
+  price: z.string().min(1, 'Price is required'),
+  category: z.string().optional(),
+  imageUrl: z.string().url().optional().or(z.literal('')),
+});
+
+export const featuredDishSchema = z.object({
+  menuItemId: z.string().optional(),
+  name: z.string().min(1, 'Featured dish name is required'),
+  description: z.string().optional(),
+  price: z.string().min(1, 'Price is required'),
+  imageUrl: z.string().url().optional().or(z.literal('')),
+}).optional();
+
 export const restaurantFormSchema = z.object({
   name: z.string().min(1, 'Restaurant name is required'),
   description: z.string().max(750, 'Description must be less than 750 characters').optional(),
@@ -86,6 +103,8 @@ export const restaurantFormSchema = z.object({
   attributes: restaurantAttributesSchema,
   media: restaurantMediaSchema,
   socials: restaurantSocialsSchema,
+  menuItems: z.array(menuItemSchema).optional(),
+  featuredDish: featuredDishSchema,
   isPublished: z.boolean().optional(),
 });
 
@@ -93,3 +112,5 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type RestaurantFormData = z.infer<typeof restaurantFormSchema>;
 export type HourEntry = z.infer<typeof hourEntrySchema>;
+export type MenuItem = z.infer<typeof menuItemSchema>;
+export type FeaturedDish = z.infer<typeof featuredDishSchema>;

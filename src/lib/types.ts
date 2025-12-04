@@ -83,6 +83,23 @@ export interface RestaurantSocials {
   youtube?: string;
 }
 
+export interface MenuItem {
+  id: string;
+  name: string;
+  description?: string;
+  price: string;
+  category?: string;
+  imageUrl?: string;
+}
+
+export interface FeaturedDish {
+  menuItemId?: string;
+  name: string;
+  description?: string;
+  price: string;
+  imageUrl?: string;
+}
+
 export interface Restaurant {
   id: string;
   slug: string;
@@ -97,6 +114,8 @@ export interface Restaurant {
   attributes?: RestaurantAttributes;
   media?: RestaurantMedia;
   socials?: RestaurantSocials;
+  menuItems?: MenuItem[];
+  featuredDish?: FeaturedDish;
   isPublished: boolean;
   userId: string;
   createdAt: string;
@@ -127,5 +146,7 @@ export interface RestaurantFormData {
   attributes?: RestaurantAttributes;
   media?: RestaurantMedia;
   socials?: RestaurantSocials;
+  menuItems?: MenuItem[];
+  featuredDish?: FeaturedDish;
   isPublished?: boolean;
 }
