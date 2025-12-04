@@ -1,6 +1,4 @@
-'use client';
-
-import { Box, Card, CardContent, CardMedia, Chip, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Chip, Typography, useTheme } from '@mui/material';
 import { Star } from '@mui/icons-material';
 import { FeaturedDish as FeaturedDishType } from '@/lib/types';
 
@@ -9,60 +7,87 @@ interface FeaturedDishProps {
 }
 
 export default function FeaturedDish({ featuredDish }: FeaturedDishProps) {
+  const theme = useTheme();
+
   return (
     <Card
+      elevation={0}
       sx={{
         position: 'relative',
-        overflow: 'visible',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        mb: 4,
+        overflow: 'hidden',
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 3,
+        transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: theme.shadows[4],
+        },
+        mb: 6,
       }}
     >
-      {/* Recommended Badge */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: -12,
-          right: 16,
-          zIndex: 1,
-        }}
-      >
-        <Chip
-          icon={<Star sx={{ color: '#FFD700 !important' }} />}
-          label="Recommended"
-          sx={{
-            bgcolor: '#FFD700',
-            color: '#000',
-            fontWeight: 'bold',
-            fontSize: '0.875rem',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          }}
-        />
-      </Box>
-
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
-        {/* Image */}
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: 300 }}>
+        {/* Image Section - Takes more space now */}
         {featuredDish.imageUrl && (
-          <CardMedia
-            component="img"
-            sx={{
-              width: { xs: '100%', sm: 200 },
-              height: { xs: 200, sm: 200 },
-              objectFit: 'cover',
-            }}
-            image={featuredDish.imageUrl}
-            alt={featuredDish.name}
-          />
+          <Box sx={{ position: 'relative', width: { xs: '100%', md: '55%' } }}>
+            <CardMedia
+              component="img"
+              sx={{
+                width: '100%',
+                height: '100%',
+                minHeight: { xs: 250, md: '100%' },
+                objectFit: 'cover',
+              }}
+              image={featuredDish.imageUrl}
+              alt={featuredDish.name}
+            />
+            {/* Badge overlaid on image for better integration */}
+            <Chip
+              icon={<Star sx={{ color: '#fff !important' }} />}
+              label="Chef's Recommendation"
+              sx={{
+                position: 'absolute',
+                top: 16,
+                left: 16,
+                bgcolor: 'rgba(0, 0, 0, 0.75)',
+                color: '#fff',
+                fontWeight: 600,
+                backdropFilter: 'blur(4px)',
+                border: '1px solid rgba(255,255,255,0.2)',
+              }}
+            />
+          </Box>
         )}
 
-        {/* Content */}
-        <CardContent sx={{ flex: 1, p: 3 }}>
+        {/* Content Section */}
+        <CardContent 
+          sx={{ 
+            flex: 1, 
+            p: { xs: 3, md: 5 },
+            display: 'flex', 
+            flexDirection: 'column',
+            justifyContent: 'center',
+            bgcolor: 'background.paper'
+          }}
+        >
           <Typography
-            variant="h5"
+            variant="overline"
+            color="primary"
+            sx={{ fontWeight: 700, letterSpacing: 1.2, mb: 1 }}
+          >
+            Featured Dish
+          </Typography>
+          
+          <Typography
+            variant="h4"
             component="h3"
             gutterBottom
-            sx={{ fontWeight: 'bold', color: 'white' }}
+            sx={{ 
+              fontWeight: 800, 
+              color: 'text.primary',
+              lineHeight: 1.2,
+              mb: 2
+            }}
           >
             {featuredDish.name}
           </Typography>
@@ -70,26 +95,28 @@ export default function FeaturedDish({ featuredDish }: FeaturedDishProps) {
           {featuredDish.description && (
             <Typography
               variant="body1"
+              color="text.secondary"
               sx={{
-                color: 'rgba(255, 255, 255, 0.9)',
-                mb: 2,
-                lineHeight: 1.6,
+                mb: 4,
+                lineHeight: 1.7,
+                fontSize: '1.05rem'
               }}
             >
               {featuredDish.description}
             </Typography>
           )}
 
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 'bold',
-              color: '#FFD700',
-              mt: 'auto',
-            }}
-          >
-            {featuredDish.price}
-          </Typography>
+          <Box sx={{ mt: 'auto', display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Typography
+              variant="h4"
+              color="primary"
+              sx={{
+                fontWeight: 700,
+              }}
+            >
+              {featuredDish.price}
+            </Typography>
+          </Box>
         </CardContent>
       </Box>
     </Card>

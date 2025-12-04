@@ -109,19 +109,20 @@ export default function RestaurantPage() {
       <HeroSection restaurant={restaurant} />
       
       <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Box sx={{ mb: 4 }}>
+          <ActionBar restaurant={restaurant} />
+        </Box>
+
+        {/* Featured Dish Section - Full Width */}
+        {restaurant.featuredDish && (
+          <Box sx={{ mb: 6 }}>
+            <FeaturedDish featuredDish={restaurant.featuredDish} />
+          </Box>
+        )}
+
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
           {/* Left Column - Main Info */}
           <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 66.666%' } }}>
-            <Box sx={{ mb: 4 }}>
-              <ActionBar restaurant={restaurant} />
-            </Box>
-
-            {/* Featured Dish Section */}
-            {restaurant.featuredDish && (
-              <Box sx={{ mb: 4 }}>
-                <FeaturedDish featuredDish={restaurant.featuredDish} />
-              </Box>
-            )}
 
             <Box sx={{ mb: 4 }}>
               <Typography variant="h5" gutterBottom fontWeight="bold">
