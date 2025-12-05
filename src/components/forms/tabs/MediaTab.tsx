@@ -24,10 +24,10 @@ export default function MediaTab() {
   const [error, setError] = useState('');
 
   const logo = watch('media.logo');
-  const cover = watch('media.cover');
+
   const gallery = watch('media.gallery') || [];
 
-  const handleUpload = async (file: File, field: 'logo' | 'cover' | 'gallery') => {
+  const handleUpload = async (file: File, field: 'logo' | 'gallery') => {
     setUploading(true);
     setError('');
 
@@ -115,50 +115,7 @@ export default function MediaTab() {
         )}
       </Box>
 
-      {/* Cover Image */}
-      <Box>
-        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-          Cover Image (Wide Image)
-        </Typography>
-        {cover ? (
-          <Box sx={{ position: 'relative', maxWidth: 600 }}>
-            <Card>
-              <CardMedia
-                component="img"
-                image={cover}
-                alt="Cover"
-                sx={{ width: '100%', height: 300, objectFit: 'cover' }}
-              />
-            </Card>
-            <IconButton
-              size="small"
-              color="error"
-              onClick={() => setValue('media.cover', '')}
-              sx={{ position: 'absolute', top: 8, right: 8, bgcolor: 'white' }}
-            >
-              <Delete />
-            </IconButton>
-          </Box>
-        ) : (
-          <Button
-            variant="outlined"
-            component="label"
-            startIcon={uploading ? <CircularProgress size={20} /> : <Upload />}
-            disabled={uploading}
-          >
-            Upload Cover Image
-            <input
-              type="file"
-              hidden
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleUpload(file, 'cover');
-              }}
-            />
-          </Button>
-        )}
-      </Box>
+
 
       {/* Gallery */}
       <Box>

@@ -140,28 +140,7 @@ export default function PublicRestaurantsPage() {
                   onClick={() => router.push(`/r/${restaurant.slug}`)}
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}
                 >
-                  {restaurant.media?.cover ? (
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={restaurant.media.cover}
-                      alt={restaurant.name}
-                      sx={{ objectFit: 'cover' }}
-                    />
-                  ) : (
-                    <Box
-                      sx={{
-                        width: '100%',
-                        height: 200,
-                        bgcolor: 'grey.100',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <RestaurantIcon sx={{ fontSize: 60, color: 'grey.300' }} />
-                    </Box>
-                  )}
+
                   <CardContent sx={{ flexGrow: 1, width: '100%' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1, alignItems: 'flex-start' }}>
                       <Typography variant="h6" component="div" fontWeight="bold" noWrap>
