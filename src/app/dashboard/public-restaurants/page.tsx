@@ -137,7 +137,7 @@ export default function PublicRestaurantsPage() {
                 }}
               >
                 <CardActionArea 
-                  onClick={() => window.open(`/r/${restaurant.slug}`, '_blank')}
+                  onClick={() => router.push(`/r/${restaurant.slug}`)}
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}
                 >
                   {restaurant.media?.cover ? (
