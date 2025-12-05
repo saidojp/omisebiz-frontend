@@ -114,11 +114,8 @@ export default function HoursTab() {
                         </Stack>
                         
                         <Stack direction="row" spacing={2} alignItems="center">
-                          <Typography variant="body2" color="text.secondary" sx={{ width: 50 }}>
-                            Break:
-                          </Typography>
                           <TextField
-                            label="Start"
+                            label="Break Start"
                             type="time"
                             size="small"
                             sx={{ width: 130 }}
@@ -126,7 +123,7 @@ export default function HoursTab() {
                             InputLabelProps={{ shrink: true }}
                           />
                           <TextField
-                            label="End"
+                            label="Break End"
                             type="time"
                             size="small"
                             sx={{ width: 130 }}
