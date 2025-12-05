@@ -120,86 +120,90 @@ export default function PublicRestaurantsPage() {
       )}
 
       {/* Restaurant Cards */}
-      {!loading && filteredRestaurants.length > 0 && (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-          {filteredRestaurants.map((restaurant) => (
-            <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
-              <Card
+{/* Restaurant Cards */}
+{!loading && filteredRestaurants.length > 0 && (
+  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+    {filteredRestaurants.map((restaurant) => (
+      <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
+        <Card
+          sx={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            aspectRatio: '1 / 1.1',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: 6,
+            },
+          }}
+        >
+          <CardActionArea 
+            onClick={() => router.push(`/r/${restaurant.slug}`)}
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', height: '100%' }}
+          >
+            {restaurant.media?.cover ? (
+              <CardMedia
+                component="img"
+                sx={{ 
+                  width: '100%', 
+                  height: '60%', 
+                  objectFit: 'cover' 
+                }}
+                image={restaurant.media.cover}
+                alt={restaurant.name}
+              />
+            ) : (
+              <Box
                 sx={{
-                  height: '100%',
+                  width: '100%',
+                  height: '60%',
+                  bgcolor: 'grey.100',
                   display: 'flex',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: 6,
-                  },
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                <CardActionArea 
-                  onClick={() => router.push(`/r/${restaurant.slug}`)}
-                  sx={{ display: 'flex', flexDirection: 'row', alignItems: 'stretch', justifyContent: 'flex-start', height: '100%' }}
-                >
-                  {restaurant.media?.cover ? (
-                    <CardMedia
-                      component="img"
-                      sx={{ width: 140, height: '100%', objectFit: 'cover' }}
-                      image={restaurant.media.cover}
-                      alt={restaurant.name}
-                    />
-                  ) : (
-                    <Box
-                      sx={{
-                        width: 140,
-                        height: '100%',
-                        bgcolor: 'grey.100',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <RestaurantIcon sx={{ fontSize: 40, color: 'grey.300' }} />
-                    </Box>
-                  )}
-                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', py: 2, px: 2 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1, alignItems: 'flex-start' }}>
-                      <Typography variant="h6" component="div" fontWeight="bold" noWrap sx={{ fontSize: '1.1rem' }}>
-                        {restaurant.name}
-                      </Typography>
-                    </Box>
-                    
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                      {restaurant.category && (
-                        <Typography variant="body2" color="text.secondary">
-                          {restaurant.category}
-                        </Typography>
-                      )}
-                      {restaurant.priceRange && (
-                        <Chip
-                          label={restaurant.priceRange}
-                          size="small"
-                          color="success"
-                          variant="outlined"
-                          sx={{ height: 20, fontSize: '0.75rem' }}
-                        />
-                      )}
-                    </Box>
-
-                    {restaurant.location && (
-                      <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: 'text.secondary' }}>
-                        <LocationOn sx={{ fontSize: 16 }} />
-                        <Typography variant="body2" noWrap sx={{ fontSize: '0.875rem' }}>
-                          {restaurant.address?.city || 'Location available'}
-                        </Typography>
-                      </Stack>
-                    )}
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Box>
-          ))}
-        </Box>
-      )}
+                <RestaurantIcon sx={{ fontSize: 60, color: 'grey.300' }} />
+              </Box>
+            )}
+            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', py: 2, px: 2.5, height: '40%' }}>
+              <Typography variant="h6" component="div" fontWeight="bold" sx={{ fontSize: '1.05rem', mb: 0.5, lineHeight: 1.3 }}>
+                {restaurant.name}
+              </Typography>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                {restaurant.category && (
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                    {restaurant.category}
+                  </Typography>
+                )}
+                {restaurant.priceRange && (
+                  <Chip
+                    label={restaurant.priceRange}
+                    size="small"
+                    color="success"
+                    variant="outlined"
+                    sx={{ height: 20, fontSize: '0.7rem' }}
+                  />
+                )}
+              </Box>
+              
+              {restaurant.location && (
+                <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: 'text.secondary', mt: 'auto' }}>
+                  <LocationOn sx={{ fontSize: 14 }} />
+                  <Typography variant="body2" noWrap sx={{ fontSize: '0.8rem' }}>
+                    {restaurant.address?.city || 'Location available'}
+                  </Typography>
+                </Stack>
+              )}
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </Box>
+    ))}
+  </Box>
+)}
 
       {/* No Search Results */}
       {!loading && restaurants.length > 0 && filteredRestaurants.length === 0 && (

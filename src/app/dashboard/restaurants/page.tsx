@@ -223,156 +223,219 @@ export default function RestaurantsPage() {
 
       {/* Restaurant Cards */}
       {!loading && filteredRestaurants.length > 0 && (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-          {filteredRestaurants.map((restaurant) => (
-            <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
-              <Card
+  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+    {filteredRestaurants.map((restaurant) => (
+      <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
+        <Card
+          sx={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            aspectRatio: '1 / 1.15',
+            position: 'relative',
+            '&:hover': { 
+              boxShadow: 6,
+              transform: 'translateY(-4px)',
+            },
+          }}
+        >
+          {/* Image Section - 55% */}
+          <Box sx={{ position: 'relative', height: '55%', bgcolor: 'grey.200' }}>
+            {restaurant.media?.cover ? (
+              <CardMedia
+                component="img"
+                sx={{ 
+                  height: '100%',
+                  width: '100%',
+                  opacity: uploadingId === restaurant.id ? 0.5 : 1,
+                  objectFit: 'cover'
+                }}
+                image={restaurant.media.cover}
+                alt={restaurant.name}
+              />
+            ) : (
+              <Box
                 sx={{
                   height: '100%',
                   display: 'flex',
-                  flexDirection: 'column',
-                  cursor: 'pointer',
-                  '&:hover': { boxShadow: 6 },
-                  position: 'relative'
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-                onClick={() => router.push(`/dashboard/restaurants/${restaurant.id}/edit`)}
               >
-                <Box sx={{ position: 'relative', height: 200, bgcolor: 'grey.200' }}>
-                  {restaurant.media?.cover ? (
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={restaurant.media.cover}
-                      alt={restaurant.name}
-                      sx={{ 
-                        opacity: uploadingId === restaurant.id ? 0.5 : 1,
-                        objectFit: 'cover'
-                      }}
-                    />
-                  ) : (
-                    <Box
-                      sx={{
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <RestaurantIcon sx={{ fontSize: 60, color: 'grey.400' }} />
-                    </Box>
-                  )}
-                  
-                  {/* Upload Overlay/Button */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      bgcolor: 'rgba(0,0,0,0.3)',
-                      opacity: 0,
-                      transition: 'opacity 0.2s',
-                      '&:hover': { opacity: 1 },
-                    }}
-                  >
-                     <Tooltip title="Change Cover Image">
-                      <IconButton 
-                        onClick={(e) => handleUploadClick(restaurant.id, e)}
-                        sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'grey.100' } }}
-                      >
-                        <PhotoCamera color="primary" />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-
-                  {/* Loading Spinner */}
-                  {uploadingId === restaurant.id && (
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        bgcolor: 'rgba(255,255,255,0.5)',
-                      }}
-                    >
-                      <CircularProgress />
-                    </Box>
-                  )}
-                </Box>
-
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="h6" component="div">
-                      {restaurant.name}
-                    </Typography>
-                    {restaurant.priceRange && (
-                      <Chip
-                        label={restaurant.priceRange}
-                        size="small"
-                        color="success"
-                        variant="outlined"
-                      />
-                    )}
-                  </Box>
-                  
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    {restaurant.category || 'Uncategorized'}
-                  </Typography>
-
-                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
-                    <LocationOn fontSize="small" color="action" />
-                    <Typography variant="body2" noWrap>
-                      {restaurant.address?.city || 'No location set'}
-                    </Typography>
-                  </Stack>
-
-                  <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                    <Chip
-                      label={restaurant.attributes?.wifi ? 'WiFi' : 'No WiFi'}
-                      size="small"
-                      color={restaurant.attributes?.wifi ? 'primary' : 'default'}
-                    />
-                    <Chip
-                      label={restaurant.attributes?.parking ? 'Parking' : 'No Parking'}
-                      size="small"
-                      color={restaurant.attributes?.parking ? 'primary' : 'default'}
-                    />
-                  </Stack>
-                </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={(e) => {
+                <RestaurantIcon sx={{ fontSize: 60, color: 'grey.400' }} />
+              </Box>
+            )}
+            
+            {/* Upload Overlay */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: 'rgba(0,0,0,0.4)',
+                opacity: 0,
+                transition: 'opacity 0.2s',
+                '&:hover': { opacity: 1 },
+              }}
+            >
+              <Tooltip title="Change Cover Image">
+                <IconButton 
+                  onClick={(e) => {
                     e.stopPropagation();
-                    window.open(`/r/${restaurant.slug}`, '_blank');
-                  }}>
-                    View
-                  </Button>
-                  <Button size="small" onClick={(e) => {
-                    e.stopPropagation();
-                    router.push(`/dashboard/restaurants/${restaurant.id}/edit`);
-                  }}>
-                    Edit
-                  </Button>
-                  <Button size="small" color="error" onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(restaurant.id);
-                  }}>
-                    Delete
-                  </Button>
-                </CardActions>
-              </Card>
+                    handleUploadClick(restaurant.id, e);
+                  }}
+                  sx={{ 
+                    bgcolor: 'white', 
+                    '&:hover': { 
+                      bgcolor: 'grey.100',
+                      transform: 'scale(1.1)',
+                    },
+                    transition: 'transform 0.2s',
+                  }}
+                >
+                  <PhotoCamera color="primary" />
+                </IconButton>
+              </Tooltip>
             </Box>
-          ))}
-        </Box>
-      )}
+
+            {/* Loading Spinner */}
+            {uploadingId === restaurant.id && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  bgcolor: 'rgba(255,255,255,0.7)',
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            )}
+          </Box>
+
+          {/* Content Section - 30% */}
+          <CardContent sx={{ 
+            flexGrow: 1, 
+            display: 'flex', 
+            flexDirection: 'column',
+            py: 1.5,
+            px: 2,
+            height: '30%'
+          }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+              <Typography 
+                variant="h6" 
+                component="div" 
+                fontWeight="bold"
+                sx={{ 
+                  fontSize: '1rem',
+                  lineHeight: 1.3,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  flexGrow: 1,
+                  mr: 1,
+                }}
+              >
+                {restaurant.name}
+              </Typography>
+              {restaurant.priceRange && (
+                <Chip
+                  label={restaurant.priceRange}
+                  size="small"
+                  color="success"
+                  variant="outlined"
+                  sx={{ height: 22, fontSize: '0.7rem', flexShrink: 0 }}
+                />
+              )}
+            </Box>
+            
+            <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
+              {restaurant.category || 'Uncategorized'}
+            </Typography>
+
+            <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 1 }}>
+              <LocationOn sx={{ fontSize: 14, color: 'text.secondary' }} />
+              <Typography variant="body2" noWrap sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
+                {restaurant.address?.city || 'No location set'}
+              </Typography>
+            </Stack>
+
+            <Stack direction="row" spacing={0.5} sx={{ mt: 'auto' }}>
+              <Chip
+                label={restaurant.attributes?.wifi ? 'WiFi' : 'No WiFi'}
+                size="small"
+                color={restaurant.attributes?.wifi ? 'primary' : 'default'}
+                sx={{ height: 20, fontSize: '0.65rem' }}
+              />
+              <Chip
+                label={restaurant.attributes?.parking ? 'Parking' : 'No Parking'}
+                size="small"
+                color={restaurant.attributes?.parking ? 'primary' : 'default'}
+                sx={{ height: 20, fontSize: '0.65rem' }}
+              />
+            </Stack>
+          </CardContent>
+
+          {/* Actions Section - 15% */}
+          <CardActions sx={{ 
+            justifyContent: 'space-between', 
+            px: 2, 
+            py: 1,
+            borderTop: '1px solid',
+            borderColor: 'divider',
+            height: '15%'
+          }}>
+            <Button 
+              size="small" 
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(`/r/${restaurant.slug}`, '_blank');
+              }}
+              sx={{ fontSize: '0.75rem' }}
+            >
+              View
+            </Button>
+            <Button 
+              size="small" 
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/dashboard/restaurants/${restaurant.id}/edit`);
+              }}
+              sx={{ fontSize: '0.75rem' }}
+            >
+              Edit
+            </Button>
+            <Button 
+              size="small" 
+              color="error" 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(restaurant.id);
+              }}
+              sx={{ fontSize: '0.75rem' }}
+            >
+              Delete
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    ))}
+  </Box>
+)}
 
       {/* No Search Results */}
       {!loading && restaurants.length > 0 && filteredRestaurants.length === 0 && (
