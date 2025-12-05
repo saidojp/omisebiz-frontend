@@ -18,10 +18,8 @@ export default function HeroSection({ restaurant }: Props) {
         sx={{
           height: { xs: 200, md: 350 },
           width: '100%',
-          bgcolor: 'grey.300',
-          backgroundImage: `url(${restaurant.media?.cover || ''})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          bgcolor: 'primary.main',
+          background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
         }}
       />
 

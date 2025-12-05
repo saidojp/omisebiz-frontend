@@ -128,7 +128,6 @@ export default function PublicRestaurantsPage() {
                 sx={{
                   height: '100%',
                   display: 'flex',
-                  flexDirection: 'column',
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   '&:hover': {
                     transform: 'translateY(-4px)',
@@ -138,54 +137,58 @@ export default function PublicRestaurantsPage() {
               >
                 <CardActionArea 
                   onClick={() => router.push(`/r/${restaurant.slug}`)}
-                  sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}
+                  sx={{ display: 'flex', flexDirection: 'row', alignItems: 'stretch', justifyContent: 'flex-start', height: '100%' }}
                 >
                   {restaurant.media?.cover ? (
                     <CardMedia
                       component="img"
-                      height="200"
+                      sx={{ width: 140, height: '100%', objectFit: 'cover' }}
                       image={restaurant.media.cover}
                       alt={restaurant.name}
-                      sx={{ objectFit: 'cover' }}
                     />
                   ) : (
                     <Box
                       sx={{
-                        width: '100%',
-                        height: 200,
+                        width: 140,
+                        height: '100%',
                         bgcolor: 'grey.100',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        flexShrink: 0,
                       }}
                     >
-                      <RestaurantIcon sx={{ fontSize: 60, color: 'grey.300' }} />
+                      <RestaurantIcon sx={{ fontSize: 40, color: 'grey.300' }} />
                     </Box>
                   )}
-                  <CardContent sx={{ flexGrow: 1, width: '100%' }}>
+                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', py: 2, px: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1, alignItems: 'flex-start' }}>
-                      <Typography variant="h6" component="div" fontWeight="bold" noWrap>
+                      <Typography variant="h6" component="div" fontWeight="bold" noWrap sx={{ fontSize: '1.1rem' }}>
                         {restaurant.name}
                       </Typography>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                      {restaurant.category && (
+                        <Typography variant="body2" color="text.secondary">
+                          {restaurant.category}
+                        </Typography>
+                      )}
                       {restaurant.priceRange && (
                         <Chip
                           label={restaurant.priceRange}
                           size="small"
                           color="success"
                           variant="outlined"
-                          sx={{ ml: 1 }}
+                          sx={{ height: 20, fontSize: '0.75rem' }}
                         />
                       )}
                     </Box>
-                    
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      {restaurant.category || 'Uncategorized'}
-                    </Typography>
 
                     {restaurant.location && (
-                      <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 1, color: 'text.secondary' }}>
-                        <LocationOn fontSize="small" />
-                        <Typography variant="body2" noWrap>
+                      <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: 'text.secondary' }}>
+                        <LocationOn sx={{ fontSize: 16 }} />
+                        <Typography variant="body2" noWrap sx={{ fontSize: '0.875rem' }}>
                           {restaurant.address?.city || 'Location available'}
                         </Typography>
                       </Stack>
