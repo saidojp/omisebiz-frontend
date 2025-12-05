@@ -16,10 +16,10 @@ export default function HeroSection({ restaurant }: Props) {
       {/* Cover Image */}
       <Box
         sx={{
-          height: { xs: 200, md: 350 },
+          height: { xs: 100, md: 250 },
           width: '100%',
           bgcolor: 'primary.main',
-          background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+          background: 'linear-gradient(45deg, #dee5ebff 30%, #dce3e5ff 90%)',
         }}
       />
 

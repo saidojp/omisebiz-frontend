@@ -70,8 +70,8 @@ export default function HoursTab() {
 
               return (
                 <Box>
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
-                    <Box sx={{ width: { xs: '100%', sm: '25%' } }}>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
+                    <Box sx={{ width: { xs: '100%', sm: '25%' }, pt: 1 }}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -91,34 +91,54 @@ export default function HoursTab() {
                     </Box>
 
                     {isOpen && 'open' in value && 'close' in value && (
-                      <>
-                        <Box sx={{ width: { xs: '50%', sm: '25%' } }}>
+                      <Stack spacing={2} sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
+                        <Stack direction="row" spacing={2}>
                           <TextField
                             label="Open"
                             type="time"
                             size="small"
-                            fullWidth
+                            sx={{ width: 130 }}
                             {...register(`hours.${day}.open`)}
                             error={!!(errors.hours?.[day] as any)?.open}
                             InputLabelProps={{ shrink: true }}
                           />
-                        </Box>
-                        <Box sx={{ width: { xs: '50%', sm: '25%' } }}>
                           <TextField
                             label="Close"
                             type="time"
                             size="small"
-                            fullWidth
+                            sx={{ width: 130 }}
                             {...register(`hours.${day}.close`)}
                             error={!!(errors.hours?.[day] as any)?.close}
                             InputLabelProps={{ shrink: true }}
                           />
-                        </Box>
-                      </>
+                        </Stack>
+                        
+                        <Stack direction="row" spacing={2} alignItems="center">
+                          <Typography variant="body2" color="text.secondary" sx={{ width: 50 }}>
+                            Break:
+                          </Typography>
+                          <TextField
+                            label="Start"
+                            type="time"
+                            size="small"
+                            sx={{ width: 130 }}
+                            {...register(`hours.${day}.breakStart`)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            label="End"
+                            type="time"
+                            size="small"
+                            sx={{ width: 130 }}
+                            {...register(`hours.${day}.breakEnd`)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Stack>
+                      </Stack>
                     )}
 
                     {!isOpen && (
-                      <Box sx={{ width: { xs: '100%', sm: '50%' } }}>
+                      <Box sx={{ pt: 1 }}>
                         <Typography variant="body2" color="text.secondary">
                           Closed
                         </Typography>

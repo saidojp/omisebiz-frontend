@@ -31,6 +31,8 @@ export interface HourEntry {
   isOpen: boolean;
   open?: string;
   close?: string;
+  breakStart?: string;
+  breakEnd?: string;
 }
 
 export interface RestaurantHours {

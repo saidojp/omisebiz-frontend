@@ -46,6 +46,8 @@ export const hourEntrySchema = z.union([
     isOpen: z.literal(true),
     open: z.string().regex(/^\d{2}:\d{2}$/, 'Time must be in HH:MM format'),
     close: z.string().regex(/^\d{2}:\d{2}$/, 'Time must be in HH:MM format'),
+    breakStart: z.string().regex(/^\d{2}:\d{2}$/, 'Time must be in HH:MM format').optional().or(z.literal('')),
+    breakEnd: z.string().regex(/^\d{2}:\d{2}$/, 'Time must be in HH:MM format').optional().or(z.literal('')),
   }),
 ]);
 
