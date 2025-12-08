@@ -80,7 +80,7 @@ export default function HeroSection({ restaurant }: Props) {
                 )}
                 {restaurant.priceRange && (
                   <Chip
-                    label={restaurant.priceRange}
+                    label={`${restaurant.priceRange.currency}${restaurant.priceRange.min} - ${restaurant.priceRange.currency}${restaurant.priceRange.max}`}
                     size="small"
                     sx={{ bgcolor: 'white' }}
                   />

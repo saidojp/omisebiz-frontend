@@ -44,9 +44,11 @@ export default function PublicRestaurantsPage() {
   const [selectedPrice, setSelectedPrice] = useState('');
 
   // Derived state for filter options
+  // Derived state for filter options
+  const formatPriceRange = (range: any) => range ? `${range.currency}${range.min} - ${range.currency}${range.max}` : '';
   const categories = Array.from(new Set(restaurants.map(r => r.category).filter(Boolean))) as string[];
   const locations = Array.from(new Set(restaurants.map(r => r.address?.city).filter(Boolean))) as string[];
-  const prices = Array.from(new Set(restaurants.map(r => r.priceRange).filter(Boolean))) as string[];
+  const prices = Array.from(new Set(restaurants.map(r => r.priceRange ? formatPriceRange(r.priceRange) : '').filter(Boolean))) as string[];
 
   useEffect(() => {
     fetchRestaurants();
@@ -69,7 +71,7 @@ export default function PublicRestaurantsPage() {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory ? r.category === selectedCategory : true;
     const matchesLocation = selectedLocation ? r.address?.city === selectedLocation : true;
-    const matchesPrice = selectedPrice ? r.priceRange === selectedPrice : true;
+    const matchesPrice = selectedPrice ? (r.priceRange ? formatPriceRange(r.priceRange) === selectedPrice : false) : true;
 
     return matchesSearch && matchesCategory && matchesLocation && matchesPrice;
   });
@@ -275,7 +277,7 @@ export default function PublicRestaurantsPage() {
                 )}
                 {restaurant.priceRange && (
                   <Chip
-                    label={restaurant.priceRange}
+                    label={`${restaurant.priceRange.currency}${restaurant.priceRange.min} - ${restaurant.priceRange.currency}${restaurant.priceRange.max}`}
                     size="small"
                     color="success"
                     variant="outlined"

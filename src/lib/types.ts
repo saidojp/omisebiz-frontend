@@ -23,7 +23,11 @@ export interface AuthResponse {
 }
 
 // Restaurant Types
-export type PriceRange = string; // Changed to string to allow custom formats like "2000-3000¥"
+export interface PriceRange {
+  min: number;
+  max: number;
+  currency: '¥';
+}
 
 export type DayOfWeek = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 

@@ -17,7 +17,11 @@ export const restaurantBasicSchema = z.object({
   name: z.string().min(1, 'Restaurant name is required'),
   description: z.string().max(750, 'Description must be less than 750 characters').optional(),
   category: z.string().optional(),
-  priceRange: z.string().optional(), // Changed to plain string to allow custom formats like "2000-3000¥"
+  priceRange: z.object({
+    min: z.number().min(0),
+    max: z.number().min(0),
+    currency: z.literal('¥'),
+  }).optional(),
 });
 
 export const restaurantContactsSchema = z.object({
@@ -97,7 +101,11 @@ export const restaurantFormSchema = z.object({
   name: z.string().min(1, 'Restaurant name is required'),
   description: z.string().max(750, 'Description must be less than 750 characters').optional(),
   category: z.string().optional(),
-  priceRange: z.string().optional(),
+  priceRange: z.object({
+    min: z.number().min(0),
+    max: z.number().min(0),
+    currency: z.literal('¥'),
+  }).optional(),
   contacts: restaurantContactsSchema.optional(),
   address: restaurantAddressSchema.optional(),
   location: restaurantLocationSchema,

@@ -116,14 +116,42 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
       />
 
       {/* Price Range */}
-      <TextField
-        {...register('priceRange')}
-        label="Price Range"
-        fullWidth
-        error={!!errors.priceRange}
-        helperText={errors.priceRange?.message || 'e.g., 2000-3000¥, 1500-2500₽, $15-25'}
-        placeholder="2000-3000¥"
-      />
+      {/* Price Range */}
+      <Box>
+        <Typography variant="subtitle2" gutterBottom>
+          Price Range (¥)
+        </Typography>
+        <Stack direction="row" spacing={2} alignItems="flex-start">
+          <TextField
+            {...register('priceRange.min', { valueAsNumber: true })}
+            label="Min Price"
+            type="number"
+            fullWidth
+            error={!!errors.priceRange?.min}
+            helperText={errors.priceRange?.min?.message}
+            InputProps={{
+              startAdornment: <Typography sx={{ mr: 1 }}>¥</Typography>,
+            }}
+          />
+          <Typography sx={{ alignSelf: 'center' }}>-</Typography>
+          <TextField
+            {...register('priceRange.max', { valueAsNumber: true })}
+            label="Max Price"
+            type="number"
+            fullWidth
+            error={!!errors.priceRange?.max}
+            helperText={errors.priceRange?.max?.message}
+            InputProps={{
+              startAdornment: <Typography sx={{ mr: 1 }}>¥</Typography>,
+            }}
+          />
+          <input 
+            type="hidden" 
+            {...register('priceRange.currency')} 
+            value="¥" 
+          />
+        </Stack>
+      </Box>
 
       {/* Publish Status */}
       <Box sx={{ pt: 2 }}>
