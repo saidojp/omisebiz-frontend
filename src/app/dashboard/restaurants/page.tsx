@@ -354,7 +354,7 @@ export default function RestaurantsPage() {
               </Typography>
               {restaurant.priceRange && (
                 <Chip
-                  label={restaurant.priceRange}
+                  label={typeof restaurant.priceRange === 'object' ? `${restaurant.priceRange.currency}${restaurant.priceRange.min} - ${restaurant.priceRange.currency}${restaurant.priceRange.max}` : restaurant.priceRange}
                   size="small"
                   color="success"
                   variant="outlined"
