@@ -113,12 +113,7 @@ export default function RestaurantPage() {
           <ActionBar restaurant={restaurant} />
         </Box>
 
-        {/* Featured Dish Section - Full Width */}
-        {restaurant.featuredDish && (
-          <Box sx={{ mb: 6 }}>
-            <FeaturedDish featuredDish={restaurant.featuredDish} />
-          </Box>
-        )}
+
 
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
           {/* Left Column - Main Info */}
@@ -132,6 +127,13 @@ export default function RestaurantPage() {
                 {restaurant.description || 'No description available.'}
               </Typography>
             </Box>
+
+            {/* Featured Dish Section */}
+            {restaurant.featuredDish && (
+              <Box sx={{ mb: 4 }}>
+                <FeaturedDish featuredDish={restaurant.featuredDish} />
+              </Box>
+            )}
 
             <Box sx={{ mb: 4 }}>
               <Typography variant="h5" gutterBottom fontWeight="bold">

@@ -30,7 +30,7 @@ export default function Home() {
         <Restaurant sx={{ fontSize: 80, color: "primary.main", mb: 2 }} />
         
         <Typography variant="h2" component="h1" gutterBottom fontWeight="bold">
-          Y
+          Omise
         </Typography>
         
         <Typography variant="h5" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
