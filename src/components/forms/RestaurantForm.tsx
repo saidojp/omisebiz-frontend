@@ -50,7 +50,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         name: restaurant.name,
         description: restaurant.description || '',
         category: restaurant.category || '',
-        priceRange: restaurant.priceRange || '',
+        priceRange: restaurant.priceRange || undefined,
         contacts: restaurant.contacts || {},
         address: restaurant.address || {},
         location: restaurant.location || null,
@@ -66,7 +66,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         name: '',
         description: '',
         category: '',
-        priceRange: '',
+        priceRange: undefined,
         contacts: {},
         address: {},
         location: null,
@@ -125,7 +125,16 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
     // Clean up optional string fields
     payload.description = data.description || undefined;
     payload.category = data.category || undefined;
-    payload.priceRange = data.priceRange || undefined;
+    
+    // Explicitly handle priceRange
+    // Check if we have valid numbers for min/max
+    if (data.priceRange && 
+        typeof data.priceRange.min === 'number' && !isNaN(data.priceRange.min) &&
+        typeof data.priceRange.max === 'number' && !isNaN(data.priceRange.max)) {
+      payload.priceRange = data.priceRange;
+    } else {
+      payload.priceRange = undefined;
+    }
     
     // Explicitly handle featuredDish to ensure it's cleared if removed
     // If undefined/null, send null to backend to clear the field

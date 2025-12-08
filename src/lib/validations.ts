@@ -102,10 +102,18 @@ export const restaurantFormSchema = z.object({
   description: z.string().max(750, 'Description must be less than 750 characters').optional(),
   category: z.string().optional(),
   priceRange: z.object({
-    min: z.number().min(0),
-    max: z.number().min(0),
+    min: z.number(),
+    max: z.number(),
     currency: z.literal('¥'),
-  }).optional(),
+  }).optional().refine((val) => {
+    if (!val) return true;
+    // Allow NaN (will be treated as empty/undefined in submit handler)
+    if (isNaN(val.min) || isNaN(val.max)) return true; 
+    return val.min >= 0 && val.max >= 0;
+  }, {
+    message: "Price must be 0 or greater",
+    path: ["min"] // Attach error to min field if general failure, though refine attaches to root of object usually
+  }),
   contacts: restaurantContactsSchema.optional(),
   address: restaurantAddressSchema.optional(),
   location: restaurantLocationSchema,
