@@ -46,7 +46,7 @@ export default function PublicRestaurantsPage() {
   // Derived state for filter options
   const formatPriceRange = (range: any) => range ? `${range.currency}${range.min} - ${range.currency}${range.max}` : '';
   const categories = Array.from(new Set(restaurants.map(r => r.category).filter(Boolean))) as string[];
-  const locations = Array.from(new Set(restaurants.map(r => r.address?.city).filter(Boolean))) as string[];
+  const locations = Array.from(new Set(restaurants.map(r => r.address?.city?.trim()).filter(Boolean))) as string[];
   
   const PRICE_BUCKETS = [
     { label: 'Under ¥1,000', min: 0, max: 1000 },
@@ -76,7 +76,7 @@ export default function PublicRestaurantsPage() {
   const filteredRestaurants = restaurants.filter((r) => {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory ? r.category === selectedCategory : true;
-    const matchesLocation = selectedLocation ? r.address?.city === selectedLocation : true;
+    const matchesLocation = selectedLocation ? r.address?.city?.trim() === selectedLocation : true;
     
     let matchesPrice = true;
     if (selectedPrice) {
