@@ -30,9 +30,16 @@ export default function HoursDisplay({ hours }: Props) {
             <Typography sx={{ textTransform: 'capitalize', fontWeight: 'inherit' }}>
               {day}
             </Typography>
-            <Typography sx={{ fontWeight: 'inherit' }}>
-              {entry?.isOpen ? `${entry.open} - ${entry.close}` : 'Closed'}
-            </Typography>
+            <Box sx={{ textAlign: 'right' }}>
+              <Typography sx={{ fontWeight: 'inherit' }}>
+                {entry?.isOpen ? `${entry.open} - ${entry.close}` : 'Closed'}
+              </Typography>
+              {entry?.isOpen && entry?.breakStart && entry?.breakEnd && (
+                <Typography variant="caption" display="block" color="text.secondary">
+                  Break: {entry.breakStart} - {entry.breakEnd}
+                </Typography>
+              )}
+            </Box>
           </Box>
         );
       })}
