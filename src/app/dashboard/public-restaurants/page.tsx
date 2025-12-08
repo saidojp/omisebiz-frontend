@@ -16,12 +16,19 @@ import {
   Stack,
   Paper,
   CardActionArea,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
 } from '@mui/material';
 import {
   Search,
   Restaurant as RestaurantIcon,
   LocationOn,
   Storefront,
+  FilterList,
+  Clear,
 } from '@mui/icons-material';
 import { getPublicRestaurants } from '@/lib/api';
 import type { Restaurant } from '@/lib/types';
@@ -32,6 +39,14 @@ export default function PublicRestaurantsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState('');
+
+  // Derived state for filter options
+  const categories = Array.from(new Set(restaurants.map(r => r.category).filter(Boolean))) as string[];
+  const locations = Array.from(new Set(restaurants.map(r => r.address?.city).filter(Boolean))) as string[];
+  const prices = Array.from(new Set(restaurants.map(r => r.priceRange).filter(Boolean))) as string[];
 
   useEffect(() => {
     fetchRestaurants();
@@ -50,9 +65,21 @@ export default function PublicRestaurantsPage() {
     }
   };
 
-  const filteredRestaurants = restaurants.filter((r) =>
-    r.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredRestaurants = restaurants.filter((r) => {
+    const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory ? r.category === selectedCategory : true;
+    const matchesLocation = selectedLocation ? r.address?.city === selectedLocation : true;
+    const matchesPrice = selectedPrice ? r.priceRange === selectedPrice : true;
+
+    return matchesSearch && matchesCategory && matchesLocation && matchesPrice;
+  });
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('');
+    setSelectedLocation('');
+    setSelectedPrice('');
+  };
 
   return (
     <Box>
@@ -67,20 +94,88 @@ export default function PublicRestaurantsPage() {
       </Box>
 
       {/* Search */}
-      <TextField
-        fullWidth
-        placeholder="Search restaurants..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        sx={{ mb: 3 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search />
-            </InputAdornment>
-          ),
-        }}
-      />
+      <Paper sx={{ p: 2, mb: 3 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
+          <Box sx={{ flex: { xs: '1 1 100%', md: '3' }, minWidth: { md: 240 } }}>
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Search restaurants..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search color="action" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          
+          <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 30%', md: '2' } }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Category</InputLabel>
+              <Select
+                value={selectedCategory}
+                label="Category"
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <MenuItem value=""><em>All</em></MenuItem>
+                {categories.map((cat) => (
+                  <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 30%', md: '2' } }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Location</InputLabel>
+              <Select
+                value={selectedLocation}
+                label="Location"
+                onChange={(e) => setSelectedLocation(e.target.value)}
+              >
+                <MenuItem value=""><em>All</em></MenuItem>
+                {locations.map((loc) => (
+                  <MenuItem key={loc} value={loc}>{loc}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 30%', md: '2' } }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Price</InputLabel>
+              <Select
+                value={selectedPrice}
+                label="Price"
+                onChange={(e) => setSelectedPrice(e.target.value)}
+              >
+                <MenuItem value=""><em>All</em></MenuItem>
+                {prices.map((price) => (
+                  <MenuItem key={price} value={price}>{price}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          {(selectedCategory || selectedLocation || selectedPrice || searchQuery) && (
+            <Box sx={{ flex: { xs: '1 1 100%', md: 'auto' }, width: { md: 'auto' } }}>
+              <Button 
+                variant="outlined" 
+                color="inherit" 
+                startIcon={<Clear />} 
+                onClick={clearFilters}
+                fullWidth
+              >
+                Clear
+              </Button>
+            </Box>
+          )}
+        </Box>
+      </Paper>
 
       {/* Error Alert */}
       {error && (
