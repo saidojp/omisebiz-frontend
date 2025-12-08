@@ -44,11 +44,17 @@ export default function PublicRestaurantsPage() {
   const [selectedPrice, setSelectedPrice] = useState('');
 
   // Derived state for filter options
-  // Derived state for filter options
   const formatPriceRange = (range: any) => range ? `${range.currency}${range.min} - ${range.currency}${range.max}` : '';
   const categories = Array.from(new Set(restaurants.map(r => r.category).filter(Boolean))) as string[];
   const locations = Array.from(new Set(restaurants.map(r => r.address?.city).filter(Boolean))) as string[];
-  const prices = Array.from(new Set(restaurants.map(r => r.priceRange ? formatPriceRange(r.priceRange) : '').filter(Boolean))) as string[];
+  
+  const PRICE_BUCKETS = [
+    { label: 'Under ¥1,000', min: 0, max: 1000 },
+    { label: '¥1,000 - ¥3,000', min: 1000, max: 3000 },
+    { label: '¥3,000 - ¥5,000', min: 3000, max: 5000 },
+    { label: '¥5,000 - ¥10,000', min: 5000, max: 10000 },
+    { label: 'Above ¥10,000', min: 10000, max: Infinity },
+  ];
 
   useEffect(() => {
     fetchRestaurants();
@@ -71,7 +77,17 @@ export default function PublicRestaurantsPage() {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory ? r.category === selectedCategory : true;
     const matchesLocation = selectedLocation ? r.address?.city === selectedLocation : true;
-    const matchesPrice = selectedPrice ? (r.priceRange ? formatPriceRange(r.priceRange) === selectedPrice : false) : true;
+    
+    let matchesPrice = true;
+    if (selectedPrice) {
+      const bucket = PRICE_BUCKETS.find(b => b.label === selectedPrice);
+      if (bucket && r.priceRange && typeof r.priceRange === 'object') {
+        // Check for overlap: (StartA < EndB) and (EndA > StartB)
+        matchesPrice = r.priceRange.min < bucket.max && r.priceRange.max > bucket.min;
+      } else {
+        matchesPrice = false;
+      }
+    }
 
     return matchesSearch && matchesCategory && matchesLocation && matchesPrice;
   });
@@ -156,8 +172,8 @@ export default function PublicRestaurantsPage() {
                 onChange={(e) => setSelectedPrice(e.target.value)}
               >
                 <MenuItem value=""><em>All</em></MenuItem>
-                {prices.map((price) => (
-                  <MenuItem key={price} value={price}>{price}</MenuItem>
+                {PRICE_BUCKETS.map((bucket) => (
+                  <MenuItem key={bucket.label} value={bucket.label}>{bucket.label}</MenuItem>
                 ))}
               </Select>
             </FormControl>
