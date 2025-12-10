@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Box, Container, Typography, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, CircularProgress, Alert, Avatar, Chip, Stack } from '@mui/material';
 import { getRestaurantBySlug } from '@/lib/api';
 import { Restaurant } from '@/lib/types';
-import HeroSection from '@/components/restaurant/HeroSection';
 import ActionBar from '@/components/restaurant/ActionBar';
 import InfoCard from '@/components/restaurant/InfoCard';
 import HoursDisplay from '@/components/restaurant/HoursDisplay';
@@ -105,10 +104,78 @@ export default function RestaurantPage() {
   }
 
   return (
-    <Box sx={{ pb: 8 }}>
-      <HeroSection restaurant={restaurant} />
-      
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
+    <Box sx={{ pb: 8, bgcolor: 'common.white', minHeight: '100vh' }}>
+      <Container maxWidth="lg" sx={{ pt: 4 }}>
+        {/* Header Section */}
+        <Box sx={{ mb: 6 }}>
+          {/* Top Bar: Socials */}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 4 }}>
+            <SocialLinks socials={restaurant.socials} />
+          </Box>
+
+          {/* Identity Section */}
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: { xs: 'column', md: 'row' }, 
+            alignItems: { xs: 'center', md: 'flex-start' }, 
+            gap: 4,
+            textAlign: { xs: 'center', md: 'left' }
+          }}>
+            {/* Logo */}
+            <Avatar 
+              src={restaurant.media?.logo} 
+              sx={{ 
+                width: { xs: 120, md: 140 }, 
+                height: { xs: 120, md: 140 }, 
+                border: '1px solid', 
+                borderColor: 'grey.200',
+                bgcolor: 'grey.50'
+              }} 
+            />
+
+            <Box sx={{ flexGrow: 1, pt: { md: 2 } }}>
+              <Typography 
+                variant="h2" 
+                component="h1" 
+                fontWeight="800"
+                sx={{ 
+                  color: 'common.black',
+                  mb: 2,
+                  fontSize: { xs: '2rem', md: '3rem' },
+                  letterSpacing: '-0.02em'
+                }}
+              >
+                {restaurant.name}
+              </Typography>
+
+              <Stack 
+                direction="row" 
+                spacing={2} 
+                alignItems="center" 
+                justifyContent={{ xs: 'center', md: 'flex-start' }}
+                sx={{ color: 'text.secondary' }}
+              >
+                {restaurant.category && (
+                  <Typography variant="body1" fontWeight={500}>
+                    {restaurant.category}
+                  </Typography>
+                )}
+                <Typography variant="body1" sx={{ color: 'grey.300' }}>•</Typography>
+                <Chip 
+                  label="Open Now" 
+                  size="small" 
+                  sx={{ 
+                    bgcolor: 'common.black', 
+                    color: 'common.white',
+                    fontWeight: 600,
+                    borderRadius: 1,
+                    height: 24
+                  }} 
+                />
+              </Stack>
+            </Box>
+          </Box>
+        </Box>
         <Box sx={{ mb: 4 }}>
           <ActionBar restaurant={restaurant} />
         </Box>
@@ -182,7 +249,7 @@ export default function RestaurantPage() {
                 )}
               </InfoCard>
 
-              <SocialLinks socials={restaurant.socials} />
+              {/* Removed SocialLinks from sidebar as they are now in the header */}
             </Box>
           </Box>
         </Box>

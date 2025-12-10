@@ -36,7 +36,14 @@ export default function ActionBar({ restaurant }: Props) {
           startIcon={<Phone />}
           href={`tel:${restaurant.contacts.phone}`}
           size="large"
-          sx={{ flexGrow: 1 }}
+          sx={{ 
+            flexGrow: 1,
+            bgcolor: 'common.black',
+            color: 'common.white',
+            '&:hover': {
+              bgcolor: 'grey.800',
+            }
+          }}
         >
           Call
         </Button>
@@ -49,24 +56,18 @@ export default function ActionBar({ restaurant }: Props) {
         target="_blank"
         rel="noopener noreferrer"
         size="large"
-        sx={{ flexGrow: 1 }}
+        sx={{ 
+          flexGrow: 1,
+          borderColor: 'divider',
+          color: 'text.primary',
+          '&:hover': {
+            borderColor: 'text.primary',
+            bgcolor: 'action.hover',
+          }
+        }}
       >
         Directions
       </Button>
-
-      {restaurant.contacts?.website && (
-        <Button
-          variant="outlined"
-          startIcon={<Language />}
-          href={restaurant.contacts.website}
-          target="_blank"
-          rel="noopener noreferrer"
-          size="large"
-          sx={{ flexGrow: 1 }}
-        >
-          Website
-        </Button>
-      )}
 
       <Tooltip title="Share">
         <IconButton 
