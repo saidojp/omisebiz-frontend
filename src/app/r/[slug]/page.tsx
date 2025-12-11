@@ -226,7 +226,8 @@ export default function RestaurantPage() {
                   featuredDish={{
                     ...restaurant.featuredDish,
                     description: restaurant.featuredDish.description || 
-                      restaurant.menuItems?.find(item => item.id === restaurant.featuredDish?.menuItemId)?.description
+                      restaurant.menuItems?.find(item => item.id === restaurant.featuredDish?.menuItemId)?.description,
+                    price: restaurant.menuItems?.find(item => item.id === restaurant.featuredDish?.menuItemId)?.price || restaurant.featuredDish.price
                   }} 
                 />
               </Box>
