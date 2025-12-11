@@ -55,7 +55,7 @@ export default function ActionBar({ restaurant }: Props) {
       )}
 
       <Button
-        variant="outlined"
+        variant="contained"
         startIcon={<Directions />}
         href={getGoogleMapsUrl()}
         target="_blank"
@@ -63,15 +63,13 @@ export default function ActionBar({ restaurant }: Props) {
         size="large"
         sx={{ 
           flexGrow: 1,
-          borderRadius: '50px',
           textTransform: 'none',
           fontSize: '1rem',
           fontWeight: 600,
-          borderColor: '#e0e0e0',
-          color: '#424242',
-          '&:hover': {
-            borderColor: '#bdbdbd',
-            bgcolor: '#f5f5f5',
+            bgcolor: '#e3f2fd', // Soft blue
+            color: '#1565c0',   // Darker blue text
+            '&:hover': {
+              bgcolor: '#bbdefb',
           }
         }}
       >

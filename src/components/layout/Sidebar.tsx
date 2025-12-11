@@ -100,10 +100,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               sx={{
                 borderRadius: 1,
                 '&:hover': {
-                  backgroundColor: 'primary.main', // Soft pastel blue
-                  color: 'primary.contrastText', // Dark blue
+                  backgroundColor: theme.palette.sidebar.hoverBg, // Custom sidebar hover
+                  color: theme.palette.sidebar.hoverText,
                   '& .MuiListItemIcon-root': {
-                    color: 'primary.contrastText',
+                    color: theme.palette.sidebar.hoverText,
                   },
                 },
               }}
