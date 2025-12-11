@@ -100,8 +100,11 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               sx={{
                 borderRadius: 1,
                 '&:hover': {
-                  backgroundColor: 'primary.light',
-                  color: 'primary.contrastText',
+                  backgroundColor: 'primary.main', // Soft pastel blue
+                  color: 'primary.contrastText', // Dark blue
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.contrastText',
+                  },
                 },
               }}
             >
