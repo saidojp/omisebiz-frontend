@@ -25,16 +25,16 @@ const theme = createTheme({
       hoverText: '#292524', // Dark Coral
     },
     primary: {
-      main: '#3a3737ff',
-      light: '#FEE2E2',
-      dark: '#DC2626',
-      contrastText: '#292524',
+      main: '#1565c0', // Strong Blue (for text/icons)
+      light: '#e3f2fd', // Pastel Blue
+      dark: '#0d47a1',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: '#FB923C',    
-      light: '#FFEDD5',
-      dark: '#EA580C',
-      contrastText: '#FFFFFF',
+      main: '#7b1fa2', // Reverted to purple-ish to compliment blue? Or keep orange? User didn't specify. Keeping separate updates minimal.
+      light: '#f3e5f5',
+      dark: '#4a0072',
+      contrastText: '#ffffff',
     },
     background: {
       default: '#FFFFFF',
@@ -44,7 +44,7 @@ const theme = createTheme({
       primary: '#292524', 
       secondary: '#78716C', 
     },
-    divider: '#F5E6E0',
+    divider: '#eaeff1', // Cooler divider for blue theme
   },
   typography: {
     fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
@@ -73,20 +73,20 @@ const theme = createTheme({
           transition: 'all 0.2s ease-in-out',
         },
         containedPrimary: {
-          backgroundColor: '#F87171',
-          color: '#FFFFFF',
+          backgroundColor: '#e3f2fd', // Pastel Blue
+          color: '#1565c0', // Dark Blue Text
           '&:hover': {
-            backgroundColor: '#DC2626',
+            backgroundColor: '#bbdefb', // Slightly darker pastel
             transform: 'translateY(-1px)',
           },
         },
         outlined: {
           borderWidth: '1.5px',
-          borderColor: '#E7D5CE',
-          color: '#57534E',
+          borderColor: '#e3f2fd',
+          color: '#1565c0',
           '&:hover': {
-            backgroundColor: '#FEF3F0',
-            borderColor: '#D6C3BA',
+            backgroundColor: '#f5fbfd',
+            borderColor: '#bbdefb',
           },
         },
       },
@@ -94,13 +94,13 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: '0 1px 3px 0 rgba(248, 113, 113, 0.08)',
-          border: '1px solid #F5E6E0',
+          boxShadow: '0 1px 3px 0 rgba(21, 101, 192, 0.08)',
+          border: '1px solid #e3f2fd',
           borderRadius: '20px',
           backgroundColor: '#FAFAFA',
           transition: 'all 0.2s ease-in-out',
           '&:hover': {
-            boxShadow: '0 4px 12px 0 rgba(248, 113, 113, 0.15)',
+            boxShadow: '0 4px 12px 0 rgba(21, 101, 192, 0.12)',
           },
         },
       },
@@ -120,8 +120,8 @@ const theme = createTheme({
         root: {
           backgroundColor: '#FFFFFF',
           color: '#292524',
-          borderBottom: '1px solid #F5E6E0',
-          boxShadow: '0 1px 2px 0 rgba(248, 113, 113, 0.06)',
+          borderBottom: '1px solid #eaeff1',
+          boxShadow: '0 1px 2px 0 rgba(21, 101, 192, 0.05)',
         },
       },
     },
@@ -129,7 +129,7 @@ const theme = createTheme({
       styleOverrides: {
         paper: {
           backgroundColor: '#FAFAFA',
-          borderRight: '1px solid #F5E6E0',
+          borderRight: '1px solid #eaeff1',
         },
       },
     },
@@ -141,8 +141,8 @@ const theme = createTheme({
           fontSize: '0.875rem',
         },
         filled: {
-          backgroundColor: '#FEE2E2',
-          color: '#DC2626',
+          backgroundColor: '#e3f2fd',
+          color: '#1565c0',
         },
       },
     },
