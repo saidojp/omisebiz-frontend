@@ -36,12 +36,17 @@ export default function ActionBar({ restaurant }: Props) {
           startIcon={<Phone />}
           href={`tel:${restaurant.contacts.phone}`}
           size="large"
+          disableElevation
           sx={{ 
             flexGrow: 1,
-            bgcolor: 'common.black',
-            color: 'common.white',
+            borderRadius: '50px',
+            textTransform: 'none',
+            fontSize: '1rem',
+            fontWeight: 600,
+            bgcolor: '#e3f2fd', // Soft blue
+            color: '#1565c0',   // Darker blue text
             '&:hover': {
-              bgcolor: 'grey.800',
+              bgcolor: '#bbdefb',
             }
           }}
         >
@@ -58,11 +63,15 @@ export default function ActionBar({ restaurant }: Props) {
         size="large"
         sx={{ 
           flexGrow: 1,
-          borderColor: 'divider',
-          color: 'text.primary',
+          borderRadius: '50px',
+          textTransform: 'none',
+          fontSize: '1rem',
+          fontWeight: 600,
+          borderColor: '#e0e0e0',
+          color: '#424242',
           '&:hover': {
-            borderColor: 'text.primary',
-            bgcolor: 'action.hover',
+            borderColor: '#bdbdbd',
+            bgcolor: '#f5f5f5',
           }
         }}
       >

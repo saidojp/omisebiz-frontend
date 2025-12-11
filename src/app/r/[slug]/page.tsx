@@ -139,7 +139,7 @@ export default function RestaurantPage() {
                 component="h1" 
                 fontWeight="800"
                 sx={{ 
-                  color: 'common.black',
+                  color: '#212121', // Softer black
                   mb: 2,
                   fontSize: { xs: '2rem', md: '3rem' },
                   letterSpacing: '-0.02em'
@@ -153,23 +153,28 @@ export default function RestaurantPage() {
                 spacing={2} 
                 alignItems="center" 
                 justifyContent={{ xs: 'center', md: 'flex-start' }}
-                sx={{ color: 'text.secondary' }}
               >
                 {restaurant.category && (
-                  <Typography variant="body1" fontWeight={500}>
-                    {restaurant.category}
-                  </Typography>
+                  <Chip 
+                    label={restaurant.category}
+                    size="small"
+                    sx={{
+                      bgcolor: '#fff3e0', // Pastel Orange/Amber
+                      color: '#e65100',
+                      fontWeight: 600,
+                      borderRadius: '12px',
+                    }}
+                  />
                 )}
-                <Typography variant="body1" sx={{ color: 'grey.300' }}>•</Typography>
+                
                 <Chip 
                   label="Open Now" 
                   size="small" 
                   sx={{ 
-                    bgcolor: 'common.black', 
-                    color: 'common.white',
+                    bgcolor: '#e8f5e9', // Pastel Green
+                    color: '#2e7d32',
                     fontWeight: 600,
-                    borderRadius: 1,
-                    height: 24
+                    borderRadius: '12px',
                   }} 
                 />
               </Stack>

@@ -7,12 +7,12 @@ interface Props {
 
 export default function InfoCard({ title, children }: Props) {
   return (
-    <Card variant="outlined">
-      <CardContent>
-        <Typography variant="h6" gutterBottom fontWeight="bold">
+    <Card elevation={0} sx={{ height: '100%', borderRadius: 4, bgcolor: '#fafafa' }}>
+      <CardContent sx={{ p: 3 }}>
+        <Typography variant="h6" gutterBottom fontWeight="bold" sx={{ color: '#424242', mb: 2 }}>
           {title}
         </Typography>
-        <Box color="text.secondary">
+        <Box sx={{ color: '#616161' }}>
           {children}
         </Box>
       </CardContent>
