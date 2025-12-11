@@ -100,7 +100,8 @@ export default function FeaturedDish({ featuredDish }: FeaturedDishProps) {
               sx={{
                 mb: 4,
                 lineHeight: 1.7,
-                fontSize: '1.05rem'
+                fontSize: '1.05rem',
+                whiteSpace: 'pre-line', // Enable line breaks
               }}
             >
               {featuredDish.description}

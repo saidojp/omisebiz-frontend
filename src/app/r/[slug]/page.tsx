@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { Box, Container, Typography, CircularProgress, Alert, Avatar, Chip, Stack } from '@mui/material';
+import { useParams, useRouter } from 'next/navigation';
+import { Box, Container, Typography, CircularProgress, Alert, Avatar, Chip, Stack, Button } from '@mui/material';
 import { getRestaurantBySlug } from '@/lib/api';
 import { Restaurant } from '@/lib/types';
 import ActionBar from '@/components/restaurant/ActionBar';
@@ -12,8 +12,10 @@ import PhotoGallery from '@/components/restaurant/PhotoGallery';
 import SocialLinks from '@/components/restaurant/SocialLinks';
 import FeaturedDish from '@/components/restaurant/FeaturedDish';
 import MenuDisplay from '@/components/restaurant/MenuDisplay';
+import { ArrowBack } from '@mui/icons-material';
 
 export default function RestaurantPage() {
+  const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
   
@@ -106,6 +108,23 @@ export default function RestaurantPage() {
   return (
     <Box sx={{ pb: 8, bgcolor: 'common.white', minHeight: '100vh' }}>
       <Container maxWidth="lg" sx={{ pt: 4 }}>
+        {/* Navigation */}
+        <Box sx={{ mb: 2 }}>
+            <Button
+              startIcon={<ArrowBack />}
+                onClick={() => router.back()}
+                sx={{ 
+                  color: 'text.secondary',
+                  '&:hover': {
+                    bgcolor: 'transparent',
+                    color: 'text.primary',
+                  }
+                }}
+            >
+              Back
+            </Button>
+        </Box>
+
         {/* Header Section */}
         <Box sx={{ mb: 6 }}>
           {/* Top Bar: Socials */}
