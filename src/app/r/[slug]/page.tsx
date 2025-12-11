@@ -112,7 +112,14 @@ export default function RestaurantPage() {
         <Box sx={{ mb: 2 }}>
             <Button
               startIcon={<ArrowBack />}
-                onClick={() => router.back()}
+                onClick={() => {
+                  // If opened in new tab/direct link (no history), go to listing
+                  if (window.history.length <= 2) {
+                    router.push('/dashboard/public-restaurants');
+                  } else {
+                    router.back();
+                  }
+                }}
                 sx={{ 
                   color: 'text.secondary',
                   '&:hover': {
