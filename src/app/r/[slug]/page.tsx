@@ -222,7 +222,13 @@ export default function RestaurantPage() {
             {/* Featured Dish Section */}
             {restaurant.featuredDish && (
               <Box sx={{ mb: 4 }}>
-                <FeaturedDish featuredDish={restaurant.featuredDish} />
+                <FeaturedDish 
+                  featuredDish={{
+                    ...restaurant.featuredDish,
+                    description: restaurant.featuredDish.description || 
+                      restaurant.menuItems?.find(item => item.id === restaurant.featuredDish?.menuItemId)?.description
+                  }} 
+                />
               </Box>
             )}
 
