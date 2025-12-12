@@ -326,7 +326,7 @@ export default function PublicRestaurantsPage() {
 
               {/* Amenities Preview - Limit to 5, Prioritized or Featured */}
               {restaurant.attributes && (
-                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 1, height: 24, overflow: 'hidden' }}>
+                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 1, minHeight: 24, height: 'auto', maxHeight: 48, overflow: 'hidden' }}>
                   {(() => {
                     // Strategy: Use featuredAttributes if available, otherwise fallback to priority list
                     let displayedItems: any[] = [];
