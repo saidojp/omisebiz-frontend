@@ -144,9 +144,9 @@ export default function RestaurantPage() {
           <Box sx={{ 
             display: 'flex', 
             flexDirection: { xs: 'column', md: 'row' }, 
-            alignItems: { xs: 'center', md: 'flex-start' }, 
+            alignItems: { xs: 'center', md: 'flex-start' }, // Center on mobile
             gap: 4,
-            textAlign: { xs: 'center', md: 'left' }
+            textAlign: { xs: 'center', md: 'left' } // Center text on mobile
           }}>
             {/* Logo */}
             <Avatar 
@@ -160,11 +160,12 @@ export default function RestaurantPage() {
               }} 
             />
 
-            <Box sx={{ flexGrow: 1, pt: { md: 2 } }}>
+            <Box sx={{ flexGrow: 1, pt: { md: 2 }, width: '100%', minWidth: 0 }}>
               <Box sx={{ 
                 display: 'flex', 
                 flexDirection: { xs: 'column', md: 'row' },
-                alignItems: { xs: 'flex-start', md: 'center' },
+                alignItems: 'center', // Always center vertically relative to each other
+                justifyContent: { xs: 'center', md: 'flex-start' }, // Center horizontally on mobile
                 gap: { xs: 2, md: 3 },
                 mb: 2
               }}>
@@ -184,8 +185,11 @@ export default function RestaurantPage() {
 
                 <Stack 
                   direction="row" 
-                  spacing={2} 
+                  spacing={1} 
                   alignItems="center" 
+                  justifyContent={{ xs: 'center', md: 'flex-start' }}
+                  flexWrap="wrap"
+                  useFlexGap
                 >
                   {restaurant.category && (
                     <Chip 
@@ -215,19 +219,14 @@ export default function RestaurantPage() {
               
               {/* Amenities */}
               {restaurant.attributes && Object.keys(restaurant.attributes).length > 0 && (
-                <Stack 
-                  direction="row" 
-                  spacing={1} 
+                <Box 
                   sx={{ 
                     mt: 2,
-                    overflowX: { xs: 'auto', md: 'visible' },
-                    flexWrap: { xs: 'nowrap', md: 'wrap' },
-                    // Hide scrollbar for cleaner look
-                    '&::-webkit-scrollbar': { display: 'none' },
-                    scrollbarWidth: 'none',
-                    pb: 1, // Add padding for potential scrollbar space
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 1,
                     width: '100%',
-                    gap: 1, // Ensure consistent gap
+                    justifyContent: { xs: 'center', md: 'flex-start' } // Center attributes on mobile
                   }}
                 >
                   {Object.values(ATTRIBUTE_GROUPS).flatMap((group: any) => 
@@ -244,10 +243,8 @@ export default function RestaurantPage() {
                               color: group.colors?.text || 'text.secondary',
                               bgcolor: group.colors?.bg || 'grey.50',
                               fontSize: '0.75rem',
-                              height: 26, // Slightly taller for better touch
+                              height: 26, 
                               fontWeight: 500,
-                              flexShrink: 0, // Prevent shrinking in scroll view
-                              ml: 0, // Reset margin since using gap
                             }}
                           />
                         );
@@ -255,7 +252,7 @@ export default function RestaurantPage() {
                       return null;
                     })
                   )}
-                </Stack>
+                </Box>
               )}
             </Box>
           </Box>
