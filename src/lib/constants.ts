@@ -46,12 +46,22 @@ export const DAYS_OF_WEEK = [
 export const ATTRIBUTE_GROUPS = {
   accessibility: {
     label: 'Accessibility',
+    colors: {
+      bg: '#e3f2fd', // Blue 50
+      text: '#1565c0', // Blue 800
+      border: '#bbdefb', // Blue 100
+    },
     items: [
       { key: 'wheelchairAccessible', label: 'Wheelchair Accessible' },
     ],
   },
   amenities: {
     label: 'Amenities',
+    colors: {
+      bg: '#e3f2fd', // Blue 50
+      text: '#1565c0', // Blue 800
+      border: '#bbdefb', // Blue 100
+    },
     items: [
       { key: 'freeWifi', label: 'Free WiFi' },
       { key: 'parking', label: 'Parking Available' },
@@ -62,6 +72,11 @@ export const ATTRIBUTE_GROUPS = {
   },
   payment: {
     label: 'Payment Methods',
+    colors: {
+      bg: '#e3f2fd', // Blue 50
+      text: '#1565c0', // Blue 800
+      border: '#bbdefb', // Blue 100
+    },
     items: [
       { key: 'creditCards', label: 'Credit Cards Accepted' },
       { key: 'cashOnly', label: 'Cash Only' },
@@ -69,6 +84,11 @@ export const ATTRIBUTE_GROUPS = {
   },
   atmosphere: {
     label: 'Atmosphere',
+    colors: {
+      bg: '#e3f2fd', // Blue 50
+      text: '#1565c0', // Blue 800
+      border: '#bbdefb', // Blue 100
+    },
     items: [
       { key: 'familyFriendly', label: 'Family Friendly' },
       { key: 'romantic', label: 'Romantic' },
@@ -78,6 +98,11 @@ export const ATTRIBUTE_GROUPS = {
   },
   services: {
     label: 'Services',
+    colors: {
+      bg: '#e3f2fd', // Blue 50
+      text: '#1565c0', // Blue 800
+      border: '#bbdefb', // Blue 100
+    },
     items: [
       { key: 'dineIn', label: 'Dine-In' },
       { key: 'takeout', label: 'Takeout' },

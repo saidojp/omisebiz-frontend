@@ -161,50 +161,102 @@ export default function RestaurantPage() {
             />
 
             <Box sx={{ flexGrow: 1, pt: { md: 2 } }}>
-              <Typography 
-                variant="h2" 
-                component="h1" 
-                fontWeight="800"
-                sx={{ 
-                  color: '#212121', // Softer black
-                  mb: 2,
-                  fontSize: { xs: '2rem', md: '3rem' },
-                  letterSpacing: '-0.02em'
-                }}
-              >
-                {restaurant.name}
-              </Typography>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: { xs: 'column', md: 'row' },
+                alignItems: { xs: 'flex-start', md: 'center' },
+                gap: { xs: 2, md: 3 },
+                mb: 2
+              }}>
+                <Typography 
+                  variant="h2" 
+                  component="h1" 
+                  fontWeight="800"
+                  sx={{ 
+                    color: '#212121', // Softer black
+                    fontSize: { xs: '2rem', md: '3rem' },
+                    letterSpacing: '-0.02em',
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {restaurant.name}
+                </Typography>
 
-              <Stack 
-                direction="row" 
-                spacing={2} 
-                alignItems="center" 
-                justifyContent={{ xs: 'center', md: 'flex-start' }}
-              >
-                {restaurant.category && (
+                <Stack 
+                  direction="row" 
+                  spacing={2} 
+                  alignItems="center" 
+                >
+                  {restaurant.category && (
+                    <Chip 
+                      label={restaurant.category}
+                      size="small"
+                      sx={{
+                        bgcolor: '#fff3e0', // Pastel Orange/Amber
+                        color: '#e65100',
+                        fontWeight: 600,
+                        borderRadius: '12px',
+                      }}
+                    />
+                  )}
+                  
                   <Chip 
-                    label={restaurant.category}
-                    size="small"
-                    sx={{
-                      bgcolor: '#fff3e0', // Pastel Orange/Amber
-                      color: '#e65100',
+                    label="Open Now" 
+                    size="small" 
+                    sx={{ 
+                      bgcolor: '#e8f5e9', // Pastel Green
+                      color: '#2e7d32',
                       fontWeight: 600,
                       borderRadius: '12px',
-                    }}
+                    }} 
                   />
-                )}
-                
-                <Chip 
-                  label="Open Now" 
-                  size="small" 
+                </Stack>
+              </Box>
+              
+              {/* Amenities */}
+              {restaurant.attributes && Object.keys(restaurant.attributes).length > 0 && (
+                <Stack 
+                  direction="row" 
+                  spacing={1} 
                   sx={{ 
-                    bgcolor: '#e8f5e9', // Pastel Green
-                    color: '#2e7d32',
-                    fontWeight: 600,
-                    borderRadius: '12px',
-                  }} 
-                />
-              </Stack>
+                    mt: 2,
+                    overflowX: { xs: 'auto', md: 'visible' },
+                    flexWrap: { xs: 'nowrap', md: 'wrap' },
+                    // Hide scrollbar for cleaner look
+                    '&::-webkit-scrollbar': { display: 'none' },
+                    scrollbarWidth: 'none',
+                    pb: 1, // Add padding for potential scrollbar space
+                    width: '100%',
+                    gap: 1, // Ensure consistent gap
+                  }}
+                >
+                  {Object.values(ATTRIBUTE_GROUPS).flatMap((group: any) => 
+                    group.items.map((item: any) => {
+                      if (restaurant.attributes?.[item.key]) {
+                        return (
+                          <Chip 
+                            key={item.key} 
+                            label={item.label} 
+                            size="small" 
+                            variant="outlined"
+                            sx={{
+                              borderColor: group.colors?.border || 'grey.300',
+                              color: group.colors?.text || 'text.secondary',
+                              bgcolor: group.colors?.bg || 'grey.50',
+                              fontSize: '0.75rem',
+                              height: 26, // Slightly taller for better touch
+                              fontWeight: 500,
+                              flexShrink: 0, // Prevent shrinking in scroll view
+                              ml: 0, // Reset margin since using gap
+                            }}
+                          />
+                        );
+                      }
+                      return null;
+                    })
+                  )}
+                </Stack>
+              )}
             </Box>
           </Box>
         </Box>
@@ -288,24 +340,7 @@ export default function RestaurantPage() {
                 )}
               </InfoCard>
 
-              {restaurant.attributes && Object.keys(restaurant.attributes).length > 0 && (
-                <InfoCard title="Amenities">
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    {Object.values(ATTRIBUTE_GROUPS).flatMap(group => 
-                      group.items.map(item => {
-                        if (restaurant.attributes?.[item.key]) {
-                          return (
-                            <Typography key={item.key} variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              ✅ {item.label}
-                            </Typography>
-                          );
-                        }
-                        return null;
-                      })
-                    )}
-                  </Box>
-                </InfoCard>
-              )}
+
 
               {/* Removed SocialLinks from sidebar as they are now in the header */}
             </Box>
