@@ -46,7 +46,6 @@ export default function PublicRestaurantsPage() {
   // Derived state for filter options
   const formatPriceRange = (range: any) => range ? `${range.currency}${range.min} - ${range.currency}${range.max}` : '';
   const categories = Array.from(new Set(restaurants.map(r => r.category).filter(Boolean))) as string[];
-  const locations = Array.from(new Set(restaurants.map(r => r.address?.city?.trim()).filter(Boolean))) as string[];
   
   const PRICE_BUCKETS = [
     { label: 'Under ¥1,000', min: 0, max: 1000 },
@@ -54,6 +53,16 @@ export default function PublicRestaurantsPage() {
     { label: '¥3,000 - ¥5,000', min: 3000, max: 5000 },
     { label: '¥5,000 - ¥10,000', min: 5000, max: 10000 },
     { label: 'Above ¥10,000', min: 10000, max: Infinity },
+  ];
+
+  const JAPAN_PREFECTURES = [
+    'Hokkaido', 'Aomori', 'Iwate', 'Miyagi', 'Akita', 'Yamagata', 'Fukushima',
+    'Ibaraki', 'Tochigi', 'Gunma', 'Saitama', 'Chiba', 'Tokyo', 'Kanagawa',
+    'Niigata', 'Toyama', 'Ishikawa', 'Fukui', 'Yamanashi', 'Nagano', 'Gifu', 'Shizuoka', 'Aichi',
+    'Mie', 'Shiga', 'Kyoto', 'Osaka', 'Hyogo', 'Nara', 'Wakayama',
+    'Tottori', 'Shimane', 'Okayama', 'Hiroshima', 'Yamaguchi',
+    'Tokushima', 'Kagawa', 'Ehime', 'Kochi',
+    'Fukuoka', 'Saga', 'Nagasaki', 'Kumamoto', 'Oita', 'Miyazaki', 'Kagoshima', 'Okinawa'
   ];
 
   useEffect(() => {
@@ -73,10 +82,22 @@ export default function PublicRestaurantsPage() {
     }
   };
 
+  // Extract used prefectures from restaurants
+  const locations = Array.from(new Set(restaurants.map(r => {
+    const addressStr = `${r.address?.city || ''} ${r.address?.street || ''}`;
+    return JAPAN_PREFECTURES.find(pref => addressStr.includes(pref));
+  }).filter(Boolean))) as string[];
+
   const filteredRestaurants = restaurants.filter((r) => {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory ? r.category === selectedCategory : true;
-    const matchesLocation = selectedLocation ? r.address?.city?.trim() === selectedLocation : true;
+    
+    // Check if address contains the selected prefecture
+    let matchesLocation = true;
+    if (selectedLocation) {
+        const addressStr = `${r.address?.city || ''} ${r.address?.street || ''}`;
+        matchesLocation = addressStr.includes(selectedLocation);
+    }
     
     let matchesPrice = true;
     if (selectedPrice) {
