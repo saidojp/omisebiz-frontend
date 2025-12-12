@@ -213,7 +213,7 @@ export default function RestaurantPage() {
 
 
 
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: { xs: 3, md: 4 } }}>
           {/* Left Column - Main Info */}
           <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 66.666%' } }}>
 
@@ -255,7 +255,7 @@ export default function RestaurantPage() {
 
           {/* Right Column - Sidebar Info */}
           <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 33.333%' } }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 } }}>
               <InfoCard title="Location">
                 <Typography variant="body2" gutterBottom>
                   {restaurant.address?.street}<br />

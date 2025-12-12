@@ -77,7 +77,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       {/* Logo Section */}
       <Box
         sx={{
-          p: 3,
+          p: { xs: 2, md: 3 },
           display: 'flex',
           alignItems: 'center',
           gap: 1.5,
@@ -92,9 +92,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       <Divider />
 
       {/* Navigation Menu */}
-      <List sx={{ flex: 1, pt: 2 }}>
+      <List sx={{ flex: 1, pt: { xs: 1, md: 2 } }}>
         {visibleMenuItems.map((item) => (
-          <ListItem key={item.text} disablePadding sx={{ px: 2, mb: 0.5 }}>
+          <ListItem key={item.text} disablePadding sx={{ px: { xs: 1.5, md: 2 }, mb: 0.5 }}>
             <ListItemButton
               onClick={() => handleNavigation(item.href)}
               sx={{
@@ -120,7 +120,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       <Divider />
 
       {/* Footer */}
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: { xs: 1.5, md: 2 } }}>
         <Typography variant="caption" color="text.secondary">
           © 2025 Omise
         </Typography>
