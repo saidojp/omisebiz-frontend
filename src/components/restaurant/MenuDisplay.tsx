@@ -191,7 +191,20 @@ export default function MenuDisplay({ menuItems }: MenuDisplayProps) {
                           mb: 0.5,
                         }}
                       >
-                        <Typography variant="h6" component="h4" sx={{ fontWeight: 600, flex: 1, wordBreak: 'break-word' }}>
+                        <Typography 
+                          variant="h6" 
+                          component="h4" 
+                          sx={{ 
+                            fontWeight: 600, 
+                            flex: 1, 
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            wordBreak: 'break-word'
+                          }}
+                        >
                           {item.name}
                         </Typography>
                         <Typography
