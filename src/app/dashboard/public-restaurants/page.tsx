@@ -331,8 +331,8 @@ export default function PublicRestaurantsPage() {
                     // Strategy: Use featuredAttributes if available, otherwise fallback to priority list
                     let displayedItems: any[] = [];
                     
-                    if (restaurant.featuredAttributes && restaurant.featuredAttributes.length > 0) {
-                      // Manual selection
+                    if (restaurant.featuredAttributes) {
+                      // Manual selection (Strict: Show only what is starred, even if empty)
                       displayedItems = restaurant.featuredAttributes.map(key => {
                         // Find the item definition across all groups
                         for (const group of Object.values(ATTRIBUTE_GROUPS)) {
