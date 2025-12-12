@@ -1,6 +1,4 @@
-'use client';
-
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 import {
   Stack,
   Typography,
@@ -14,7 +12,7 @@ import { ATTRIBUTE_GROUPS } from '@/lib/constants';
 import type { RestaurantFormData } from '@/lib/validations';
 
 export default function AttributesTab() {
-  const { register } = useFormContext<RestaurantFormData>();
+  const { control } = useFormContext<RestaurantFormData>();
 
   return (
     <Stack spacing={4}>
@@ -29,10 +27,21 @@ export default function AttributesTab() {
           </Typography>
           <FormGroup>
             {group.items.map((item) => (
-              <FormControlLabel
+              <Controller
                 key={item.key}
-                control={<Checkbox {...register(`attributes.${item.key}`)} />}
-                label={item.label}
+                name={`attributes.${item.key}`}
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox 
+                        checked={!!field.value} 
+                        onChange={(e) => field.onChange(e.target.checked)} 
+                      />
+                    }
+                    label={item.label}
+                  />
+                )}
               />
             ))}
           </FormGroup>
