@@ -13,6 +13,7 @@ import SocialLinks from '@/components/restaurant/SocialLinks';
 import FeaturedDish from '@/components/restaurant/FeaturedDish';
 import MenuDisplay from '@/components/restaurant/MenuDisplay';
 import { ArrowBack } from '@mui/icons-material';
+import { ATTRIBUTE_GROUPS } from '@/lib/constants';
 
 export default function RestaurantPage() {
   const router = useRouter();
@@ -286,6 +287,25 @@ export default function RestaurantPage() {
                   </Typography>
                 )}
               </InfoCard>
+
+              {restaurant.attributes && Object.keys(restaurant.attributes).length > 0 && (
+                <InfoCard title="Amenities">
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    {Object.values(ATTRIBUTE_GROUPS).flatMap(group => 
+                      group.items.map(item => {
+                        if (restaurant.attributes?.[item.key]) {
+                          return (
+                            <Typography key={item.key} variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              ✅ {item.label}
+                            </Typography>
+                          );
+                        }
+                        return null;
+                      })
+                    )}
+                  </Box>
+                </InfoCard>
+              )}
 
               {/* Removed SocialLinks from sidebar as they are now in the header */}
             </Box>
