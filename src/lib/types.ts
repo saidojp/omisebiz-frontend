@@ -118,6 +118,7 @@ export interface Restaurant {
   hours?: RestaurantHours;
   priceRange?: PriceRange;
   attributes?: RestaurantAttributes;
+  featuredAttributes?: string[];
   media?: RestaurantMedia;
   socials?: RestaurantSocials;
   menuItems?: MenuItem[];
@@ -150,6 +151,7 @@ export interface RestaurantFormData {
   hours?: RestaurantHours;
   priceRange?: PriceRange;
   attributes?: RestaurantAttributes;
+  featuredAttributes?: string[];
   media?: RestaurantMedia;
   socials?: RestaurantSocials;
   menuItems?: MenuItem[];

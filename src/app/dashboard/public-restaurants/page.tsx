@@ -31,6 +31,7 @@ import {
   Clear,
 } from '@mui/icons-material';
 import { getPublicRestaurants } from '@/lib/api';
+import { ATTRIBUTE_GROUPS, CARD_DISPLAY_PRIORITY } from '@/lib/constants';
 import type { Restaurant } from '@/lib/types';
 
 export default function PublicRestaurantsPage() {
@@ -322,6 +323,62 @@ export default function PublicRestaurantsPage() {
                   />
                 )}
               </Box>
+
+              {/* Amenities Preview - Limit to 5, Prioritized or Featured */}
+              {restaurant.attributes && (
+                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 1, height: 24, overflow: 'hidden' }}>
+                  {(() => {
+                    // Strategy: Use featuredAttributes if available, otherwise fallback to priority list
+                    let displayedItems: any[] = [];
+                    
+                    if (restaurant.featuredAttributes && restaurant.featuredAttributes.length > 0) {
+                      // Manual selection
+                      displayedItems = restaurant.featuredAttributes.map(key => {
+                        // Find the item definition across all groups
+                        for (const group of Object.values(ATTRIBUTE_GROUPS)) {
+                           const found = (group as any).items.find((i: any) => i.key === key);
+                           if (found) return { ...found, colors: (group as any).colors };
+                        }
+                        return null;
+                      }).filter(Boolean);
+                    } else {
+                      // Auto priority fallback
+                      displayedItems = Object.values(ATTRIBUTE_GROUPS).flatMap((group: any) => 
+                        group.items.map((item: any) => {
+                          if (restaurant.attributes?.[item.key]) {
+                            const priority = CARD_DISPLAY_PRIORITY.indexOf(item.key);
+                            return { 
+                              ...item, 
+                              colors: group.colors, 
+                              priority: priority === -1 ? 100 : priority 
+                            };
+                          }
+                          return null;
+                        })
+                      )
+                      .filter(Boolean)
+                      .sort((a: any, b: any) => a.priority - b.priority);
+                    }
+
+                    return displayedItems.slice(0, 5).map((item: any) => (
+                      <Chip
+                        key={item.key}
+                        label={item.label}
+                        size="small"
+                        variant="outlined"
+                        sx={{
+                          borderColor: item.colors?.border || 'grey.300',
+                          color: item.colors?.text || 'text.secondary',
+                          bgcolor: item.colors?.bg || 'grey.50',
+                          fontSize: '0.65rem',
+                          height: 20,
+                          fontWeight: 500,
+                        }}
+                      />
+                    ));
+                  })()}
+                </Box>
+              )}
               
               {restaurant.location && (
                 <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: 'text.secondary', mt: 'auto' }}>

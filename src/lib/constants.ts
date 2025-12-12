@@ -112,6 +112,26 @@ export const ATTRIBUTE_GROUPS = {
   },
 } as const;
 
+// Priority list for card display (high priority first)
+export const CARD_DISPLAY_PRIORITY = [
+  'freeWifi',
+  'creditCards',
+  'parking',
+  'wheelchairAccessible',
+  'outdoorSeating',
+  'reservations',
+  'delivery',
+  'takeout',
+  'dineIn',
+  'familyFriendly',
+  'romantic',
+  'bar',
+  'liveMusic',
+  'casual',
+  'upscale',
+  'cashOnly',
+];
+
 // Default Hours
 export const defaultHours = {
   monday: { isOpen: true, open: '09:00', close: '22:00' },

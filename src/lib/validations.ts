@@ -119,6 +119,7 @@ export const restaurantFormSchema = z.object({
   location: restaurantLocationSchema,
   hours: restaurantHoursSchema,
   attributes: restaurantAttributesSchema,
+  featuredAttributes: z.array(z.string()).optional(),
   media: restaurantMediaSchema,
   socials: restaurantSocialsSchema,
   menuItems: z.array(menuItemSchema).optional(),
