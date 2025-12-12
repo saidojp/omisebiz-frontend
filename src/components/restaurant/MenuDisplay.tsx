@@ -187,16 +187,21 @@ export default function MenuDisplay({ menuItems }: MenuDisplayProps) {
                           display: 'flex',
                           justifyContent: 'space-between',
                           alignItems: 'flex-start',
+                          gap: 2, // Explicit gap
                           mb: 0.5,
                         }}
                       >
-                        <Typography variant="h6" component="h4" sx={{ fontWeight: 600 }}>
+                        <Typography variant="h6" component="h4" sx={{ fontWeight: 600, flex: 1, wordBreak: 'break-word' }}>
                           {item.name}
                         </Typography>
                         <Typography
                           variant="h6"
                           color="primary"
-                          sx={{ fontWeight: 'bold', ml: 2 }}
+                          sx={{ 
+                            fontWeight: 'bold',
+                            whiteSpace: 'nowrap', // Prevent wrapping
+                            flexShrink: 0, // Prevent shrinking
+                          }}
                         >
                           {item.price}
                         </Typography>

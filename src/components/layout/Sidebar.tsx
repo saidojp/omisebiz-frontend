@@ -122,7 +122,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       {/* Footer */}
       <Box sx={{ p: 2 }}>
         <Typography variant="caption" color="text.secondary">
-          © 2025 OmiseBiz
+          © 2025 Omise
         </Typography>
       </Box>
     </Box>

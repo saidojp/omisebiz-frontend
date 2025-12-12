@@ -38,13 +38,14 @@ export default function ActionBar({ restaurant }: Props) {
           size="large"
           disableElevation
           sx={{ 
-            flexGrow: 1,
+            flex: 1, // Ensure equal distribution
+            minWidth: '120px', // Prevent becoming too small
             borderRadius: '50px',
             textTransform: 'none',
             fontSize: '1rem',
             fontWeight: 600,
-            bgcolor: '#e3f2fd', // Soft blue
-            color: '#1565c0',   // Darker blue text
+            bgcolor: '#e3f2fd',
+            color: '#1565c0',
             '&:hover': {
               bgcolor: '#bbdefb',
             }
@@ -62,12 +63,14 @@ export default function ActionBar({ restaurant }: Props) {
         rel="noopener noreferrer"
         size="large"
         sx={{ 
-          flexGrow: 1,
+          flex: 1, // Ensure equal distribution
+          minWidth: '120px',
+          borderRadius: '50px',
           textTransform: 'none',
           fontSize: '1rem',
           fontWeight: 600,
-            bgcolor: '#e3f2fd', // Soft blue
-            color: '#1565c0',   // Darker blue text
+            bgcolor: '#e3f2fd',
+            color: '#1565c0',
             '&:hover': {
               bgcolor: '#bbdefb',
           }
