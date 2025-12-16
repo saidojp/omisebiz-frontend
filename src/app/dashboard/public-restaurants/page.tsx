@@ -341,23 +341,6 @@ export default function PublicRestaurantsPage() {
                         }
                         return null;
                       }).filter(Boolean);
-                    } else {
-                      // Auto priority fallback
-                      displayedItems = Object.values(ATTRIBUTE_GROUPS).flatMap((group: any) => 
-                        group.items.map((item: any) => {
-                          if (restaurant.attributes?.[item.key]) {
-                            const priority = CARD_DISPLAY_PRIORITY.indexOf(item.key);
-                            return { 
-                              ...item, 
-                              colors: group.colors, 
-                              priority: priority === -1 ? 100 : priority 
-                            };
-                          }
-                          return null;
-                        })
-                      )
-                      .filter(Boolean)
-                      .sort((a: any, b: any) => a.priority - b.priority);
                     }
 
                     return displayedItems.slice(0, 5).map((item: any) => (
