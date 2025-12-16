@@ -73,6 +73,7 @@ export interface RestaurantAttributes {
   wheelchairAccessible?: boolean;
   outdoorSeating?: boolean;
   acceptsCreditCards?: boolean;
+  halal?: boolean;
   [key: string]: boolean | undefined;
 }
 

@@ -110,10 +110,22 @@ export const ATTRIBUTE_GROUPS = {
       { key: 'reservations', label: 'Reservations' },
     ],
   },
+  dietary: {
+    label: 'Dietary',
+    colors: {
+      bg: '#e8f5e9', // Green 50
+      text: '#2e7d32', // Green 800
+      border: '#c8e6c9', // Green 100
+    },
+    items: [
+      { key: 'halal', label: 'Halal' },
+    ],
+  },
 } as const;
 
 // Priority list for card display (high priority first)
 export const CARD_DISPLAY_PRIORITY = [
+  'halal',
   'freeWifi',
   'creditCards',
   'parking',
