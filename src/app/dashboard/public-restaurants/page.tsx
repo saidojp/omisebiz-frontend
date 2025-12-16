@@ -43,6 +43,7 @@ export default function PublicRestaurantsPage() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
+  const [selectedDietary, setSelectedDietary] = useState('');
 
   // Derived state for filter options
   const formatPriceRange = (range: any) => range ? `${range.currency}${range.min} - ${range.currency}${range.max}` : '';
@@ -111,7 +112,9 @@ export default function PublicRestaurantsPage() {
       }
     }
 
-    return matchesSearch && matchesCategory && matchesLocation && matchesPrice;
+    const matchesDietary = selectedDietary ? r.attributes?.[selectedDietary] : true;
+
+    return matchesSearch && matchesCategory && matchesLocation && matchesPrice && matchesDietary;
   });
 
   const clearFilters = () => {
@@ -119,6 +122,7 @@ export default function PublicRestaurantsPage() {
     setSelectedCategory('');
     setSelectedLocation('');
     setSelectedPrice('');
+    setSelectedDietary('');
   };
 
   return (
@@ -201,7 +205,23 @@ export default function PublicRestaurantsPage() {
             </FormControl>
           </Box>
 
-          {(selectedCategory || selectedLocation || selectedPrice || searchQuery) && (
+          <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 30%', md: '2' } }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Dietary</InputLabel>
+              <Select
+                value={selectedDietary}
+                label="Dietary"
+                onChange={(e) => setSelectedDietary(e.target.value)}
+              >
+                <MenuItem value=""><em>All</em></MenuItem>
+                {ATTRIBUTE_GROUPS.dietary.items.map((item) => (
+                  <MenuItem key={item.key} value={item.key}>{item.label}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          {(selectedCategory || selectedLocation || selectedPrice || selectedDietary || searchQuery) && (
             <Box sx={{ flex: { xs: '1 1 100%', md: 'auto' }, width: { md: 'auto' } }}>
               <Button 
                 variant="outlined" 
