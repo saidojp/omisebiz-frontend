@@ -1,126 +1,135 @@
 # OmiseBiz Frontend
 
-Restaurant Management Platform - Frontend Application
+A modern, centralized platform for managing restaurant profiles and generating stunning public landing pages. Designed for restaurant owners to easily manage their digital presence.
 
-## 🚀 Tech Stack
+## 🌟 Overview
+
+OmiseBiz serves as a single source of truth for restaurant data. It allows owners to manage multiple locations, menus, operating hours, and media from one dashboard, automatically generating SEO-optimized public websites for each restaurant.
+
+## 🚀 Key Features (MVP)
+
+- **Owner Dashboard**: A comprehensive control panel to manage all your restaurant listings.
+- **Restaurant Management**:
+  - Detailed profile editing (Contacts, Address, Map Location).
+  - Operating Hours management with break times.
+  - Rich attribute selection (Amenities, Payment methods, etc.).
+- **Visual Content**:
+  - Image Gallery (Interior, Exterior, Food, Team).
+  - Menu management (Digital menu items & Featured Dish).
+- **Public Landing Pages**:
+  - Automatically generated at `/r/[slug]`.
+  - Modern, responsive design.
+  - SEO-optimized metadata.
+- **Public Directory**: Browse all published restaurants in the system.
+- **Authentication**: Secure login/registration for business owners.
+
+## 🛠 Tech Stack
 
 - **Framework**: Next.js 14+ (App Router)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS + Material UI (MUI)
+- **Styling**: Tailwind CSS, Shadcn UI, Material UI
 - **State Management**: Zustand
 - **Forms**: React Hook Form + Zod
-- **HTTP Client**: Axios
+- **Networking**: Axios
 
-## 📋 Prerequisites
+## 🚦 Getting Started
 
-- Node.js 18+ 
-- npm or yarn
-- Backend API running on `http://localhost:4000`
+### Prerequisites
+- Node.js 18+
+- Backend API running (default: port 4000)
 
-## 🛠️ Installation
+### Installation
 
-```bash
-# Install dependencies
-npm install
+1. **Clone the repository**
+   ```bash
+   git clone <repo-url>
+   cd omisebiz-frontend
+   ```
 
-# Copy environment variables
-cp .env.example .env.local
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# Start development server
-npm run dev
-```
+3. **Configure Environment**
+   Create a `.env.local` file:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:4000/api
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+4. **Run Development Server**
+   ```bash
+   npm run dev
+   ```
 
-## 📁 Project Structure
+Visit [http://localhost:3000](http://localhost:3000) to view the application.
 
-```
-src/
-├── app/                    # Next.js App Router pages
-│   ├── (auth)/            # Auth pages (login, register)
-│   ├── (dashboard)/       # Protected dashboard pages
-│   ├── r/[slug]/          # Public restaurant pages
-│   └── layout.tsx         # Root layout
-├── components/
-│   ├── ui/                # Reusable UI components
-│   ├── forms/             # Form components
-│   ├── restaurant/        # Restaurant-specific components
-│   ├── layout/            # Layout components
-│   └── providers/         # Context providers
-└── lib/
-    ├── api.ts             # API client
-    ├── store.ts           # Zustand stores
-    ├── types.ts           # TypeScript types
-    ├── utils.ts           # Utility functions
-    ├── constants.ts       # Constants
-    └── validations.ts     # Zod schemas
-```
+---
 
-## 🌍 Environment Variables
+# OmiseBiz フロントエンド
 
-Create `.env.local` file:
+レストランのプロフィールを一元管理し、魅力的な公開ランディングページを生成する最新のプラットフォームです。飲食店のオーナーがデジタルプレゼンスを簡単に管理できるように設計されています。
 
-```env
-NEXT_PUBLIC_API_URL=http://localhost:4000
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
+## 🌟 概要
 
-## 📚 Available Scripts
+OmiseBizは、レストランデータの「信頼できる唯一の情報源（Single Source of Truth）」として機能します。オーナーは1つのダッシュボードから複数の店舗、メニュー、営業時間、メディアを管理でき、各レストランのSEO最適化された公開ウェブサイトを自動的に生成します。
 
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm start        # Start production server
-npm run lint     # Run ESLint
-```
+## 🚀 主な機能 (MVP)
 
-## 🎨 Features
+- **オーナーダッシュボード**: すべてのレストランリストを管理するための包括的なコントロールパネル。
+- **レストラン管理**:
+  - 詳細なプロフィール編集（連絡先、住所、地図上の位置）。
+  - 休憩時間を含む営業時間の管理。
+  - 豊富な属性選択（アメニティ、支払い方法など）。
+- **ビジュアルコンテンツ**:
+  - 画像ギャラリー（内観、外観、料理、チーム）。
+  - メニュー管理（デジタルメニュー項目＆おすすめ料理）。
+- **公開ランディングページ**:
+  - `/r/[slug]` で自動生成されます。
+  - モダンでレスポンシブなデザイン。
+  - SEO最適化されたメタデータ。
+- **公開ディレクトリ**: システム内のすべての公開レストランを閲覧可能。
+- **認証**: ビジネスオーナー向けの安全なログイン/登録機能。
 
-### Phase 1: ✅ Infrastructure
-- Next.js setup with TypeScript
-- MUI theme configuration
-- API client with interceptors
-- Auth store with Zustand
-- Route protection middleware
+## � 技術スタック
 
-### Phase 2: 🚧 Authentication (In Progress)
-- Login page
-- Register page
-- User session management
+- **フレームワーク**: Next.js 14+ (App Router)
+- **言語**: TypeScript
+- **スタイリング**: Tailwind CSS, Shadcn UI, Material UI
+- **状態管理**: Zustand
+- **フォーム**: React Hook Form + Zod
+- **通信**: Axios
 
-### Phase 3: 📋 Dashboard
-- Restaurant list
-- Create/Edit forms
-- Delete functionality
+## � 始め方
 
-### Phase 4: 🍽️ Public Pages
-- Public restaurant pages
-- SEO optimization
-- Social sharing
+### 前提条件
+- Node.js 18以上
+- バックエンドAPIが稼働していること（デフォルト: ポート4000）
 
-## 📖 Documentation
+### インストール
 
-- [Manifest](./docs/manifest.md) - Project overview
-- [Backend Roadmap](./docs/roadmap.md) - Backend development plan
-- [Frontend Roadmap](./docs/frontend-roadmap.md) - Frontend development plan
-- [API Reference](./docs/backend-api-reference.md) - Backend API documentation
+1. **リポジトリのクローン**
+   ```bash
+   git clone <repo-url>
+   cd omisebiz-frontend
+   ```
 
-## 🔗 Backend
+2. **依存関係のインストール**
+   ```bash
+   npm install
+   ```
 
-Make sure the backend is running:
-```bash
-# In backend directory
-npm run dev
-```
+3. **環境設定**
+   `.env.local` ファイルを作成します:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:4000/api
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   ```
 
-Backend should be available at `http://localhost:4000`
+4. **開発サーバーの起動**
+   ```bash
+   npm run dev
+   ```
 
-## 🧑‍💻 Development
-
-1. Start backend server (port 4000)
-2. Start frontend dev server: `npm run dev`
-3. Open browser at `http://localhost:3000`
-
-## 📄 License
-
-ISC
+ブラウザで [http://localhost:3000](http://localhost:3000) を開いてアプリケーションを確認してください。
