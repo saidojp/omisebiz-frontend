@@ -47,39 +47,39 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
 
   const defaultValues: DefaultValues<RestaurantFormData> = restaurant
     ? {
-        name: restaurant.name,
-        description: restaurant.description || '',
-        category: restaurant.category || '',
-        priceRange: restaurant.priceRange || undefined,
-        contacts: restaurant.contacts || {},
-        address: restaurant.address || {},
-        location: restaurant.location || null,
-        hours: restaurant.hours || defaultHours,
-        attributes: restaurant.attributes || {},
-        featuredAttributes: restaurant.featuredAttributes || [],
-        media: restaurant.media || {},
-        socials: restaurant.socials || {},
-        menuItems: restaurant.menuItems || [],
-        featuredDish: restaurant.featuredDish || undefined,
-        isPublished: restaurant.isPublished || false,
-      }
+      name: restaurant.name,
+      description: restaurant.description || '',
+      category: restaurant.category || '',
+      priceRange: restaurant.priceRange || undefined,
+      contacts: restaurant.contacts || {},
+      address: restaurant.address || {},
+      location: restaurant.location || null,
+      hours: restaurant.hours || defaultHours,
+      attributes: restaurant.attributes || {},
+      featuredAttributes: restaurant.featuredAttributes || [],
+      media: restaurant.media || {},
+      socials: restaurant.socials || {},
+      menuItems: restaurant.menuItems || [],
+      featuredDish: restaurant.featuredDish || undefined,
+      isPublished: restaurant.isPublished || false,
+    }
     : {
-        name: '',
-        description: '',
-        category: '',
-        priceRange: undefined,
-        contacts: {},
-        address: {},
-        location: null,
-        hours: defaultHours,
-        attributes: {},
-        featuredAttributes: [],
-        media: {},
-        socials: {},
-        menuItems: [],
-        featuredDish: undefined,
-        isPublished: false,
-      };
+      name: '',
+      description: '',
+      category: '',
+      priceRange: undefined,
+      contacts: {},
+      address: {},
+      location: null,
+      hours: defaultHours,
+      attributes: {},
+      featuredAttributes: [],
+      media: {},
+      socials: {},
+      menuItems: [],
+      featuredDish: undefined,
+      isPublished: false,
+    };
 
   const methods = useForm<RestaurantFormData>({
     resolver: zodResolver(restaurantFormSchema),
@@ -89,7 +89,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
   const onSubmit = async (data: RestaurantFormData) => {
     console.log('=== FORM SUBMISSION STARTED ===');
     console.log('Raw form data:', JSON.stringify(data, null, 2));
-    
+
     setLoading(true);
     setError('');
     setSuccess('');
@@ -127,17 +127,17 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
     // Clean up optional string fields
     payload.description = data.description || undefined;
     payload.category = data.category || undefined;
-    
+
     // Explicitly handle priceRange
     // Check if we have valid numbers for min/max
-    if (data.priceRange && 
-        typeof data.priceRange.min === 'number' && !isNaN(data.priceRange.min) &&
-        typeof data.priceRange.max === 'number' && !isNaN(data.priceRange.max)) {
+    if (data.priceRange &&
+      typeof data.priceRange.min === 'number' && !isNaN(data.priceRange.min) &&
+      typeof data.priceRange.max === 'number' && !isNaN(data.priceRange.max)) {
       payload.priceRange = data.priceRange;
     } else {
       payload.priceRange = undefined;
     }
-    
+
     // Explicitly handle featuredDish to ensure it's cleared if removed
     // If undefined/null, send null to backend to clear the field
     payload.featuredDish = (data.featuredDish || null) as any;
@@ -147,7 +147,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
 
     try {
       console.log(`Making ${mode.toUpperCase()} request...`);
-      
+
       if (mode === 'create') {
         const response = await api.post('/restaurants', payload);
         console.log('CREATE response:', response.data);
@@ -155,7 +155,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         setTimeout(() => router.push('/dashboard/restaurants'), 1500);
       } else {
         const response = await api.patch(`/restaurants/${restaurant?.id}`, payload);
-        
+
         // Handle publish status change separately if needed
         if (restaurant && data.isPublished !== restaurant.isPublished) {
           console.log(`Updating publish status to: ${data.isPublished}`);
@@ -170,7 +170,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         setSuccess('Restaurant updated successfully!');
         setTimeout(() => router.push('/dashboard/restaurants'), 1000);
       }
-      
+
       console.log('=== FORM SUBMISSION SUCCESSFUL ===');
     } catch (err: any) {
       console.error('=== FORM SUBMISSION FAILED ===');
@@ -179,10 +179,10 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
       console.error('Error response data:', err.response?.data);
       console.error('Error response status:', err.response?.status);
       console.error('Error message:', err.message);
-      
+
       // Extract detailed error message
       let errorMessage = 'Failed to save restaurant';
-      
+
       if (err.response?.data) {
         if (typeof err.response.data === 'string') {
           errorMessage = err.response.data;
@@ -195,14 +195,14 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         } else if (err.response.data.message) {
           errorMessage = err.response.data.message;
         }
-        
+
         // Include validation details if available
         if (err.response.data.errors) {
-          errorMessage += '\n\nValidation errors:\n' + 
+          errorMessage += '\n\nValidation errors:\n' +
             JSON.stringify(err.response.data.errors, null, 2);
         }
       }
-      
+
       console.error('Extracted error message:', errorMessage);
       setError(errorMessage);
     } finally {
@@ -252,11 +252,29 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
               Please fix the following errors:
             </Typography>
             <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
-              {Object.entries(methods.formState.errors).map(([key, error]) => (
-                <li key={key}>
-                  {key}: {(error as any)?.message || 'Invalid value'}
-                </li>
-              ))}
+              {(() => {
+                const renderErrors = (errors: any, prefix = ''): React.ReactNode[] => {
+                  let messages: React.ReactNode[] = [];
+                  for (const key in errors) {
+                    const error = errors[key];
+                    if (!error) continue;
+
+                    const fullKey = prefix ? `${prefix}.${key}` : key;
+
+                    if (error.message) {
+                      messages.push(
+                        <li key={fullKey}>
+                          <strong>{fullKey}</strong>: {error.message}
+                        </li>
+                      );
+                    } else if (typeof error === 'object') {
+                      messages = [...messages, ...renderErrors(error, fullKey)];
+                    }
+                  }
+                  return messages;
+                };
+                return renderErrors(methods.formState.errors);
+              })()}
             </ul>
           </Alert>
         )}
@@ -292,7 +310,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
               menuItems={methods.watch('menuItems') || []}
               onChange={(items) => {
                 methods.setValue('menuItems', items);
-                
+
                 // If the featured dish is no longer in the menu items list, remove it
                 const currentFeatured = methods.getValues('featuredDish');
                 if (currentFeatured) {
@@ -303,7 +321,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
                     // Fallback: check by name and price if ID is missing (legacy data)
                     exists = !!items.find((i) => i.name === currentFeatured.name && i.price === currentFeatured.price);
                   }
-                  
+
                   if (!exists) {
                     methods.setValue('featuredDish', undefined);
                   }
@@ -331,24 +349,24 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         {/* Form Actions */}
         <Paper sx={{ p: 2 }}>
           <Stack direction="row" spacing={2} justifyContent="space-between">
-              <Button
-                variant="outlined"
-                onClick={handleBack}
-                disabled={activeTab === 0 || loading}
-              >
-                Back
-              </Button>
+            <Button
+              variant="outlined"
+              onClick={handleBack}
+              disabled={activeTab === 0 || loading}
+            >
+              Back
+            </Button>
 
-              {mode === 'edit' && restaurant?.slug && (
-                <Button
-                  variant="text"
-                  color="primary"
-                  onClick={() => window.open(`/r/${restaurant.slug}`, '_blank')}
-                  startIcon={<Visibility />}
-                >
-                  View Public Page
-                </Button>
-              )}
+            {mode === 'edit' && restaurant?.slug && (
+              <Button
+                variant="text"
+                color="primary"
+                onClick={() => window.open(`/r/${restaurant.slug}`, '_blank')}
+                startIcon={<Visibility />}
+              >
+                View Public Page
+              </Button>
+            )}
 
             <Stack direction="row" spacing={2}>
               {mode === 'edit' && (
@@ -361,7 +379,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
                   Save Changes
                 </Button>
               )}
-              
+
               {activeTab < 6 ? (
                 <Button variant="contained" onClick={handleNext} disabled={loading}>
                   Next

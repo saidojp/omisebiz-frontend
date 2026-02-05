@@ -65,7 +65,7 @@ export const restaurantHoursSchema = z.object({
   sunday: hourEntrySchema,
 }).optional();
 
-export const restaurantAttributesSchema = z.record(z.string(), z.boolean()).optional();
+export const restaurantAttributesSchema = z.record(z.string(), z.boolean().optional()).optional();
 
 export const restaurantMediaSchema = z.object({
   logo: z.string().url().optional().or(z.literal('')),
@@ -108,7 +108,7 @@ export const restaurantFormSchema = z.object({
   }).optional().refine((val) => {
     if (!val) return true;
     // Allow NaN (will be treated as empty/undefined in submit handler)
-    if (isNaN(val.min) || isNaN(val.max)) return true; 
+    if (isNaN(val.min) || isNaN(val.max)) return true;
     return val.min >= 0 && val.max >= 0;
   }, {
     message: "Price must be 0 or greater",
