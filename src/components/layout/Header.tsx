@@ -135,45 +135,36 @@ export default function Header({ onMenuClick }: HeaderProps) {
           }}
         >
           {/* User Info */}
-          {!isGuest && (
-            <>
-              <Box sx={{ px: 2, py: 1.5 }}>
-                <Typography variant="subtitle2" fontWeight="bold">
-                  {user?.username}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {user?.email}
-                </Typography>
-              </Box>
+          {!isGuest && [
+            <Box key="user-info" sx={{ px: 2, py: 1.5 }}>
+              <Typography variant="subtitle2" fontWeight="bold">
+                {user?.username}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {user?.email}
+              </Typography>
+            </Box>,
+            <Divider key="divider-1" />,
+            <MenuItem key="settings" onClick={handleSettings}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Settings</ListItemText>
+            </MenuItem>,
+            <Divider key="divider-2" />
+          ]}
 
-              <Divider />
-
-              {/* Menu Items */}
-              <MenuItem onClick={handleSettings}>
-                <ListItemIcon>
-                  <Settings fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Settings</ListItemText>
-              </MenuItem>
-
-              <Divider />
-            </>
-          )}
-
-          {isGuest && (
-            <>
-              <Box sx={{ px: 2, py: 1.5 }}>
-                <Typography variant="subtitle2" fontWeight="bold">
-                  Guest User
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Browsing mode
-                </Typography>
-              </Box>
-
-              <Divider />
-            </>
-          )}
+          {isGuest && [
+            <Box key="guest-info" sx={{ px: 2, py: 1.5 }}>
+              <Typography variant="subtitle2" fontWeight="bold">
+                Guest User
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Browsing mode
+              </Typography>
+            </Box>,
+            <Divider key="divider-guest" />
+          ]}
 
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>

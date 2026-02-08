@@ -210,6 +210,7 @@ export default function MenuManager({
                     )}
                   </Box>
                 }
+                primaryTypographyProps={{ component: 'div' }}
                 secondary={
                   <Box>
                     <Typography component="span" variant="body2" color="primary" fontWeight="bold">
@@ -221,12 +222,13 @@ export default function MenuManager({
                       </Typography>
                     )}
                     {item.description && (
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                      <Typography component="div" variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
                         {item.description}
                       </Typography>
                     )}
                   </Box>
                 }
+                secondaryTypographyProps={{ component: 'div' }}
               />
             </ListItem>
           ))}
