@@ -17,11 +17,13 @@ import {
 import { Upload, Delete, Image as ImageIcon } from '@mui/icons-material';
 import api from '@/lib/api';
 import type { RestaurantFormData } from '@/lib/validations';
+import { useTranslations } from 'next-intl';
 
 export default function MediaTab() {
   const { watch, setValue } = useFormContext<RestaurantFormData>();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const t = useTranslations('mediaTab');
 
   const logo = watch('media.logo');
   const cover = watch('media.cover');
@@ -47,7 +49,7 @@ export default function MediaTab() {
         setValue(`media.${field}`, url);
       }
     } catch (err: any) {
-      setError('Failed to upload image');
+      setError(t('failedToUpload'));
     } finally {
       setUploading(false);
     }
@@ -61,7 +63,7 @@ export default function MediaTab() {
   return (
     <Stack spacing={4}>
       <Typography variant="h6" gutterBottom>
-        Restaurant Media
+        {t('title')}
       </Typography>
 
       {error && (
@@ -73,7 +75,7 @@ export default function MediaTab() {
       {/* Logo */}
       <Box>
         <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-          Logo (Square Image)
+          {t('logo')}
         </Typography>
         {logo ? (
           <Box sx={{ position: 'relative', width: 200, height: 200 }}>
@@ -101,7 +103,7 @@ export default function MediaTab() {
             startIcon={uploading ? <CircularProgress size={20} /> : <Upload />}
             disabled={uploading}
           >
-            Upload Logo
+            {t('uploadLogo')}
             <input
               type="file"
               hidden
@@ -120,10 +122,10 @@ export default function MediaTab() {
       {/* Card Image */}
       <Box>
         <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-          Card Image (Wide Image)
+          {t('cardImage')}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          This image will be displayed on the restaurant card in the public listing. Recommended size: 800x400px.
+          {t('cardImageHint')}
         </Typography>
         {cover ? (
           <Box sx={{ position: 'relative', maxWidth: 600 }}>
@@ -151,7 +153,7 @@ export default function MediaTab() {
             startIcon={uploading ? <CircularProgress size={20} /> : <Upload />}
             disabled={uploading}
           >
-            Upload Card Image
+            {t('uploadCardImage')}
             <input
               type="file"
               hidden
@@ -168,7 +170,7 @@ export default function MediaTab() {
       {/* Gallery */}
       <Box>
         <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-          Photo Gallery
+          {t('photoGallery')}
         </Typography>
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
@@ -206,7 +208,7 @@ export default function MediaTab() {
           startIcon={uploading ? <CircularProgress size={20} /> : <ImageIcon />}
           disabled={uploading}
         >
-          Add Photos
+          {t('addPhotos')}
           <input
             type="file"
             hidden

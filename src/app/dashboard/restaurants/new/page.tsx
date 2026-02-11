@@ -8,9 +8,12 @@ import {
 import { ArrowBack } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import RestaurantForm from '@/components/forms/RestaurantForm';
+import { useTranslations } from 'next-intl';
 
 export default function NewRestaurantPage() {
   const router = useRouter();
+  const t = useTranslations('newRestaurant');
+  const tc = useTranslations('common');
 
   return (
     <Box>
@@ -19,14 +22,14 @@ export default function NewRestaurantPage() {
         onClick={() => router.back()}
         sx={{ mb: 3 }}
       >
-        Back
+        {tc('back')}
       </Button>
 
       <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
-        Create New Restaurant
+        {t('title')}
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Fill in the details below to create your restaurant profile
+        {t('subtitle')}
       </Typography>
 
       <RestaurantForm mode="create" />

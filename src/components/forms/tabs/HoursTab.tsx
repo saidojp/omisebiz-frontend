@@ -15,19 +15,13 @@ import {
 import { ContentCopy } from '@mui/icons-material';
 import { DAYS_OF_WEEK } from '@/lib/constants';
 import type { RestaurantFormData, HourEntry } from '@/lib/validations';
-
-const DAY_LABELS: Record<string, string> = {
-  monday: 'Monday',
-  tuesday: 'Tuesday',
-  wednesday: 'Wednesday',
-  thursday: 'Thursday',
-  friday: 'Friday',
-  saturday: 'Saturday',
-  sunday: 'Sunday',
-};
+import { useTranslations } from 'next-intl';
 
 export default function HoursTab() {
   const { control, watch, setValue, register, formState: { errors } } = useFormContext<RestaurantFormData>();
+  const t = useTranslations('hoursTab');
+  const td = useTranslations('hours');
+  const tc = useTranslations('common');
 
   const hours = watch('hours');
 
@@ -46,7 +40,7 @@ export default function HoursTab() {
     <Stack spacing={3}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6">
-          Hours of Operation
+          {t('title')}
         </Typography>
         <Button
           variant="outlined"
@@ -54,7 +48,7 @@ export default function HoursTab() {
           startIcon={<ContentCopy />}
           onClick={copyToAllDays}
         >
-          Copy Monday to All Days
+          {t('copyMondayToAll')}
         </Button>
       </Box>
 
@@ -86,7 +80,7 @@ export default function HoursTab() {
                             }}
                           />
                         }
-                        label={day.charAt(0).toUpperCase() + day.slice(1)}
+                        label={td(day)}
                       />
                     </Box>
 
@@ -94,7 +88,7 @@ export default function HoursTab() {
                       <Stack spacing={2} sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
                         <Stack direction="row" spacing={2}>
                           <TextField
-                            label="Open"
+                            label={t('open')}
                             type="time"
                             size="small"
                             sx={{ width: 130 }}
@@ -103,7 +97,7 @@ export default function HoursTab() {
                             InputLabelProps={{ shrink: true }}
                           />
                           <TextField
-                            label="Close"
+                            label={t('close')}
                             type="time"
                             size="small"
                             sx={{ width: 130 }}
@@ -112,10 +106,10 @@ export default function HoursTab() {
                             InputLabelProps={{ shrink: true }}
                           />
                         </Stack>
-                        
+
                         <Stack direction="row" spacing={2} alignItems="center">
                           <TextField
-                            label="Break Start"
+                            label={t('breakStart')}
                             type="time"
                             size="small"
                             sx={{ width: 130 }}
@@ -123,7 +117,7 @@ export default function HoursTab() {
                             InputLabelProps={{ shrink: true }}
                           />
                           <TextField
-                            label="Break End"
+                            label={t('breakEnd')}
                             type="time"
                             size="small"
                             sx={{ width: 130 }}
@@ -137,7 +131,7 @@ export default function HoursTab() {
                     {!isOpen && (
                       <Box sx={{ pt: 1 }}>
                         <Typography variant="body2" color="text.secondary">
-                          Closed
+                          {tc('closed')}
                         </Typography>
                       </Box>
                     )}

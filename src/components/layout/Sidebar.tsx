@@ -23,6 +23,7 @@ import {
   Storefront as StorefrontIcon,
 } from '@mui/icons-material';
 import { useAuthStore } from '@/lib/store';
+import { useTranslations } from 'next-intl';
 
 const DRAWER_WIDTH = 260;
 
@@ -31,34 +32,35 @@ interface SidebarProps {
   onClose: () => void;
 }
 
-const menuItems = [
-  {
-    text: 'Restaurants',
-    icon: <StorefrontIcon />,
-    href: '/dashboard/public-restaurants',
-  },
-  {
-    text: 'My Business',
-    icon: <RestaurantIcon />,
-    href: '/dashboard/restaurants',
-  },
-  {
-    text: 'Add Restaurant',
-    icon: <AddIcon />,
-    href: '/dashboard/restaurants/new',
-  },
-  {
-    text: 'Settings',
-    icon: <SettingsIcon />,
-    href: '/dashboard/settings',
-  },
-];
-
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { isGuest } = useAuthStore();
+  const t = useTranslations('sidebar');
+
+  const menuItems = [
+    {
+      text: t('restaurants'),
+      icon: <StorefrontIcon />,
+      href: '/dashboard/public-restaurants',
+    },
+    {
+      text: t('myBusiness'),
+      icon: <RestaurantIcon />,
+      href: '/dashboard/restaurants',
+    },
+    {
+      text: t('addRestaurant'),
+      icon: <AddIcon />,
+      href: '/dashboard/restaurants/new',
+    },
+    {
+      text: t('settings'),
+      icon: <SettingsIcon />,
+      href: '/dashboard/settings',
+    },
+  ];
 
   // Filter menu items for guests
   const visibleMenuItems = isGuest
@@ -122,7 +124,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       {/* Footer */}
       <Box sx={{ p: { xs: 1.5, md: 2 } }}>
         <Typography variant="caption" color="text.secondary">
-          © 2025 Omise
+          {t('copyright')}
         </Typography>
       </Box>
     </Box>

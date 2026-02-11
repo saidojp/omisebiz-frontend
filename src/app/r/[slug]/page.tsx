@@ -14,12 +14,16 @@ import FeaturedDish from '@/components/restaurant/FeaturedDish';
 import MenuDisplay from '@/components/restaurant/MenuDisplay';
 import { ArrowBack } from '@mui/icons-material';
 import { ATTRIBUTE_GROUPS } from '@/lib/constants';
+import { useTranslations } from 'next-intl';
 
 export default function RestaurantPage() {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
-  
+  const t = useTranslations('restaurantPublic');
+  const tc = useTranslations('common');
+  const ta = useTranslations('attributes');
+
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -29,16 +33,15 @@ export default function RestaurantPage() {
       try {
         console.log('=== STARTING FETCH ===');
         console.log('Fetching restaurant with slug:', slug);
-        
+
         const data = await getRestaurantBySlug(slug);
-        
+
         console.log('=== RAW DATA RECEIVED ===');
         console.log('Full response:', data);
         console.log('data.success:', data.success);
         console.log('data.data:', data.data);
         console.log('data.data?.restaurant:', data.data?.restaurant);
-        
-        // Check different possible structures
+
         if (data.data?.restaurant) {
           console.log('✅ Found restaurant at data.data.restaurant');
           setRestaurant(data.data.restaurant);
@@ -48,13 +51,13 @@ export default function RestaurantPage() {
         } else {
           console.error('❌ Restaurant not found in response structure');
           console.log('Checked: data.data.restaurant and data.restaurant');
-          setError('Restaurant not found');
+          setError(t('notFound'));
         }
       } catch (err: any) {
         console.error('=== ERROR CAUGHT ===');
         console.error('Full error:', err);
         console.error('Error response:', err.response);
-        const errorMessage = err.response?.data?.error || err.message || 'Failed to load restaurant';
+        const errorMessage = err.response?.data?.error || err.message || t('notFound');
         const errorDetails = err.response?.status ? `Status: ${err.response.status}` : '';
         setError(`${errorMessage} ${errorDetails}`);
       } finally {
@@ -95,10 +98,10 @@ export default function RestaurantPage() {
         >
           <Alert severity="error">
             <Typography variant="h6" gutterBottom>
-              Restaurant Not Found
+              {t('notFound')}
             </Typography>
             <Typography variant="body2">
-              {error || 'The restaurant you are looking for does not exist or is not published.'}
+              {error || t('notFoundMessage')}
             </Typography>
           </Alert>
         </Box>
@@ -111,26 +114,25 @@ export default function RestaurantPage() {
       <Container maxWidth="lg" sx={{ pt: 4 }}>
         {/* Navigation */}
         <Box sx={{ mb: 2 }}>
-            <Button
-              startIcon={<ArrowBack />}
-                onClick={() => {
-                  // If opened in new tab/direct link (no history), go to listing
-                  if (window.history.length <= 2) {
-                    router.push('/dashboard/public-restaurants');
-                  } else {
-                    router.back();
-                  }
-                }}
-                sx={{ 
-                  color: 'text.secondary',
-                  '&:hover': {
-                    bgcolor: 'transparent',
-                    color: 'text.primary',
-                  }
-                }}
-            >
-              Back
-            </Button>
+          <Button
+            startIcon={<ArrowBack />}
+            onClick={() => {
+              if (window.history.length <= 2) {
+                router.push('/dashboard/public-restaurants');
+              } else {
+                router.back();
+              }
+            }}
+            sx={{
+              color: 'text.secondary',
+              '&:hover': {
+                bgcolor: 'transparent',
+                color: 'text.primary',
+              }
+            }}
+          >
+            {tc('back')}
+          </Button>
         </Box>
 
         {/* Header Section */}
@@ -141,40 +143,40 @@ export default function RestaurantPage() {
           </Box>
 
           {/* Identity Section */}
-          <Box sx={{ 
-            display: 'flex', 
-            flexDirection: { xs: 'column', md: 'row' }, 
-            alignItems: { xs: 'center', md: 'flex-start' }, // Center on mobile
+          <Box sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            alignItems: { xs: 'center', md: 'flex-start' },
             gap: 4,
-            textAlign: { xs: 'center', md: 'left' } // Center text on mobile
+            textAlign: { xs: 'center', md: 'left' }
           }}>
             {/* Logo */}
-            <Avatar 
-              src={restaurant.media?.logo} 
-              sx={{ 
-                width: { xs: 120, md: 140 }, 
-                height: { xs: 120, md: 140 }, 
-                border: '1px solid', 
+            <Avatar
+              src={restaurant.media?.logo}
+              sx={{
+                width: { xs: 120, md: 140 },
+                height: { xs: 120, md: 140 },
+                border: '1px solid',
                 borderColor: 'grey.200',
                 bgcolor: 'grey.50'
-              }} 
+              }}
             />
 
             <Box sx={{ flexGrow: 1, pt: { md: 2 }, width: '100%', minWidth: 0 }}>
-              <Box sx={{ 
-                display: 'flex', 
+              <Box sx={{
+                display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
-                alignItems: 'center', // Always center vertically relative to each other
-                justifyContent: { xs: 'center', md: 'flex-start' }, // Center horizontally on mobile
+                alignItems: 'center',
+                justifyContent: { xs: 'center', md: 'flex-start' },
                 gap: { xs: 2, md: 3 },
                 mb: 2
               }}>
-                <Typography 
-                  variant="h2" 
-                  component="h1" 
+                <Typography
+                  variant="h2"
+                  component="h1"
                   fontWeight="800"
-                  sx={{ 
-                    color: '#212121', // Softer black
+                  sx={{
+                    color: '#212121',
                     fontSize: { xs: '2rem', md: '3rem' },
                     letterSpacing: '-0.02em',
                     lineHeight: 1.2,
@@ -183,67 +185,67 @@ export default function RestaurantPage() {
                   {restaurant.name}
                 </Typography>
 
-                <Stack 
-                  direction="row" 
-                  spacing={1} 
-                  alignItems="center" 
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  alignItems="center"
                   justifyContent={{ xs: 'center', md: 'flex-start' }}
                   flexWrap="wrap"
                   useFlexGap
                 >
                   {restaurant.category && (
-                    <Chip 
+                    <Chip
                       label={restaurant.category}
                       size="small"
                       sx={{
-                        bgcolor: '#fff3e0', // Pastel Orange/Amber
+                        bgcolor: '#fff3e0',
                         color: '#e65100',
                         fontWeight: 600,
                         borderRadius: '12px',
                       }}
                     />
                   )}
-                  
-                  <Chip 
-                    label="Open Now" 
-                    size="small" 
-                    sx={{ 
-                      bgcolor: '#e8f5e9', // Pastel Green
+
+                  <Chip
+                    label={t('openNow')}
+                    size="small"
+                    sx={{
+                      bgcolor: '#e8f5e9',
                       color: '#2e7d32',
                       fontWeight: 600,
                       borderRadius: '12px',
-                    }} 
+                    }}
                   />
                 </Stack>
               </Box>
-              
+
               {/* Amenities */}
               {restaurant.attributes && Object.keys(restaurant.attributes).length > 0 && (
-                <Box 
-                  sx={{ 
+                <Box
+                  sx={{
                     mt: 2,
                     display: 'flex',
                     flexWrap: 'wrap',
                     gap: 1,
                     width: '100%',
-                    justifyContent: { xs: 'center', md: 'flex-start' } // Center attributes on mobile
+                    justifyContent: { xs: 'center', md: 'flex-start' }
                   }}
                 >
-                  {Object.values(ATTRIBUTE_GROUPS).flatMap((group: any) => 
+                  {Object.values(ATTRIBUTE_GROUPS).flatMap((group: any) =>
                     group.items.map((item: any) => {
                       if (restaurant.attributes?.[item.key]) {
                         return (
-                          <Chip 
-                            key={item.key} 
-                            label={item.label} 
-                            size="small" 
+                          <Chip
+                            key={item.key}
+                            label={ta(item.key)}
+                            size="small"
                             variant="outlined"
                             sx={{
                               borderColor: group.colors?.border || 'grey.300',
                               color: group.colors?.text || 'text.secondary',
                               bgcolor: group.colors?.bg || 'grey.50',
                               fontSize: '0.75rem',
-                              height: 26, 
+                              height: 26,
                               fontWeight: 500,
                             }}
                           />
@@ -269,30 +271,30 @@ export default function RestaurantPage() {
 
             <Box sx={{ mb: 4 }}>
               <Typography variant="h5" gutterBottom fontWeight="bold">
-                About
+                {t('about')}
               </Typography>
               <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-line' }}>
-                {restaurant.description || 'No description available.'}
+                {restaurant.description || t('noDescription')}
               </Typography>
             </Box>
 
             {/* Featured Dish Section */}
             {restaurant.featuredDish && (
               <Box sx={{ mb: 4 }}>
-                <FeaturedDish 
+                <FeaturedDish
                   featuredDish={{
                     ...restaurant.featuredDish,
-                    description: restaurant.featuredDish.description || 
+                    description: restaurant.featuredDish.description ||
                       restaurant.menuItems?.find(item => item.id === restaurant.featuredDish?.menuItemId)?.description,
                     price: restaurant.menuItems?.find(item => item.id === restaurant.featuredDish?.menuItemId)?.price || restaurant.featuredDish.price
-                  }} 
+                  }}
                 />
               </Box>
             )}
 
             <Box sx={{ mb: 4 }}>
               <Typography variant="h5" gutterBottom fontWeight="bold">
-                Gallery
+                {t('gallery')}
               </Typography>
               <PhotoGallery media={restaurant.media} />
             </Box>
@@ -306,20 +308,19 @@ export default function RestaurantPage() {
           {/* Right Column - Sidebar Info */}
           <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 33.333%' } }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 } }}>
-              <InfoCard title="Location">
+              <InfoCard title={t('locationTitle')}>
                 <Typography variant="body2" gutterBottom>
                   {restaurant.address?.street}<br />
                   {restaurant.address?.city}, {restaurant.address?.zip}<br />
                   {restaurant.address?.country}
                 </Typography>
-                {/* Map Embed would go here */}
               </InfoCard>
 
-              <InfoCard title="Hours">
+              <InfoCard title={t('hoursTitle')}>
                 <HoursDisplay hours={restaurant.hours} />
               </InfoCard>
 
-              <InfoCard title="Contact">
+              <InfoCard title={t('contactTitle')}>
                 {restaurant.contacts?.phone && (
                   <Typography variant="body2" gutterBottom>
                     📞 {restaurant.contacts.phone}
@@ -332,14 +333,10 @@ export default function RestaurantPage() {
                 )}
                 {restaurant.contacts?.website && (
                   <Typography variant="body2">
-                    🌐 <a href={restaurant.contacts.website} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>Website</a>
+                    🌐 <a href={restaurant.contacts.website} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>{t('websiteLink')}</a>
                   </Typography>
                 )}
               </InfoCard>
-
-
-
-              {/* Removed SocialLinks from sidebar as they are now in the header */}
             </Box>
           </Box>
         </Box>

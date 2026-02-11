@@ -33,6 +33,7 @@ import {
 } from '@mui/icons-material';
 import api from '@/lib/api';
 import type { Restaurant } from '@/lib/types';
+import { useTranslations } from 'next-intl';
 
 export default function RestaurantsPage() {
   const router = useRouter();
@@ -40,7 +41,9 @@ export default function RestaurantsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  
+  const t = useTranslations('restaurants');
+  const tc = useTranslations('common');
+
   // Upload state
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -55,20 +58,20 @@ export default function RestaurantsPage() {
       const response = await api.get('/restaurants');
       setRestaurants(response.data.restaurants || []);
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Failed to load restaurants');
+      setError(err.response?.data?.error?.message || t('failedToLoad'));
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this restaurant?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
 
     try {
       await api.delete(`/restaurants/${id}`);
       setRestaurants(restaurants.filter((r) => r.id !== id));
     } catch (err: any) {
-      alert('Failed to delete restaurant');
+      alert(t('deleteFailed'));
     }
   };
 
@@ -89,10 +92,7 @@ export default function RestaurantsPage() {
       // 1. Upload image
       const formData = new FormData();
       formData.append('image', file);
-      
-      // Show loading state on the specific card? 
-      // We can use uploadingId to show a spinner on the card.
-      
+
       const uploadRes = await api.post('/api/upload/image', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -112,15 +112,15 @@ export default function RestaurantsPage() {
       });
 
       // 3. Update local state
-      setRestaurants(restaurants.map(r => 
-        r.id === uploadingId 
+      setRestaurants(restaurants.map(r =>
+        r.id === uploadingId
           ? { ...r, media: updatedMedia }
           : r
       ));
 
     } catch (err) {
       console.error('Upload failed:', err);
-      alert('Failed to upload image');
+      alert(t('uploadFailed'));
     } finally {
       setUploadingId(null);
     }
@@ -145,10 +145,10 @@ export default function RestaurantsPage() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
           <Typography variant="h4" component="h1" fontWeight="bold">
-            My Restaurants
+            {t('myRestaurants')}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {restaurants.length} {restaurants.length === 1 ? 'restaurant' : 'restaurants'}
+            {t('restaurantCount', { count: restaurants.length })}
           </Typography>
         </Box>
         <Button
@@ -156,14 +156,14 @@ export default function RestaurantsPage() {
           startIcon={<Add />}
           onClick={() => router.push('/dashboard/restaurants/new')}
         >
-          Add Restaurant
+          {t('addRestaurant')}
         </Button>
       </Box>
 
       {/* Search */}
       <TextField
         fullWidth
-        placeholder="Search restaurants..."
+        placeholder={t('searchPlaceholder')}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         sx={{ mb: 3 }}
@@ -208,7 +208,7 @@ export default function RestaurantsPage() {
       {!loading && restaurants.length === 0 && (
         <Paper sx={{ p: 4, textAlign: 'center' }}>
           <Typography variant="h6" color="text.secondary">
-            No restaurants found
+            {t('noRestaurants')}
           </Typography>
           <Button
             variant="contained"
@@ -216,235 +216,235 @@ export default function RestaurantsPage() {
             onClick={() => router.push('/dashboard/restaurants/new')}
             sx={{ mt: 2 }}
           >
-            Create Your First Restaurant
+            {t('createFirst')}
           </Button>
         </Paper>
       )}
 
       {/* Restaurant Cards */}
       {!loading && filteredRestaurants.length > 0 && (
-  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-    {filteredRestaurants.map((restaurant) => (
-      <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
-        <Card
-          sx={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            aspectRatio: '1 / 1.15',
-            position: 'relative',
-            '&:hover': { 
-              boxShadow: 6,
-              transform: 'translateY(-4px)',
-            },
-          }}
-        >
-          {/* Image Section - 55% */}
-          <Box sx={{ position: 'relative', height: '55%', bgcolor: 'grey.200' }}>
-            {restaurant.media?.cover ? (
-              <CardMedia
-                component="img"
-                sx={{ 
-                  height: '100%',
-                  width: '100%',
-                  opacity: uploadingId === restaurant.id ? 0.5 : 1,
-                  objectFit: 'cover'
-                }}
-                image={restaurant.media.cover}
-                alt={restaurant.name}
-              />
-            ) : (
-              <Box
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+          {filteredRestaurants.map((restaurant) => (
+            <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
+              <Card
                 sx={{
                   height: '100%',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  aspectRatio: '1 / 1.15',
+                  position: 'relative',
+                  '&:hover': {
+                    boxShadow: 6,
+                    transform: 'translateY(-4px)',
+                  },
                 }}
               >
-                <RestaurantIcon sx={{ fontSize: 60, color: 'grey.400' }} />
-              </Box>
-            )}
-            
-            {/* Upload Overlay */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                bgcolor: 'rgba(0,0,0,0.4)',
-                opacity: 0,
-                transition: 'opacity 0.2s',
-                '&:hover': { opacity: 1 },
-              }}
-            >
-              <Tooltip title="Change Cover Image">
-                <IconButton 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleUploadClick(restaurant.id, e);
-                  }}
-                  sx={{ 
-                    bgcolor: 'white', 
-                    '&:hover': { 
-                      bgcolor: 'grey.100',
-                      transform: 'scale(1.1)',
-                    },
-                    transition: 'transform 0.2s',
-                  }}
-                >
-                  <PhotoCamera color="primary" />
-                </IconButton>
-              </Tooltip>
-            </Box>
+                {/* Image Section - 55% */}
+                <Box sx={{ position: 'relative', height: '55%', bgcolor: 'grey.200' }}>
+                  {restaurant.media?.cover ? (
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        height: '100%',
+                        width: '100%',
+                        opacity: uploadingId === restaurant.id ? 0.5 : 1,
+                        objectFit: 'cover'
+                      }}
+                      image={restaurant.media.cover}
+                      alt={restaurant.name}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <RestaurantIcon sx={{ fontSize: 60, color: 'grey.400' }} />
+                    </Box>
+                  )}
 
-            {/* Loading Spinner */}
-            {uploadingId === restaurant.id && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  bgcolor: 'rgba(255,255,255,0.7)',
-                }}
-              >
-                <CircularProgress />
-              </Box>
-            )}
-          </Box>
+                  {/* Upload Overlay */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      bgcolor: 'rgba(0,0,0,0.4)',
+                      opacity: 0,
+                      transition: 'opacity 0.2s',
+                      '&:hover': { opacity: 1 },
+                    }}
+                  >
+                    <Tooltip title={t('changeCover')}>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleUploadClick(restaurant.id, e);
+                        }}
+                        sx={{
+                          bgcolor: 'white',
+                          '&:hover': {
+                            bgcolor: 'grey.100',
+                            transform: 'scale(1.1)',
+                          },
+                          transition: 'transform 0.2s',
+                        }}
+                      >
+                        <PhotoCamera color="primary" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
 
-          {/* Content Section - 30% */}
-          <CardContent sx={{ 
-            flexGrow: 1, 
-            display: 'flex', 
-            flexDirection: 'column',
-            py: 1.5,
-            px: 2,
-            height: '30%'
-          }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
-              <Typography 
-                variant="h6" 
-                component="div" 
-                fontWeight="bold"
-                sx={{ 
-                  fontSize: '1rem',
-                  lineHeight: 1.3,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
+                  {/* Loading Spinner */}
+                  {uploadingId === restaurant.id && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: 'rgba(255,255,255,0.7)',
+                      }}
+                    >
+                      <CircularProgress />
+                    </Box>
+                  )}
+                </Box>
+
+                {/* Content Section - 30% */}
+                <CardContent sx={{
                   flexGrow: 1,
-                  mr: 1,
-                }}
-              >
-                {restaurant.name}
-              </Typography>
-              {restaurant.priceRange && (
-                <Chip
-                  label={typeof restaurant.priceRange === 'object' ? `${restaurant.priceRange.currency}${restaurant.priceRange.min} - ${restaurant.priceRange.currency}${restaurant.priceRange.max}` : restaurant.priceRange}
-                  size="small"
-                  color="success"
-                  variant="outlined"
-                  sx={{ height: 22, fontSize: '0.7rem', flexShrink: 0 }}
-                />
-              )}
+                  display: 'flex',
+                  flexDirection: 'column',
+                  py: 1.5,
+                  px: 2,
+                  height: '30%'
+                }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      fontWeight="bold"
+                      sx={{
+                        fontSize: '1rem',
+                        lineHeight: 1.3,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical',
+                        flexGrow: 1,
+                        mr: 1,
+                      }}
+                    >
+                      {restaurant.name}
+                    </Typography>
+                    {restaurant.priceRange && (
+                      <Chip
+                        label={typeof restaurant.priceRange === 'object' ? `${restaurant.priceRange.currency}${restaurant.priceRange.min} - ${restaurant.priceRange.currency}${restaurant.priceRange.max}` : restaurant.priceRange}
+                        size="small"
+                        color="success"
+                        variant="outlined"
+                        sx={{ height: 22, fontSize: '0.7rem', flexShrink: 0 }}
+                      />
+                    )}
+                  </Box>
+
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
+                    {restaurant.category || t('uncategorized')}
+                  </Typography>
+
+                  <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 1 }}>
+                    <LocationOn sx={{ fontSize: 14, color: 'text.secondary' }} />
+                    <Typography variant="body2" noWrap sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
+                      {restaurant.address?.city || t('noLocation')}
+                    </Typography>
+                  </Stack>
+
+                  <Stack direction="row" spacing={0.5} sx={{ mt: 'auto' }}>
+                    <Chip
+                      label={restaurant.attributes?.wifi ? t('wifi') : t('noWifi')}
+                      size="small"
+                      color={restaurant.attributes?.wifi ? 'primary' : 'default'}
+                      sx={{ height: 20, fontSize: '0.65rem' }}
+                    />
+                    <Chip
+                      label={restaurant.attributes?.parking ? t('parking') : t('noParking')}
+                      size="small"
+                      color={restaurant.attributes?.parking ? 'primary' : 'default'}
+                      sx={{ height: 20, fontSize: '0.65rem' }}
+                    />
+                  </Stack>
+                </CardContent>
+
+                {/* Actions Section - 15% */}
+                <CardActions sx={{
+                  justifyContent: 'space-between',
+                  px: 2,
+                  py: 1,
+                  borderTop: '1px solid',
+                  borderColor: 'divider',
+                  height: '15%'
+                }}>
+                  <Button
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.open(`/r/${restaurant.slug}`, '_blank');
+                    }}
+                    sx={{ fontSize: '0.75rem' }}
+                  >
+                    {tc('view')}
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/dashboard/restaurants/${restaurant.id}/edit`);
+                    }}
+                    sx={{ fontSize: '0.75rem' }}
+                  >
+                    {tc('edit')}
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(restaurant.id);
+                    }}
+                    sx={{ fontSize: '0.75rem' }}
+                  >
+                    {tc('delete')}
+                  </Button>
+                </CardActions>
+              </Card>
             </Box>
-            
-            <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
-              {restaurant.category || 'Uncategorized'}
-            </Typography>
-
-            <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 1 }}>
-              <LocationOn sx={{ fontSize: 14, color: 'text.secondary' }} />
-              <Typography variant="body2" noWrap sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
-                {restaurant.address?.city || 'No location set'}
-              </Typography>
-            </Stack>
-
-            <Stack direction="row" spacing={0.5} sx={{ mt: 'auto' }}>
-              <Chip
-                label={restaurant.attributes?.wifi ? 'WiFi' : 'No WiFi'}
-                size="small"
-                color={restaurant.attributes?.wifi ? 'primary' : 'default'}
-                sx={{ height: 20, fontSize: '0.65rem' }}
-              />
-              <Chip
-                label={restaurant.attributes?.parking ? 'Parking' : 'No Parking'}
-                size="small"
-                color={restaurant.attributes?.parking ? 'primary' : 'default'}
-                sx={{ height: 20, fontSize: '0.65rem' }}
-              />
-            </Stack>
-          </CardContent>
-
-          {/* Actions Section - 15% */}
-          <CardActions sx={{ 
-            justifyContent: 'space-between', 
-            px: 2, 
-            py: 1,
-            borderTop: '1px solid',
-            borderColor: 'divider',
-            height: '15%'
-          }}>
-            <Button 
-              size="small" 
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(`/r/${restaurant.slug}`, '_blank');
-              }}
-              sx={{ fontSize: '0.75rem' }}
-            >
-              View
-            </Button>
-            <Button 
-              size="small" 
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push(`/dashboard/restaurants/${restaurant.id}/edit`);
-              }}
-              sx={{ fontSize: '0.75rem' }}
-            >
-              Edit
-            </Button>
-            <Button 
-              size="small" 
-              color="error" 
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDelete(restaurant.id);
-              }}
-              sx={{ fontSize: '0.75rem' }}
-            >
-              Delete
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-    ))}
-  </Box>
-)}
+          ))}
+        </Box>
+      )}
 
       {/* No Search Results */}
       {!loading && restaurants.length > 0 && filteredRestaurants.length === 0 && (
         <Box sx={{ textAlign: 'center', py: 8 }}>
           <Typography variant="h6" gutterBottom>
-            No restaurants found
+            {t('noResults')}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Try a different search term
+            {t('tryDifferent')}
           </Typography>
         </Box>
       )}

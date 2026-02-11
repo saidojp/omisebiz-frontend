@@ -7,53 +7,55 @@ import {
   Typography,
 } from '@mui/material';
 import type { RestaurantFormData } from '@/lib/validations';
+import { useTranslations } from 'next-intl';
 
 export default function SocialTab() {
   const {
     register,
     formState: { errors },
   } = useFormContext<RestaurantFormData>();
+  const t = useTranslations('socialTab');
 
   return (
     <Stack spacing={3}>
       <Typography variant="h6" gutterBottom>
-        Social Media Links
+        {t('title')}
       </Typography>
 
       <TextField
         {...register('socials.instagram')}
-        label="Instagram URL"
+        label={t('instagramUrl')}
         fullWidth
         error={!!errors.socials?.instagram}
         helperText={errors.socials?.instagram?.message}
-        placeholder="https://instagram.com/yourrestaurant"
+        placeholder={t('instagramPlaceholder')}
       />
 
       <TextField
         {...register('socials.facebook')}
-        label="Facebook URL"
+        label={t('facebookUrl')}
         fullWidth
         error={!!errors.socials?.facebook}
         helperText={errors.socials?.facebook?.message}
-        placeholder="https://facebook.com/yourrestaurant"
+        placeholder={t('facebookPlaceholder')}
       />
 
       <TextField
         {...register('socials.tiktok')}
-        label="TikTok URL (Optional)"
+        label={t('tiktokUrl')}
         fullWidth
         error={!!errors.socials?.tiktok}
         helperText={errors.socials?.tiktok?.message}
-        placeholder="https://tiktok.com/@yourrestaurant"
+        placeholder={t('tiktokPlaceholder')}
       />
 
       <TextField
         {...register('socials.youtube')}
-        label="YouTube URL (Optional)"
+        label={t('youtubeUrl')}
         fullWidth
         error={!!errors.socials?.youtube}
         helperText={errors.socials?.youtube?.message}
-        placeholder="https://youtube.com/@yourrestaurant"
+        placeholder={t('youtubePlaceholder')}
       />
     </Stack>
   );

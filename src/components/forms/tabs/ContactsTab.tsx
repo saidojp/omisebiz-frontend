@@ -8,63 +8,65 @@ import {
   Box,
 } from '@mui/material';
 import type { RestaurantFormData } from '@/lib/validations';
+import { useTranslations } from 'next-intl';
 
 export default function ContactsTab() {
   const {
     register,
     formState: { errors },
   } = useFormContext<RestaurantFormData>();
+  const t = useTranslations('contactsTab');
 
   return (
     <Stack spacing={3}>
       <Typography variant="h6" gutterBottom>
-        Contact Information
+        {t('title')}
       </Typography>
 
       {/* Phone */}
       <TextField
         {...register('contacts.phone')}
-        label="Phone Number"
+        label={t('phone')}
         fullWidth
         error={!!errors.contacts?.phone}
         helperText={errors.contacts?.phone?.message}
-        placeholder="+1-234-567-8900"
+        placeholder={t('phonePlaceholder')}
       />
 
       {/* Email */}
       <TextField
         {...register('contacts.email')}
-        label="Email"
+        label={t('email')}
         type="email"
         fullWidth
         error={!!errors.contacts?.email}
         helperText={errors.contacts?.email?.message}
-        placeholder="info@restaurant.com"
+        placeholder={t('emailPlaceholder')}
       />
 
       {/* Website */}
       <TextField
         {...register('contacts.website')}
-        label="Website URL"
+        label={t('website')}
         type="url"
         fullWidth
         error={!!errors.contacts?.website}
         helperText={errors.contacts?.website?.message}
-        placeholder="https://www.restaurant.com"
+        placeholder={t('websitePlaceholder')}
       />
 
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-        Address
+        {t('address')}
       </Typography>
 
       {/* Street Address */}
       <TextField
         {...register('address.street')}
-        label="Street Address"
+        label={t('street')}
         fullWidth
         error={!!errors.address?.street}
         helperText={errors.address?.street?.message}
-        placeholder="123 Main Street"
+        placeholder={t('streetPlaceholder')}
       />
 
       {/* City, Zip */}
@@ -72,21 +74,21 @@ export default function ContactsTab() {
         <Box sx={{ flex: 2 }}>
           <TextField
             {...register('address.city')}
-            label="City"
+            label={t('city')}
             fullWidth
             error={!!errors.address?.city}
             helperText={errors.address?.city?.message}
-            placeholder="Tokyo"
+            placeholder={t('cityPlaceholder')}
           />
         </Box>
         <Box sx={{ flex: 1 }}>
           <TextField
             {...register('address.zip')}
-            label="Postal Code"
+            label={t('postalCode')}
             fullWidth
             error={!!errors.address?.zip}
             helperText={errors.address?.zip?.message}
-            placeholder="100-0001"
+            placeholder={t('postalCodePlaceholder')}
           />
         </Box>
       </Stack>
@@ -94,41 +96,41 @@ export default function ContactsTab() {
       {/* Country */}
       <TextField
         {...register('address.country')}
-        label="Country"
+        label={t('country')}
         fullWidth
         error={!!errors.address?.country}
         helperText={errors.address?.country?.message}
-        placeholder="Japan"
+        placeholder={t('countryPlaceholder')}
       />
 
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-        Coordinates (Optional)
+        {t('coordinates')}
       </Typography>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
         <Box sx={{ flex: 1 }}>
           <TextField
-            {...register('location.lat', { 
-              setValueAs: (v) => v === '' ? null : Number(v) 
+            {...register('location.lat', {
+              setValueAs: (v) => v === '' ? null : Number(v)
             })}
-            label="Latitude"
+            label={t('latitude')}
             type="number"
             fullWidth
             error={!!errors.location?.lat}
-            helperText={errors.location?.lat?.message || 'e.g., 35.6762'}
+            helperText={errors.location?.lat?.message || t('latitudeHint')}
             inputProps={{ step: 'any' }}
           />
         </Box>
         <Box sx={{ flex: 1 }}>
           <TextField
-            {...register('location.lng', { 
-              setValueAs: (v) => v === '' ? null : Number(v) 
+            {...register('location.lng', {
+              setValueAs: (v) => v === '' ? null : Number(v)
             })}
-            label="Longitude"
+            label={t('longitude')}
             type="number"
             fullWidth
             error={!!errors.location?.lng}
-            helperText={errors.location?.lng?.message || 'e.g., 139.6503'}
+            helperText={errors.location?.lng?.message || t('longitudeHint')}
             inputProps={{ step: 'any' }}
           />
         </Box>

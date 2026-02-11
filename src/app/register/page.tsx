@@ -22,12 +22,15 @@ import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { registerSchema, type RegisterFormData } from '@/lib/validations';
 import type { AuthResponse } from '@/lib/types';
+import { useTranslations } from 'next-intl';
 
 export default function RegisterPage() {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations('auth');
+  const tc = useTranslations('common');
 
   const {
     register,
@@ -51,7 +54,7 @@ export default function RegisterPage() {
       // Redirect to dashboard
       router.push('/dashboard');
     } catch (err: any) {
-      const message = err.response?.data?.error?.message || 'Registration failed. Please try again.';
+      const message = err.response?.data?.error?.message || t('registrationFailed');
       setError(message);
     } finally {
       setIsLoading(false);
@@ -81,10 +84,10 @@ export default function RegisterPage() {
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Restaurant sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
             <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
-              Create Account
+              {t('createAccount')}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Start managing your restaurants today
+              {t('registerSubtitle')}
             </Typography>
           </Box>
 
@@ -100,7 +103,7 @@ export default function RegisterPage() {
             <Stack spacing={3}>
               <TextField
                 {...register('email')}
-                label="Email Address"
+                label={t('emailLabel')}
                 type="email"
                 fullWidth
                 error={!!errors.email}
@@ -112,22 +115,22 @@ export default function RegisterPage() {
 
               <TextField
                 {...register('username')}
-                label="Username"
+                label={t('usernameLabel')}
                 type="text"
                 fullWidth
                 error={!!errors.username}
-                helperText={errors.username?.message || 'Minimum 3 characters'}
+                helperText={errors.username?.message || t('usernameHint')}
                 disabled={isLoading}
                 autoComplete="username"
               />
 
               <TextField
                 {...register('password')}
-                label="Password"
+                label={t('passwordLabel')}
                 type="password"
                 fullWidth
                 error={!!errors.password}
-                helperText={errors.password?.message || 'Exactly 6 digits'}
+                helperText={errors.password?.message || t('passwordDigits')}
                 disabled={isLoading}
                 autoComplete="new-password"
               />
@@ -140,7 +143,7 @@ export default function RegisterPage() {
                 disabled={isLoading}
                 startIcon={isLoading ? <CircularProgress size={20} /> : <AppRegistration />}
               >
-                {isLoading ? 'Creating account...' : 'Sign Up'}
+                {isLoading ? t('creatingAccount') : t('signUp')}
               </Button>
             </Stack>
           </form>
@@ -148,16 +151,16 @@ export default function RegisterPage() {
           {/* Divider */}
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" color="text.secondary">
-              OR
+              {tc('or')}
             </Typography>
           </Divider>
 
           {/* Login Link */}
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
-              Already have an account?{' '}
+              {t('hasAccount')}{' '}
               <Link href="/login" style={{ color: 'inherit', fontWeight: 600 }}>
-                Sign In
+                {t('signIn')}
               </Link>
             </Typography>
           </Box>

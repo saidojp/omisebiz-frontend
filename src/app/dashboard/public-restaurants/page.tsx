@@ -33,6 +33,7 @@ import {
 import { getPublicRestaurants } from '@/lib/api';
 import { ATTRIBUTE_GROUPS, CARD_DISPLAY_PRIORITY } from '@/lib/constants';
 import type { Restaurant } from '@/lib/types';
+import { useTranslations } from 'next-intl';
 
 export default function PublicRestaurantsPage() {
   const router = useRouter();
@@ -44,17 +45,20 @@ export default function PublicRestaurantsPage() {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
   const [selectedDietary, setSelectedDietary] = useState('');
+  const t = useTranslations('publicRestaurants');
+  const tc = useTranslations('common');
+  const ta = useTranslations('attributes');
 
   // Derived state for filter options
   const formatPriceRange = (range: any) => range ? `${range.currency}${range.min} - ${range.currency}${range.max}` : '';
   const categories = Array.from(new Set(restaurants.map(r => r.category).filter(Boolean))) as string[];
-  
+
   const PRICE_BUCKETS = [
-    { label: 'Under ¥1,000', min: 0, max: 1000 },
-    { label: '¥1,000 - ¥3,000', min: 1000, max: 3000 },
-    { label: '¥3,000 - ¥5,000', min: 3000, max: 5000 },
-    { label: '¥5,000 - ¥10,000', min: 5000, max: 10000 },
-    { label: 'Above ¥10,000', min: 10000, max: Infinity },
+    { label: t('underYen1000'), min: 0, max: 1000 },
+    { label: t('yen1000to3000'), min: 1000, max: 3000 },
+    { label: t('yen3000to5000'), min: 3000, max: 5000 },
+    { label: t('yen5000to10000'), min: 5000, max: 10000 },
+    { label: t('aboveYen10000'), min: 10000, max: Infinity },
   ];
 
   const JAPAN_PREFECTURES = [
@@ -78,7 +82,7 @@ export default function PublicRestaurantsPage() {
       setRestaurants(data.data.restaurants || []);
     } catch (err: any) {
       console.error('Failed to fetch public restaurants:', err);
-      setError('Failed to load public restaurants. Please try again later.');
+      setError(t('failedToLoad'));
     } finally {
       setLoading(false);
     }
@@ -93,19 +97,18 @@ export default function PublicRestaurantsPage() {
   const filteredRestaurants = restaurants.filter((r) => {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory ? r.category === selectedCategory : true;
-    
+
     // Check if address contains the selected prefecture
     let matchesLocation = true;
     if (selectedLocation) {
-        const addressStr = `${r.address?.city || ''} ${r.address?.street || ''}`;
-        matchesLocation = addressStr.includes(selectedLocation);
+      const addressStr = `${r.address?.city || ''} ${r.address?.street || ''}`;
+      matchesLocation = addressStr.includes(selectedLocation);
     }
-    
+
     let matchesPrice = true;
     if (selectedPrice) {
       const bucket = PRICE_BUCKETS.find(b => b.label === selectedPrice);
       if (bucket && r.priceRange && typeof r.priceRange === 'object') {
-        // Check for overlap: (StartA < EndB) and (EndA > StartB)
         matchesPrice = r.priceRange.min < bucket.max && r.priceRange.max > bucket.min;
       } else {
         matchesPrice = false;
@@ -130,10 +133,10 @@ export default function PublicRestaurantsPage() {
       {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
-          Restaurants
+          {t('title')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Browse restaurants
+          {t('subtitle')}
         </Typography>
       </Box>
 
@@ -144,7 +147,7 @@ export default function PublicRestaurantsPage() {
             <TextField
               fullWidth
               size="small"
-              placeholder="Search restaurants..."
+              placeholder={tc('search') + '...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{
@@ -156,16 +159,16 @@ export default function PublicRestaurantsPage() {
               }}
             />
           </Box>
-          
+
           <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 30%', md: '2' } }}>
             <FormControl fullWidth size="small">
-              <InputLabel>Category</InputLabel>
+              <InputLabel>{t('category')}</InputLabel>
               <Select
                 value={selectedCategory}
-                label="Category"
+                label={t('category')}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
-                <MenuItem value=""><em>All</em></MenuItem>
+                <MenuItem value=""><em>{tc('all')}</em></MenuItem>
                 {categories.map((cat) => (
                   <MenuItem key={cat} value={cat}>{cat}</MenuItem>
                 ))}
@@ -175,13 +178,13 @@ export default function PublicRestaurantsPage() {
 
           <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 30%', md: '2' } }}>
             <FormControl fullWidth size="small">
-              <InputLabel>Location</InputLabel>
+              <InputLabel>{t('location')}</InputLabel>
               <Select
                 value={selectedLocation}
-                label="Location"
+                label={t('location')}
                 onChange={(e) => setSelectedLocation(e.target.value)}
               >
-                <MenuItem value=""><em>All</em></MenuItem>
+                <MenuItem value=""><em>{tc('all')}</em></MenuItem>
                 {locations.map((loc) => (
                   <MenuItem key={loc} value={loc}>{loc}</MenuItem>
                 ))}
@@ -191,13 +194,13 @@ export default function PublicRestaurantsPage() {
 
           <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 30%', md: '2' } }}>
             <FormControl fullWidth size="small">
-              <InputLabel>Price</InputLabel>
+              <InputLabel>{t('price')}</InputLabel>
               <Select
                 value={selectedPrice}
-                label="Price"
+                label={t('price')}
                 onChange={(e) => setSelectedPrice(e.target.value)}
               >
-                <MenuItem value=""><em>All</em></MenuItem>
+                <MenuItem value=""><em>{tc('all')}</em></MenuItem>
                 {PRICE_BUCKETS.map((bucket) => (
                   <MenuItem key={bucket.label} value={bucket.label}>{bucket.label}</MenuItem>
                 ))}
@@ -207,15 +210,15 @@ export default function PublicRestaurantsPage() {
 
           <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 30%', md: '2' } }}>
             <FormControl fullWidth size="small">
-              <InputLabel>Dietary</InputLabel>
+              <InputLabel>{t('dietary')}</InputLabel>
               <Select
                 value={selectedDietary}
-                label="Dietary"
+                label={t('dietary')}
                 onChange={(e) => setSelectedDietary(e.target.value)}
               >
-                <MenuItem value=""><em>All</em></MenuItem>
+                <MenuItem value=""><em>{tc('all')}</em></MenuItem>
                 {ATTRIBUTE_GROUPS.dietary.items.map((item) => (
-                  <MenuItem key={item.key} value={item.key}>{item.label}</MenuItem>
+                  <MenuItem key={item.key} value={item.key}>{ta(item.key)}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -223,14 +226,14 @@ export default function PublicRestaurantsPage() {
 
           {(selectedCategory || selectedLocation || selectedPrice || selectedDietary || searchQuery) && (
             <Box sx={{ flex: { xs: '1 1 100%', md: 'auto' }, width: { md: 'auto' } }}>
-              <Button 
-                variant="outlined" 
-                color="inherit" 
-                startIcon={<Clear />} 
+              <Button
+                variant="outlined"
+                color="inherit"
+                startIcon={<Clear />}
                 onClick={clearFilters}
                 fullWidth
               >
-                Clear
+                {tc('clear')}
               </Button>
             </Box>
           )}
@@ -266,147 +269,143 @@ export default function PublicRestaurantsPage() {
         <Paper sx={{ p: 4, textAlign: 'center' }}>
           <Storefront sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
           <Typography variant="h6" color="text.secondary">
-            No published restaurants yet
+            {t('noPublished')}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Restaurants will appear here once they are published.
+            {t('willAppear')}
           </Typography>
         </Paper>
       )}
 
       {/* Restaurant Cards */}
-{/* Restaurant Cards */}
-{!loading && filteredRestaurants.length > 0 && (
-  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-    {filteredRestaurants.map((restaurant) => (
-      <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
-        <Card
-          sx={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            aspectRatio: '1 / 1.1',
-            '&:hover': {
-              transform: 'translateY(-4px)',
-              boxShadow: 6,
-            },
-          }}
-        >
-          <CardActionArea 
-            onClick={() => router.push(`/r/${restaurant.slug}`)}
-            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', height: '100%' }}
-          >
-            {restaurant.media?.cover ? (
-              <CardMedia
-                component="img"
-                sx={{ 
-                  width: '100%', 
-                  height: '60%', 
-                  objectFit: 'cover' 
-                }}
-                image={restaurant.media.cover}
-                alt={restaurant.name}
-              />
-            ) : (
-              <Box
+      {!loading && filteredRestaurants.length > 0 && (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+          {filteredRestaurants.map((restaurant) => (
+            <Box key={restaurant.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.33% - 16px)' } }}>
+              <Card
                 sx={{
-                  width: '100%',
-                  height: '60%',
-                  bgcolor: 'grey.100',
+                  height: '100%',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  aspectRatio: '1 / 1.1',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: 6,
+                  },
                 }}
               >
-                <RestaurantIcon sx={{ fontSize: 60, color: 'grey.300' }} />
-              </Box>
-            )}
-            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', py: 2, px: 2.5, height: '40%' }}>
-              <Typography variant="h6" component="div" fontWeight="bold" sx={{ fontSize: '1.05rem', mb: 0.5, lineHeight: 1.3 }}>
-                {restaurant.name}
-              </Typography>
-              
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                {restaurant.category && (
-                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-                    {restaurant.category}
-                  </Typography>
-                )}
-                {restaurant.priceRange && (
-                  <Chip
-                    label={`${restaurant.priceRange.currency}${restaurant.priceRange.min} - ${restaurant.priceRange.currency}${restaurant.priceRange.max}`}
-                    size="small"
-                    color="success"
-                    variant="outlined"
-                    sx={{ height: 20, fontSize: '0.7rem' }}
-                  />
-                )}
-              </Box>
+                <CardActionArea
+                  onClick={() => router.push(`/r/${restaurant.slug}`)}
+                  sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', height: '100%' }}
+                >
+                  {restaurant.media?.cover ? (
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        width: '100%',
+                        height: '60%',
+                        objectFit: 'cover'
+                      }}
+                      image={restaurant.media.cover}
+                      alt={restaurant.name}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        width: '100%',
+                        height: '60%',
+                        bgcolor: 'grey.100',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <RestaurantIcon sx={{ fontSize: 60, color: 'grey.300' }} />
+                    </Box>
+                  )}
+                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', py: 2, px: 2.5, height: '40%' }}>
+                    <Typography variant="h6" component="div" fontWeight="bold" sx={{ fontSize: '1.05rem', mb: 0.5, lineHeight: 1.3 }}>
+                      {restaurant.name}
+                    </Typography>
 
-              {/* Amenities Preview - Limit to 5, Prioritized or Featured */}
-              {restaurant.attributes && (
-                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 1, minHeight: 24, height: 'auto', maxHeight: 48, overflow: 'hidden' }}>
-                  {(() => {
-                    // Strategy: Use featuredAttributes if available, otherwise fallback to priority list
-                    let displayedItems: any[] = [];
-                    
-                    if (restaurant.featuredAttributes) {
-                      // Manual selection (Strict: Show only what is starred, even if empty)
-                      displayedItems = restaurant.featuredAttributes.map(key => {
-                        // Find the item definition across all groups
-                        for (const group of Object.values(ATTRIBUTE_GROUPS)) {
-                           const found = (group as any).items.find((i: any) => i.key === key);
-                           if (found) return { ...found, colors: (group as any).colors };
-                        }
-                        return null;
-                      }).filter(Boolean);
-                    }
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                      {restaurant.category && (
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                          {restaurant.category}
+                        </Typography>
+                      )}
+                      {restaurant.priceRange && (
+                        <Chip
+                          label={`${restaurant.priceRange.currency}${restaurant.priceRange.min} - ${restaurant.priceRange.currency}${restaurant.priceRange.max}`}
+                          size="small"
+                          color="success"
+                          variant="outlined"
+                          sx={{ height: 20, fontSize: '0.7rem' }}
+                        />
+                      )}
+                    </Box>
 
-                    return displayedItems.slice(0, 5).map((item: any) => (
-                      <Chip
-                        key={item.key}
-                        label={item.label}
-                        size="small"
-                        variant="outlined"
-                        sx={{
-                          borderColor: item.colors?.border || 'grey.300',
-                          color: item.colors?.text || 'text.secondary',
-                          bgcolor: item.colors?.bg || 'grey.50',
-                          fontSize: '0.65rem',
-                          height: 20,
-                          fontWeight: 500,
-                        }}
-                      />
-                    ));
-                  })()}
-                </Box>
-              )}
-              
-              {restaurant.location && (
-                <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: 'text.secondary', mt: 'auto' }}>
-                  <LocationOn sx={{ fontSize: 14 }} />
-                  <Typography variant="body2" noWrap sx={{ fontSize: '0.8rem' }}>
-                    {restaurant.address?.city || 'Location available'}
-                  </Typography>
-                </Stack>
-              )}
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Box>
-    ))}
-  </Box>
-)}
+                    {/* Amenities Preview */}
+                    {restaurant.attributes && (
+                      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 1, minHeight: 24, height: 'auto', maxHeight: 48, overflow: 'hidden' }}>
+                        {(() => {
+                          let displayedItems: any[] = [];
+
+                          if (restaurant.featuredAttributes) {
+                            displayedItems = restaurant.featuredAttributes.map(key => {
+                              for (const group of Object.values(ATTRIBUTE_GROUPS)) {
+                                const found = (group as any).items.find((i: any) => i.key === key);
+                                if (found) return { ...found, colors: (group as any).colors };
+                              }
+                              return null;
+                            }).filter(Boolean);
+                          }
+
+                          return displayedItems.slice(0, 5).map((item: any) => (
+                            <Chip
+                              key={item.key}
+                              label={ta(item.key)}
+                              size="small"
+                              variant="outlined"
+                              sx={{
+                                borderColor: item.colors?.border || 'grey.300',
+                                color: item.colors?.text || 'text.secondary',
+                                bgcolor: item.colors?.bg || 'grey.50',
+                                fontSize: '0.65rem',
+                                height: 20,
+                                fontWeight: 500,
+                              }}
+                            />
+                          ));
+                        })()}
+                      </Box>
+                    )}
+
+                    {restaurant.location && (
+                      <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: 'text.secondary', mt: 'auto' }}>
+                        <LocationOn sx={{ fontSize: 14 }} />
+                        <Typography variant="body2" noWrap sx={{ fontSize: '0.8rem' }}>
+                          {restaurant.address?.city || t('locationAvailable')}
+                        </Typography>
+                      </Stack>
+                    )}
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Box>
+          ))}
+        </Box>
+      )}
 
       {/* No Search Results */}
       {!loading && restaurants.length > 0 && filteredRestaurants.length === 0 && (
         <Box sx={{ textAlign: 'center', py: 8 }}>
           <Typography variant="h6" gutterBottom>
-            No restaurants found
+            {tc('search')} — 0
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Try a different search term
+            {tc('clear')}
           </Typography>
         </Box>
       )}

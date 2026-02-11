@@ -16,6 +16,7 @@ import {
 import { Refresh } from '@mui/icons-material';
 import type { RestaurantFormData } from '@/lib/validations';
 import { regenerateRestaurantSlug } from '@/lib/api';
+import { useTranslations } from 'next-intl';
 
 interface BasicInfoTabProps {
   restaurantId?: string;
@@ -32,6 +33,7 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
 
   const [regenerating, setRegenerating] = useState(false);
   const [regenMessage, setRegenMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const t = useTranslations('basicInfoTab');
 
   const description = watch('description') || '';
 
@@ -41,9 +43,9 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
     setRegenMessage(null);
     try {
       const data = await regenerateRestaurantSlug(restaurantId);
-      setRegenMessage({ type: 'success', text: `Slug updated to: ${data.restaurant.slug}` });
+      setRegenMessage({ type: 'success', text: t('slugUpdated', { slug: data.restaurant.slug }) });
     } catch (error) {
-      setRegenMessage({ type: 'error', text: 'Failed to regenerate slug' });
+      setRegenMessage({ type: 'error', text: t('slugFailed') });
     } finally {
       setRegenerating(false);
     }
@@ -52,22 +54,22 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
   return (
     <Stack spacing={3}>
       <Typography variant="h6" gutterBottom>
-        Basic Information
+        {t('title')}
       </Typography>
 
       {/* Restaurant Name */}
       <Box>
         <TextField
           {...register('name')}
-          label="Restaurant Name"
+          label={t('restaurantName')}
           required
           fullWidth
           error={!!errors.name}
           helperText={
-            errors.name?.message || 
-            "ℹ️ The public URL will automatically update based on the restaurant name"
+            errors.name?.message ||
+            t('nameHint')
           }
-          placeholder="e.g., Sakura Sushi Bar"
+          placeholder={t('namePlaceholder')}
         />
         {mode === 'edit' && restaurantId && (
           <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -78,7 +80,7 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
               disabled={regenerating}
               startIcon={regenerating ? <CircularProgress size={16} /> : <Refresh />}
             >
-              Regenerate Public URL
+              {t('regenerateUrl')}
             </Button>
             {regenMessage && (
               <Alert severity={regenMessage.type} sx={{ mt: 1, py: 0, px: 2 }}>
@@ -92,39 +94,38 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
       {/* Category */}
       <TextField
         {...register('category')}
-        label="Category"
+        label={t('categoryLabel')}
         fullWidth
         error={!!errors.category}
         helperText={errors.category?.message}
-        placeholder="e.g., Japanese, Italian, Cafe"
+        placeholder={t('categoryPlaceholder')}
       />
 
       {/* Description */}
       <TextField
         {...register('description')}
-        label="Description"
+        label={t('descriptionLabel')}
         multiline
         rows={4}
         fullWidth
         error={!!errors.description}
         helperText={
           errors.description?.message ||
-          `${description.length}/750 characters`
+          t('descriptionCount', { count: description.length })
         }
-        placeholder="Tell customers about your restaurant..."
+        placeholder={t('descriptionPlaceholder')}
         inputProps={{ maxLength: 750 }}
       />
 
       {/* Price Range */}
-      {/* Price Range */}
       <Box>
         <Typography variant="subtitle2" gutterBottom>
-          Price Range (¥)
+          {t('priceRange')}
         </Typography>
         <Stack direction="row" spacing={2} alignItems="flex-start">
           <TextField
             {...register('priceRange.min', { valueAsNumber: true })}
-            label="Min Price"
+            label={t('minPrice')}
             type="number"
             fullWidth
             error={!!errors.priceRange?.min}
@@ -136,7 +137,7 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
           <Typography sx={{ alignSelf: 'center' }}>-</Typography>
           <TextField
             {...register('priceRange.max', { valueAsNumber: true })}
-            label="Max Price"
+            label={t('maxPrice')}
             type="number"
             fullWidth
             error={!!errors.priceRange?.max}
@@ -145,10 +146,10 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
               startAdornment: <Typography sx={{ mr: 1 }}>¥</Typography>,
             }}
           />
-          <input 
-            type="hidden" 
-            {...register('priceRange.currency')} 
-            value="¥" 
+          <input
+            type="hidden"
+            {...register('priceRange.currency')}
+            value="¥"
           />
         </Stack>
       </Box>
@@ -170,10 +171,10 @@ export default function BasicInfoTab({ restaurantId, mode }: BasicInfoTabProps) 
               label={
                 <Box>
                   <Typography variant="body1" fontWeight="medium">
-                    Publish Restaurant
+                    {t('publishRestaurant')}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Make this restaurant visible on public pages
+                    {t('publishHint')}
                   </Typography>
                 </Box>
               }

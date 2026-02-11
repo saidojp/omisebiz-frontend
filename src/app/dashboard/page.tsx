@@ -4,10 +4,13 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Container, Typography, CircularProgress } from '@mui/material';
 import { useAuthStore } from '@/lib/store';
+import { useTranslations } from 'next-intl';
 
 export default function DashboardPage() {
   const router = useRouter();
   const { isAuthenticated, isGuest, user } = useAuthStore();
+  const t = useTranslations('dashboard');
+  const tc = useTranslations('common');
 
   useEffect(() => {
     // Redirect guests to public restaurants, authenticated users to their restaurants
@@ -47,10 +50,10 @@ export default function DashboardPage() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {isGuest ? 'Welcome, Guest!' : `Welcome, ${user?.username}!`}
+          {isGuest ? t('welcomeGuest') : t('welcomeUser', { username: user?.username || '' })}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Redirecting...
+          {tc('redirecting')}
         </Typography>
       </Box>
     </Container>

@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { Box, Container, Typography, Button, Stack } from "@mui/material";
 import { Restaurant, Login, AppRegistration, PersonOutline } from "@mui/icons-material";
 import { useAuthStore } from "@/lib/store";
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
   const router = useRouter();
   const { setGuestMode } = useAuthStore();
+  const t = useTranslations('home');
 
   const handleGuestMode = () => {
     setGuestMode();
@@ -28,18 +30,18 @@ export default function Home() {
         }}
       >
         <Restaurant sx={{ fontSize: 80, color: "primary.main", mb: 2 }} />
-        
+
         <Typography variant="h2" component="h1" gutterBottom fontWeight="bold">
-          Omise
+          {t('title')}
         </Typography>
-        
+
         <Typography variant="h5" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
         </Typography>
-        
+
         <Typography variant="body1" color="text.secondary" sx={{ mb: 6, maxWidth: 600 }}>
-         
+
         </Typography>
-        
+
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: { xs: '100%', sm: 'auto' } }}>
           <Button
             component={Link}
@@ -49,9 +51,9 @@ export default function Home() {
             startIcon={<Login />}
             sx={{ minWidth: 160 }}
           >
-            Login
+            {t('login')}
           </Button>
-          
+
           <Button
             component={Link}
             href="/register"
@@ -60,7 +62,7 @@ export default function Home() {
             startIcon={<AppRegistration />}
             sx={{ minWidth: 160 }}
           >
-            Register
+            {t('register')}
           </Button>
 
           <Button
@@ -70,7 +72,7 @@ export default function Home() {
             startIcon={<PersonOutline />}
             sx={{ minWidth: 160 }}
           >
-            Continue as Guest
+            {t('continueAsGuest')}
           </Button>
         </Stack>
       </Box>

@@ -24,6 +24,7 @@ import { restaurantFormSchema, type RestaurantFormData } from '@/lib/validations
 import { defaultHours } from '@/lib/constants';
 import api from '@/lib/api';
 import type { Restaurant } from '@/lib/types';
+import { useTranslations } from 'next-intl';
 
 import BasicInfoTab from './tabs/BasicInfoTab';
 import ContactsTab from './tabs/ContactsTab';
@@ -44,6 +45,8 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const t = useTranslations('restaurantForm');
+  const tc = useTranslations('common');
 
   const defaultValues: DefaultValues<RestaurantFormData> = restaurant
     ? {
@@ -116,20 +119,16 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
       ...data,
       contacts: cleanData(data.contacts),
       address: cleanData(data.address),
-      // Ensure location is either a valid object or undefined (not null)
       location: data.location?.lat && data.location?.lng ? data.location : undefined,
-      hours: data.hours, // Hours structure is complex, keep as is
+      hours: data.hours,
       attributes: cleanData(data.attributes),
       media: cleanData(data.media),
       socials: cleanData(data.socials),
     };
 
-    // Clean up optional string fields
     payload.description = data.description || undefined;
     payload.category = data.category || undefined;
 
-    // Explicitly handle priceRange
-    // Check if we have valid numbers for min/max
     if (data.priceRange &&
       typeof data.priceRange.min === 'number' && !isNaN(data.priceRange.min) &&
       typeof data.priceRange.max === 'number' && !isNaN(data.priceRange.max)) {
@@ -138,8 +137,6 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
       payload.priceRange = undefined;
     }
 
-    // Explicitly handle featuredDish to ensure it's cleared if removed
-    // If undefined/null, send null to backend to clear the field
     payload.featuredDish = (data.featuredDish || null) as any;
 
     console.log('Cleaned payload:', JSON.stringify(payload, null, 2));
@@ -151,12 +148,11 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
       if (mode === 'create') {
         const response = await api.post('/restaurants', payload);
         console.log('CREATE response:', response.data);
-        setSuccess('Restaurant created successfully!');
+        setSuccess(t('createdSuccess'));
         setTimeout(() => router.push('/dashboard/restaurants'), 1500);
       } else {
         const response = await api.patch(`/restaurants/${restaurant?.id}`, payload);
 
-        // Handle publish status change separately if needed
         if (restaurant && data.isPublished !== restaurant.isPublished) {
           console.log(`Updating publish status to: ${data.isPublished}`);
           if (data.isPublished) {
@@ -167,7 +163,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         }
 
         console.log('UPDATE response:', response.data);
-        setSuccess('Restaurant updated successfully!');
+        setSuccess(t('updatedSuccess'));
         setTimeout(() => router.push('/dashboard/restaurants'), 1000);
       }
 
@@ -180,8 +176,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
       console.error('Error response status:', err.response?.status);
       console.error('Error message:', err.message);
 
-      // Extract detailed error message
-      let errorMessage = 'Failed to save restaurant';
+      let errorMessage = t('failedToSave');
 
       if (err.response?.data) {
         if (typeof err.response.data === 'string') {
@@ -196,7 +191,6 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
           errorMessage = err.response.data.message;
         }
 
-        // Include validation details if available
         if (err.response.data.errors) {
           errorMessage += '\n\nValidation errors:\n' +
             JSON.stringify(err.response.data.errors, null, 2);
@@ -239,7 +233,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
             <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-              Error
+              {tc('error')}
             </Typography>
             <Box component="pre" sx={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', fontSize: '0.875rem', margin: 0 }}>
               {error}
@@ -249,7 +243,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
         {Object.keys(methods.formState.errors).length > 0 && (
           <Alert severity="error" sx={{ mb: 3 }}>
             <Typography variant="subtitle2" fontWeight="bold">
-              Please fix the following errors:
+              {t('fixErrors')}
             </Typography>
             <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
               {(() => {
@@ -287,13 +281,13 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
             variant="scrollable"
             scrollButtons="auto"
           >
-            <Tab label="Basic Info" />
-            <Tab label="Contacts & Location" />
-            <Tab label="Hours" />
-            <Tab label="Attributes" />
-            <Tab label="Media" />
-            <Tab label="Social Media" />
-            <Tab label="Menu" />
+            <Tab label={t('basicInfo')} />
+            <Tab label={t('contactsLocation')} />
+            <Tab label={t('hours')} />
+            <Tab label={t('attributes')} />
+            <Tab label={t('mediaTab')} />
+            <Tab label={t('socialMedia')} />
+            <Tab label={t('menuTab')} />
           </Tabs>
         </Paper>
 
@@ -311,14 +305,12 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
               onChange={(items) => {
                 methods.setValue('menuItems', items);
 
-                // If the featured dish is no longer in the menu items list, remove it
                 const currentFeatured = methods.getValues('featuredDish');
                 if (currentFeatured) {
                   let exists = false;
                   if (currentFeatured.menuItemId) {
                     exists = !!items.find((i) => i.id === currentFeatured.menuItemId);
                   } else {
-                    // Fallback: check by name and price if ID is missing (legacy data)
                     exists = !!items.find((i) => i.name === currentFeatured.name && i.price === currentFeatured.price);
                   }
 
@@ -354,7 +346,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
               onClick={handleBack}
               disabled={activeTab === 0 || loading}
             >
-              Back
+              {tc('back')}
             </Button>
 
             {mode === 'edit' && restaurant?.slug && (
@@ -364,7 +356,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
                 onClick={() => window.open(`/r/${restaurant.slug}`, '_blank')}
                 startIcon={<Visibility />}
               >
-                View Public Page
+                {t('viewPublicPage')}
               </Button>
             )}
 
@@ -376,13 +368,13 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
                   startIcon={loading ? <CircularProgress size={20} /> : <Save />}
                   disabled={loading}
                 >
-                  Save Changes
+                  {t('saveChanges')}
                 </Button>
               )}
 
               {activeTab < 6 ? (
                 <Button variant="contained" onClick={handleNext} disabled={loading}>
-                  Next
+                  {tc('next')}
                 </Button>
               ) : (
                 <>
@@ -394,7 +386,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
                         startIcon={loading ? <CircularProgress size={20} /> : <Save />}
                         disabled={loading}
                       >
-                        Save Draft
+                        {t('saveDraft')}
                       </Button>
                       <Button
                         type="submit"
@@ -402,7 +394,7 @@ export default function RestaurantForm({ restaurant, mode }: RestaurantFormProps
                         startIcon={loading ? <CircularProgress size={20} /> : <Save />}
                         disabled={loading}
                       >
-                        Create Restaurant
+                        {t('createRestaurant')}
                       </Button>
                     </>
                   )}

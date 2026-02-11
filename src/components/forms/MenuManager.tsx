@@ -25,6 +25,7 @@ import {
 import { Add, Delete, Edit, Star, Upload } from '@mui/icons-material';
 import { MenuItem as MenuItemType } from '@/lib/types';
 import api from '@/lib/api';
+import { useTranslations } from 'next-intl';
 
 interface MenuManagerProps {
   menuItems: MenuItemType[];
@@ -49,8 +50,10 @@ export default function MenuManager({
     category: '',
     imageUrl: '',
   });
+  const t = useTranslations('menuManager');
+  const tc = useTranslations('common');
 
-  const categories = ['Appetizers', 'Main Course', 'Desserts', 'Beverages', 'Other'];
+  const categories = [t('appetizers'), t('mainCourse'), t('desserts'), t('beverages'), t('other')];
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -71,7 +74,6 @@ export default function MenuManager({
       }));
     } catch (error) {
       console.error('Failed to upload image:', error);
-      // You might want to show an error message to the user here
     } finally {
       setUploading(false);
     }
@@ -138,13 +140,13 @@ export default function MenuManager({
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6">Menu Items</Typography>
+        <Typography variant="h6">{t('menuItems')}</Typography>
         <Button
           variant="contained"
           startIcon={<Add />}
           onClick={() => handleOpenDialog()}
         >
-          Add Menu Item
+          {t('addMenuItem')}
         </Button>
       </Box>
 
@@ -152,7 +154,7 @@ export default function MenuManager({
         <Card>
           <CardContent>
             <Typography color="text.secondary" align="center">
-              No menu items yet. Add your first menu item!
+              {t('noItems')}
             </Typography>
           </CardContent>
         </Card>
@@ -237,30 +239,30 @@ export default function MenuManager({
 
       {/* Add/Edit Dialog */}
       <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingItem ? 'Edit Menu Item' : 'Add Menu Item'}</DialogTitle>
+        <DialogTitle>{editingItem ? t('editMenuItem') : t('addMenuItem')}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
             <TextField
-              label="Name *"
+              label={t('nameLabel')}
               fullWidth
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
             <TextField
-              label="Price *"
+              label={t('priceLabel')}
               fullWidth
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              placeholder="e.g., ¥2000, $15.99"
+              placeholder={t('pricePlaceholder')}
             />
             <FormControl fullWidth>
-              <InputLabel>Category</InputLabel>
+              <InputLabel>{t('categoryLabel')}</InputLabel>
               <Select
                 value={formData.category}
-                label="Category"
+                label={t('categoryLabel')}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
-                <MenuItem value="">None</MenuItem>
+                <MenuItem value="">{tc('none')}</MenuItem>
                 {categories.map((cat) => (
                   <MenuItem key={cat} value={cat}>
                     {cat}
@@ -269,7 +271,7 @@ export default function MenuManager({
               </Select>
             </FormControl>
             <TextField
-              label="Description"
+              label={t('descriptionLabel')}
               fullWidth
               multiline
               rows={3}
@@ -278,7 +280,7 @@ export default function MenuManager({
             />
             <Box>
               <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                Dish Image
+                {t('dishImage')}
               </Typography>
               {formData.imageUrl ? (
                 <Box sx={{ position: 'relative', width: '100%', height: 200, mb: 1 }}>
@@ -321,7 +323,7 @@ export default function MenuManager({
                   ) : (
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                       <Upload />
-                      <Typography variant="body2">Upload Image</Typography>
+                      <Typography variant="body2">{t('uploadImage')}</Typography>
                     </Box>
                   )}
                   <input
@@ -336,13 +338,13 @@ export default function MenuManager({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleCloseDialog}>{tc('cancel')}</Button>
           <Button
             onClick={handleSaveItem}
             variant="contained"
             disabled={!formData.name || !formData.price}
           >
-            {editingItem ? 'Save' : 'Add'}
+            {editingItem ? tc('save') : t('add')}
           </Button>
         </DialogActions>
       </Dialog>

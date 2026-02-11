@@ -23,6 +23,8 @@ import {
 } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store';
+import { useTranslations } from 'next-intl';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -34,6 +36,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { user, isGuest, logout } = useAuthStore();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const t = useTranslations('dashboard');
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -89,19 +92,24 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
         {/* Page Title */}
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Dashboard
+          {t('title')}
         </Typography>
 
         {/* Guest Mode Badge */}
         {isGuest && (
           <Chip
-            label="Guest Mode"
+            label={t('guestMode')}
             size="small"
             color="warning"
             variant="outlined"
             sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}
           />
         )}
+
+        {/* Language Switcher */}
+        <Box sx={{ mr: 1 }}>
+          <LanguageSwitcher />
+        </Box>
 
         {/* User Menu */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -149,7 +157,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
               <ListItemIcon>
                 <Settings fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Settings</ListItemText>
+              <ListItemText>{t('settings')}</ListItemText>
             </MenuItem>,
             <Divider key="divider-2" />
           ]}
@@ -157,10 +165,10 @@ export default function Header({ onMenuClick }: HeaderProps) {
           {isGuest && [
             <Box key="guest-info" sx={{ px: 2, py: 1.5 }}>
               <Typography variant="subtitle2" fontWeight="bold">
-                Guest User
+                {t('guestUser')}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                Browsing mode
+                {t('browsingMode')}
               </Typography>
             </Box>,
             <Divider key="divider-guest" />
@@ -170,7 +178,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <ListItemIcon>
               <Logout fontSize="small" color="error" />
             </ListItemIcon>
-            <ListItemText>{isGuest ? 'Exit Guest Mode' : 'Logout'}</ListItemText>
+            <ListItemText>{isGuest ? t('exitGuestMode') : t('logout')}</ListItemText>
           </MenuItem>
         </Menu>
       </Toolbar>

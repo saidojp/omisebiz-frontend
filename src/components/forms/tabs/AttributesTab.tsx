@@ -13,10 +13,13 @@ import {
 import { Star, StarBorder } from '@mui/icons-material';
 import { ATTRIBUTE_GROUPS } from '@/lib/constants';
 import type { RestaurantFormData } from '@/lib/validations';
+import { useTranslations } from 'next-intl';
 
 export default function AttributesTab() {
   const { control, watch, setValue } = useFormContext<RestaurantFormData>();
-  
+  const t = useTranslations('attributesTab');
+  const ta = useTranslations('attributes');
+
   // Watch all attributes to know which are active
   const attributes = watch('attributes') || {};
   const featuredAttributes = watch('featuredAttributes') || [];
@@ -26,11 +29,9 @@ export default function AttributesTab() {
     const index = currentFeatured.indexOf(key);
 
     if (index !== -1) {
-      // Remove
       currentFeatured.splice(index, 1);
       setValue('featuredAttributes', currentFeatured);
     } else {
-      // Add (if under limit)
       if (currentFeatured.length < 5) {
         currentFeatured.push(key);
         setValue('featuredAttributes', currentFeatured);
@@ -42,17 +43,17 @@ export default function AttributesTab() {
     <Stack spacing={4}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6">
-          Restaurant Attributes
+          {t('title')}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Featured on Card: <strong>{featuredAttributes.length}/5</strong>
+          {t('featuredOnCard', { count: featuredAttributes.length })}
         </Typography>
       </Box>
 
       {Object.entries(ATTRIBUTE_GROUPS).map(([groupKey, group]) => (
         <Box key={groupKey}>
           <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-            {group.label}
+            {ta(groupKey)}
           </Typography>
           <FormGroup>
             {group.items.map((item) => {
@@ -67,25 +68,24 @@ export default function AttributesTab() {
                     render={({ field }) => (
                       <FormControlLabel
                         control={
-                          <Checkbox 
-                            checked={!!field.value} 
+                          <Checkbox
+                            checked={!!field.value}
                             onChange={(e) => {
                               field.onChange(e.target.checked);
-                              // If unchecked, remove from featured
                               if (!e.target.checked && isFeatured) {
                                 toggleFeatured(item.key);
                               }
-                            }} 
+                            }}
                           />
                         }
-                        label={item.label}
+                        label={ta(item.key)}
                       />
                     )}
                   />
-                  
+
                   {isChecked && (
-                    <Tooltip title={isFeatured ? "Remove from card" : "Feature on card"}>
-                      <IconButton 
+                    <Tooltip title={isFeatured ? t('removeFromCard') : t('featureOnCard')}>
+                      <IconButton
                         onClick={() => toggleFeatured(item.key)}
                         size="small"
                         color={isFeatured ? "warning" : "default"}

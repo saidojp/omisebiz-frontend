@@ -13,12 +13,15 @@ import { ArrowBack } from '@mui/icons-material';
 import api from '@/lib/api';
 import RestaurantForm from '@/components/forms/RestaurantForm';
 import type { Restaurant } from '@/lib/types';
+import { useTranslations } from 'next-intl';
 
 export default function EditRestaurantPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  
+  const t = useTranslations('editRestaurant');
+  const tc = useTranslations('common');
+
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -29,7 +32,7 @@ export default function EditRestaurantPage() {
         const response = await api.get(`/restaurants/${id}`);
         setRestaurant(response.data.restaurant);
       } catch (err: any) {
-        setError(err.response?.data?.error?.message || 'Failed to load restaurant');
+        setError(err.response?.data?.error?.message || t('failedToLoad'));
       } finally {
         setLoading(false);
       }
@@ -52,7 +55,7 @@ export default function EditRestaurantPage() {
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
-        <Button onClick={() => router.back()}>Go Back</Button>
+        <Button onClick={() => router.back()}>{tc('goBack')}</Button>
       </Box>
     );
   }
@@ -68,14 +71,14 @@ export default function EditRestaurantPage() {
         onClick={() => router.back()}
         sx={{ mb: 3 }}
       >
-        Back
+        {tc('back')}
       </Button>
 
       <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
-        Edit Restaurant
+        {t('title')}
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Update your restaurant profile information
+        {t('subtitle')}
       </Typography>
 
       <RestaurantForm restaurant={restaurant} mode="edit" />
