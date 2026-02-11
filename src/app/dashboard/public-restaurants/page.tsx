@@ -382,7 +382,7 @@ export default function PublicRestaurantsPage() {
                       </Box>
                     )}
 
-                    {restaurant.location && (
+                    {(restaurant.location || restaurant.address?.city) && (
                       <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: 'text.secondary', mt: 'auto' }}>
                         <LocationOn sx={{ fontSize: 14 }} />
                         <Typography variant="body2" noWrap sx={{ fontSize: '0.8rem' }}>

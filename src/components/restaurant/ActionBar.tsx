@@ -1,5 +1,5 @@
 import { Stack, Button, IconButton, Tooltip } from '@mui/material';
-import { Phone, Directions, Language, Share } from '@mui/icons-material';
+import { Phone, Directions, Share } from '@mui/icons-material';
 import { Restaurant } from '@/lib/types';
 import { useTranslations } from 'next-intl';
 
@@ -23,62 +23,89 @@ export default function ActionBar({ restaurant }: Props) {
     }
   };
 
+  const getGoogleMapsUrl = () => {
+    // If we have precise location data (lat/lng), use it
+    if (restaurant.location &&
+      typeof restaurant.location.lat === 'number' &&
+      typeof restaurant.location.lng === 'number') {
+      return `https://www.google.com/maps/search/?api=1&query=${restaurant.location.lat},${restaurant.location.lng}`;
+    }
+
+    // Fallback to address search
+    const address = [
+      restaurant.address?.street,
+      restaurant.address?.city,
+      restaurant.address?.zip,
+      restaurant.address?.country
+    ].filter(Boolean).join(', ');
+
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+  };
+
   return (
-    <Stack
-      direction="row"
-      spacing={1}
-      sx={{
-        flexWrap: 'wrap',
-        gap: 1,
-      }}
-    >
+    <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
       {restaurant.contacts?.phone && (
         <Button
-          variant="outlined"
-          size="small"
+          variant="contained"
           startIcon={<Phone />}
           href={`tel:${restaurant.contacts.phone}`}
-          sx={{ borderRadius: 2 }}
+          size="large"
+          disableElevation
+          sx={{
+            flex: 1, // Ensure equal distribution
+            minWidth: '120px', // Prevent becoming too small
+            borderRadius: '50px',
+            textTransform: 'none',
+            fontSize: '1rem',
+            fontWeight: 600,
+            bgcolor: '#e3f2fd',
+            color: '#1565c0',
+            '&:hover': {
+              bgcolor: '#bbdefb',
+            }
+          }}
         >
           {t('call')}
         </Button>
       )}
 
-      {restaurant.location && (
-        <Button
-          variant="outlined"
-          size="small"
-          startIcon={<Directions />}
-          href={`https://www.google.com/maps?q=${restaurant.location.lat},${restaurant.location.lng}`}
-          target="_blank"
-          sx={{ borderRadius: 2 }}
-        >
-          {t('directions')}
-        </Button>
-      )}
-
-      {restaurant.contacts?.website && (
-        <Button
-          variant="outlined"
-          size="small"
-          startIcon={<Language />}
-          href={restaurant.contacts.website}
-          target="_blank"
-          sx={{ borderRadius: 2 }}
-        >
-          {t('websiteLink')}
-        </Button>
-      )}
-
       <Button
-        variant="outlined"
-        size="small"
-        startIcon={<Share />}
-        onClick={handleShare}
-        sx={{ borderRadius: 2 }}
+        variant="contained"
+        startIcon={<Directions />}
+        href={getGoogleMapsUrl()}
+        target="_blank"
+        rel="noopener noreferrer"
+        size="large"
+        disableElevation
+        sx={{
+          flex: 1, // Ensure equal distribution
+          minWidth: '120px',
+          borderRadius: '50px',
+          textTransform: 'none',
+          fontSize: '1rem',
+          fontWeight: 600,
+          bgcolor: '#e3f2fd',
+          color: '#1565c0',
+          '&:hover': {
+            bgcolor: '#bbdefb',
+          }
+        }}
       >
-        {t('share')}
+        {t('directions')}
       </Button>
+
+      <Tooltip title={t('share')}>
+        <IconButton
+          onClick={handleShare}
+          sx={{
+            border: '1px solid',
+            borderColor: 'divider',
+            alignSelf: 'center'
+          }}
+        >
+          <Share />
+        </IconButton>
+      </Tooltip>
     </Stack>
   );
 }
